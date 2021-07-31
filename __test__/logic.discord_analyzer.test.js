@@ -30,19 +30,15 @@ test("Test for constructor", () => {
     expect(v.channel_id).toEqual('CHR');
     expect(v.message).toEqual('ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）');
     expect(v.title).toEqual('もーーー！（バグだらけじゃん自分で作っておきながらー！） (最大人数 : 6人)');
-    expect(v.time).toEqual(DiscordAnalyzer.TIME_DEFAULT);
     expect(v.max_number).toEqual(DiscordAnalyzer.MAX_NUMBERS_DEFAULT);
 })
 
 test("Test for constructor", () => {
-    /**
     var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', '868275869540569110');
     expect(v.channel_id).toEqual('CHR');
     expect(v.message).toEqual('ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
     expect(v.title).toEqual('21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
-    expect(v.time).toEqual("21:00");
     expect(v.max_number).toEqual(3);
-     */
 })
 
 test("Test for constructor", () => {
@@ -51,22 +47,6 @@ test("Test for constructor", () => {
     expect(v.type).toEqual(DiscordAnalyzer.TYPE_JOIN);
     expect(v.id).toEqual("123");
 })
-
-test("Test for get times", () => {
-    /**
-    expect(DiscordAnalyzer.GetRecruitmentTime("24時からやります")).toEqual("00:00");
-    expect(DiscordAnalyzer.GetRecruitmentTime("23時からやります")).toEqual("23:00");
-    expect(DiscordAnalyzer.GetRecruitmentTime("0時からやります")).toEqual("00:00");
-    expect(DiscordAnalyzer.GetRecruitmentTime("25時からやります")).toEqual(undefined);
-    expect(DiscordAnalyzer.GetRecruitmentTime("-1時からやります")).toEqual("01:00");
-
-    expect(DiscordAnalyzer.GetRecruitmentTime("24:00からやります")).toEqual("00:00");
-    expect(DiscordAnalyzer.GetRecruitmentTime("23:59からやります")).toEqual("23:59");
-    expect(DiscordAnalyzer.GetRecruitmentTime("0000からやります")).toEqual("00:00");
-    expect(DiscordAnalyzer.GetRecruitmentTime("25:00からやります")).toEqual(undefined);
-    expect(DiscordAnalyzer.GetRecruitmentTime("-01:00からやります")).toEqual("01:00");
-     */
-});
 
 test("Test for get times", () => {
     expect(DiscordAnalyzer.GetRecruitmentNumbers("募集します @3")).toEqual(3);

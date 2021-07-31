@@ -13,7 +13,7 @@ module.exports = class DiscordAnalyzer {
     static TYPE_DECLINE = 3;
     static TYPE_LIST = 4;
 
-    static TIME_DEFAULT = "23:00";
+    static HOURS_DEFAULT = 23;
     static MAX_NUMBERS_DEFAULT = 6;
     static ERROR_CHANNEL_ID = "ERR_CHR";
 
@@ -47,17 +47,24 @@ module.exports = class DiscordAnalyzer {
         this.errorMessage = [];
         this.type = DiscordAnalyzer.TYPE_INIT;
         let tmpErrorMsg = [];
+        // 現在時刻
+        let default_date = new Date();
+        default_date.setHours(default_date.getHours() + DiscordAnalyzer.HOURS_DEFAULT);
 
+        // 募集検知
         if (DiscordAnalyzer.CheckRecruitment(this.message) == true) {
             this.type = DiscordAnalyzer.TYPE_RECRUITEMENT;
             this.title = DiscordAnalyzer.GetRecruitmentText(this.message);
+
             // 以下は可能なら切り出す…　時間指定と人数指定
-            // TODO:書式文字列をYYYY-MM-DD HH24:MI:SSで返す
             this.time = DiscordAnalyzer.GetRecruitmentTime(this.message);
             if (this.time === undefined) {
-                // TODO:書式文字列をYYYY-MM-DD HH24:MI:SSで返す
-                this.time = DiscordAnalyzer.TIME_DEFAULT;
+                // 取得できない場合はデフォルト適用
+                logger.info(`時刻文字列が存在しないため、デフォルトを適用する : ${default_date}`);
+                this.time = default_date;
             }
+            logger.debug(`時刻解析結果 : ${this.time}`);
+
             this.max_number = DiscordAnalyzer.GetRecruitmentNumbers(this.message);
             if (this.max_number === undefined) {
                 this.max_number = DiscordAnalyzer.MAX_NUMBERS_DEFAULT;
