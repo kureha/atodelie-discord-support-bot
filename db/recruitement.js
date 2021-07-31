@@ -1,5 +1,9 @@
 const logger = require('./../common/logger');
 
+// 定数定義を読み込む
+const Constants = require('../common/constants');
+const constants = new Constants();
+
 module.exports = class Recruitment {
 
     /**
@@ -33,6 +37,11 @@ module.exports = class Recruitment {
     static SQL_SELECT_M_RECRUITMENT_MAX_ID = 'SELECT IFNULL(MAX(id) + 1, 1) AS id FROM [m_recruitment] ';
 
     /**
+     * マスタテーブルから一致するトークンが有効募集で使われてるかを確認するSQL
+     */
+     static SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT = 'SELECT COUNT(*) AS [count] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') ';
+
+    /**
      * 募集テーブル作成用SQL
      */
     static SQL_CREATE_T_PARTICIPATE = 'CREATE TABLE IF NOT EXISTS [t_participate] ( [id] INTEGER NOT NULL, [status] INTEGER NOT NULL, [user_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id],[user_id]) )';
@@ -45,7 +54,7 @@ module.exports = class Recruitment {
     /**
      * 募集テーブル挿入用SQL
      */
-    static SQL_INSERT_T_PARTICIPATE = 'INSERT INTO [t_participate] ([id], [status], [user_id], [description], [regist_time], [update_time], [delete]) SELECT [id], $status, $user_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false FROM [m_recruitment] WHERE [token] = $token ';
+    static SQL_INSERT_T_PARTICIPATE = 'INSERT INTO [t_participate] ([id], [status], [user_id], [description], [regist_time], [update_time], [delete]) SELECT [id], $status, $user_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false FROM [m_recruitment] WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') ';
 
     /**
      * 募集テーブル更新用SQL
@@ -67,11 +76,7 @@ module.exports = class Recruitment {
      * @returns {Promise} インスタンス
      */
     constructor() {
-        // 定数定義を読み込む
-        const constants = require('../common/constants');
-        this.constants = new constants();
-
-        const db = this.get_db_instance(this.constants.SQLITE_FILE);
+        const db = this.get_db_instance(constants.SQLITE_FILE);
         logger.info(`database open successed. db = ${db}`);
 
         this.create_all_database(db)
@@ -140,7 +145,7 @@ module.exports = class Recruitment {
     insert_m_recruitment(data) {
         // Promise処理
         return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(this.constants.SQLITE_FILE);
+            const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
                 const sql = `${Recruitment.SQL_INSERT_M_RECRUITMENT}`;
@@ -176,10 +181,10 @@ module.exports = class Recruitment {
     update_m_recruitment(data) {
         // Promise処理
         return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(this.constants.SQLITE_FILE);
+            const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Recruitment.SQL_UPDATE_m_recruitment} WHERE [token] = $token `;
+                const sql = `${Recruitment.SQL_UPDATE_m_recruitment} WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -213,10 +218,10 @@ module.exports = class Recruitment {
     delete_m_recruitment(token) {
         // Promise処理
         return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(this.constants.SQLITE_FILE);
+            const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Recruitment.SQL_DELETE_M_RECRUITMENT} WHERE [token] = $token `;
+                const sql = `${Recruitment.SQL_DELETE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -243,7 +248,33 @@ module.exports = class Recruitment {
     get_m_recruitment_id() {
         // Promise処理
         return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(this.constants.SQLITE_FILE);
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT_MAX_ID}`;
+                logger.info(`sql = ${sql}`);
+                db.get(sql, [], ((err, row) => {
+                    if (err) {
+                        logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_M_RECRUITMENT}`);
+                        reject(err);
+                    }
+                    logger.info(`selected max m_reqruitement id successed. : result = ${row.id}`);
+                    resolve(row.id);
+                }));
+            });
+
+            db.close();
+        });
+    }
+
+    /**
+     * 募集マスタ用のTOKENを生成します
+     */
+    get_m_recruitment_token() {
+        // Promise処理
+        return new Promise((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
                 // run serialize
@@ -271,11 +302,11 @@ module.exports = class Recruitment {
     get_m_recruitment(token) {
         // Promise処理
         return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(this.constants.SQLITE_FILE);
+            const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT} WHERE M1.[token] = ? `;
+                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT} WHERE M1.[token] = ? and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 db.get(sql, [token], ((err, row) => {
                     if (err) {
@@ -304,7 +335,7 @@ module.exports = class Recruitment {
     insert_t_participate(data) {
         // Promise処理
         return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(this.constants.SQLITE_FILE);
+            const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
                 const sql = `${Recruitment.SQL_INSERT_T_PARTICIPATE}`;
@@ -336,10 +367,10 @@ module.exports = class Recruitment {
     update_t_participate(data) {
         // Promise処理
         return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(this.constants.SQLITE_FILE);
+            const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Recruitment.SQL_UPDATE_T_PARTICIPATE} where [id] = (select [id] from [m_recruitment] where [token] = $token) AND [user_id] = $user_id `;
+                const sql = `${Recruitment.SQL_UPDATE_T_PARTICIPATE} where [id] = (select [id] from [m_recruitment] where [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\')) AND [user_id] = $user_id `;
                 logger.info(`sql = ${sql}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -370,10 +401,10 @@ module.exports = class Recruitment {
     delete_t_participate(token) {
         // Promise処理
         return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(this.constants.SQLITE_FILE);
+            const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Recruitment.SQL_DELETE_T_PARTICIPATE} WHERE [id] = (SELECT [id] FROM [m_recruitment] WHERE [token] = $token) `;
+                const sql = `${Recruitment.SQL_DELETE_T_PARTICIPATE} WHERE [id] = (SELECT [id] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\')) `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -400,11 +431,11 @@ module.exports = class Recruitment {
     get_t_participate(token) {
         // Promise処理
         return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(this.constants.SQLITE_FILE);
+            const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token `;
+                const sql = `${Recruitment.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and m1.[limit_time] >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 db.all(sql, [token], ((err, rows) => {
                     if (err) {

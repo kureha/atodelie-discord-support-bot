@@ -52,7 +52,7 @@ test("Test for constructor", () => {
     expect(v.channel_id).toEqual('CHR');
     expect(v.valid).toEqual(true);
     expect(v.type).toEqual(constants.TYPE_JOIN);
-    expect(v.id).toEqual("123");
+    expect(v.token).toEqual("123");
 })
 
 test("Test for get numbers", () => {

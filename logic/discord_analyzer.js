@@ -59,16 +59,15 @@ module.exports = class DiscordAnalyzer {
             this.owner_id = message_user_id;
             logger.debug(`recruitment's name, owner_id : name = ${this.name}, owner_id = ${message_user_id}`);
 
-            // token算出
-            this.token = DiscordAnalyzer.Create4DigitsToken();
-            logger.debug(`recruitment's token : ${this.token}`);
+            // tokenは後で算出するため空文字となる
+            this.token = '';
 
             // 以下は可能なら切り出す…　時間指定と人数指定
             this.limit_time = DiscordAnalyzer.GetRecruitmentTime(this.message);
             if (this.limit_time === undefined) {
                 // 取得できない場合はデフォルト適用
                 logger.debug(`target time is not found on message, apply default time. : ${default_date}`);
-                this.limit_time = default_date;
+                this.limit_time = default_date.toISOString();
             }
             logger.debug(`recruitment's target time : ${this.limit_time}`);
 
@@ -76,7 +75,7 @@ module.exports = class DiscordAnalyzer {
             if (this.max_number === undefined) {
                 // 取得できない場合はデフォルト適用
                 logger.debug(`max members number is not found on message, apply default number. : ${DiscordAnalyzer.MAX_NUMBERS_DEFAULT}`);
-                this.max_number = DiscordAnalyzer.MAX_NUMBERS_DEFAULT.toISOString();
+                this.max_number = DiscordAnalyzer.MAX_NUMBERS_DEFAULT;
             }
             logger.debug(`recruitment's target number : ${this.max_number}`);
 
@@ -150,14 +149,6 @@ module.exports = class DiscordAnalyzer {
         }
 
         return result;
-    }
-
-    /**
-     * 4桁のDigitを取得します
-     * @returns 4桁のDigits
-     */
-    static Create4DigitsToken() {
-        return String(Math.floor(Math.random() * 9999) + 1);
     }
 
     /**

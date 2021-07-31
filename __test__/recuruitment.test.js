@@ -25,7 +25,7 @@ test("test for m_recruitment c/r/u/d", () => {
                     channel_id: "testingid",
                     token: test_token,
                     status: 2,
-                    limit_time: "2021-07-31 11:59:59",
+                    limit_time: "2099-12-31 11:59:59",
                     name: "myname",
                     owner_id: "owenr_id",
                     description: "description",
@@ -49,7 +49,6 @@ test("test for m_recruitment c/r/u/d", () => {
                 // update data
                 data.status = 3;
                 data.description = "updated";
-                data.delete = 1;
 
                 // update test
                 return recruitment.update_m_recruitment(data);
@@ -66,7 +65,7 @@ test("test for m_recruitment c/r/u/d", () => {
                 expect(data.name).toEqual("myname");
                 expect(data.owner_id).toEqual("owenr_id");
                 expect(data.description).toEqual("updated");
-                expect(data.delete).toEqual(1);
+                expect(data.delete).toEqual(0);
 
                 // delete test
                 return recruitment.delete_m_recruitment(test_token);
@@ -117,7 +116,7 @@ test('test for t_participate c/r/u/d', () => {
                     channel_id: "testingid",
                     token: test_token,
                     status: 2,
-                    limit_time: "2021-07-31 11:59:59",
+                    limit_time: "2099-12-31 11:59:59",
                     name: "myname",
                     owner_id: "owenr_id",
                     description: "description",
