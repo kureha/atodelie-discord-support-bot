@@ -9,6 +9,8 @@ const client = new Discord.Client();
 const Constants = require('./common/constants');
 const constants = new Constants();
 
+const DiscordAnalyzer = require('./logic/discord_analyzer');
+
 client.on('ready', () => {
   client.user.setPresence(
     { activity: { name: constants.DISCORD_ACTIVITY_NAME }, status: 'online' }
@@ -23,6 +25,10 @@ client.on('message', message => {
     logger.trace(message);
 
     // TODO
+    // メッセージを解析する
+    const analyzer = new DiscordAnalyzer(message.content, message.channel.id, client.user.id);
+    logger.trace(analyzer);
+
     return
   }
 })

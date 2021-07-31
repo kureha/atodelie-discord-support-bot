@@ -23,6 +23,7 @@ module.exports = class DiscordAnalyzer {
                 // user.idは消去する
                 this.message = mes.replace('<@!' + user_id + '> ', "");
             } else {
+                logger.warn(`can't remove user id. : mes = ${mes}, user_id = ${user_id}`);
                 this.message = mes;
             }
         } else {
@@ -51,7 +52,7 @@ module.exports = class DiscordAnalyzer {
 
         // 募集検知
         if (DiscordAnalyzer.CheckRecruitment(this.message) == true) {
-            logger.info(`target message is new recruitment. : mes = ${mes}`);
+            logger.info(`target message is new recruitment. : mes = ${this.message}`);
             this.type = constants.TYPE_RECRUITEMENT;
             this.title = DiscordAnalyzer.GetRecruitmentText(this.message);
             logger.debug(`recruitment's title : ${this.title}`);
@@ -75,24 +76,24 @@ module.exports = class DiscordAnalyzer {
         }
         else if (DiscordAnalyzer.CheckJoin(this.message) == true) {
             // 参加
-            logger.info(`target message is join. : mes = ${mes}`);
+            logger.info(`target message is join. : mes = ${this.message}`);
             this.type = constants.TYPE_JOIN;
             this.id = DiscordAnalyzer.GetJoinId(this.message);
         }
         else if (DiscordAnalyzer.CheckDecline(this.message) == true) {
             // 辞退
-            logger.info(`target message is decline. : mes = ${mes}`);
+            logger.info(`target message is decline. : mes = ${this.message}`);
             this.type = constants.TYPE_DECLINE;
             this.id = DiscordAnalyzer.GetDeclineId(this.message);
         }
         else if (DiscordAnalyzer.CheckTypeList(this.message) == true) {
             // 一覧表示
-            logger.info(`target message is listing. : mes = ${mes}`);
+            logger.info(`target message is listing. : mes = ${this.message}`);
             this.type = constants.TYPE_LIST;
         }
         else {
             // どのメッセージでもない
-            logger.info(`target message is not valid. : mes = ${mes}`);
+            logger.info(`target message is not valid. : mes = ${this.message}`);
             this.valid = false;
             error_messages_list.push(constants.DISCORD_MESSAGE_IS_INVALID);
         }
@@ -229,7 +230,7 @@ module.exports = class DiscordAnalyzer {
      * @returns 
      */
     static CheckRecruitment(mes) {
-        if (this.ExtractByRegexp(mes, '^(募集|ぼしゅう)[^ 　]*[ 　]') === undefined) {
+        if (this.ExtractByRegexp(mes, '^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]') === undefined) {
             return false;
         } else {
             return true;
@@ -242,7 +243,7 @@ module.exports = class DiscordAnalyzer {
      * @returns 
      */
     static GetRecruitmentText(mes) {
-        return mes.replace(/^(募集|ぼしゅう)[^ 　]*[ 　]/, "");
+        return mes.replace(/^^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]/, "");
     }
 
     /**
