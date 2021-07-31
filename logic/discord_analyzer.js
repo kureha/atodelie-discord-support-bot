@@ -42,11 +42,11 @@ module.exports = class DiscordAnalyzer {
         }
 
         // 募集の有効無効を示す
-        this.isValid = true;
+        this.valid = true;
         this.id = 0;
-        this.errorMessage = [];
+        this.error_messages = [];
         this.type = DiscordAnalyzer.TYPE_INIT;
-        let tmpErrorMsg = [];
+        let error_messages_list = [];
         // 現在時刻
         let default_date = new Date();
         default_date.setHours(default_date.getHours() + DiscordAnalyzer.HOURS_DEFAULT);
@@ -84,15 +84,15 @@ module.exports = class DiscordAnalyzer {
             this.type = DiscordAnalyzer.TYPE_LIST;
         }
         else {
-            this.isValid = false;
-            tmpErrorMsg.push(constants.DISCORD_MESSAGE_IS_INVALID);
+            this.valid = false;
+            error_messages_list.push(constants.DISCORD_MESSAGE_IS_INVALID);
         }
 
         // 有効な場合はインスタンスを返す
-        if (this.isValid === true) {
+        if (this.valid === true) {
 
         } else {
-            this.errorMessage = tmpErrorMsg;
+            this.error_messages = error_messages_list;
         }
     }
 
@@ -180,21 +180,21 @@ module.exports = class DiscordAnalyzer {
         }
 
         // set target date as TODAY
-        var targetDate = new Date();
-        targetDate.setHours(hour);
-        targetDate.setMinutes(minute);
-        targetDate.setSeconds(0);
+        var target_date = new Date();
+        target_date.setHours(hour);
+        target_date.setMinutes(minute);
+        target_date.setSeconds(0);
 
         // compare time to now
-        var nowDate = new Date();
+        var now_date = new Date();
 
         // if target is past time, add date
-        if (targetDate < nowDate) {
-            targetDate.setDate(targetDate.getDate() + 1);
+        if (target_date < now_date) {
+            target_date.setDate(target_date.getDate() + 1);
         }
 
         // return values
-        return targetDate;
+        return target_date;
     }
 
     /**
