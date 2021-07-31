@@ -7,12 +7,6 @@ const constants = new Constants();
 
 module.exports = class DiscordAnalyzer {
 
-    static TYPE_INIT = 0;
-    static TYPE_RECRUITEMENT = 1;
-    static TYPE_JOIN = 2;
-    static TYPE_DECLINE = 3;
-    static TYPE_LIST = 4;
-
     static HOURS_DEFAULT = 23;
     static MAX_NUMBERS_DEFAULT = 6;
     static ERROR_CHANNEL_ID = "ERR_CHR";
@@ -47,7 +41,7 @@ module.exports = class DiscordAnalyzer {
         this.valid = true;
         this.id = 0;
         this.error_messages = [];
-        this.type = DiscordAnalyzer.TYPE_INIT;
+        this.type = constants.TYPE_INIT;
 
         // エラーメッセージ格納用配列（一時的）
         let error_messages_list = [];
@@ -58,7 +52,7 @@ module.exports = class DiscordAnalyzer {
         // 募集検知
         if (DiscordAnalyzer.CheckRecruitment(this.message) == true) {
             logger.info(`target message is new recruitment. : mes = ${mes}`);
-            this.type = DiscordAnalyzer.TYPE_RECRUITEMENT;
+            this.type = constants.TYPE_RECRUITEMENT;
             this.title = DiscordAnalyzer.GetRecruitmentText(this.message);
             logger.debug(`recruitment's title : ${this.title}`);
 
@@ -82,19 +76,19 @@ module.exports = class DiscordAnalyzer {
         else if (DiscordAnalyzer.CheckJoin(this.message) == true) {
             // 参加
             logger.info(`target message is join. : mes = ${mes}`);
-            this.type = DiscordAnalyzer.TYPE_JOIN;
+            this.type = constants.TYPE_JOIN;
             this.id = DiscordAnalyzer.GetJoinId(this.message);
         }
         else if (DiscordAnalyzer.CheckDecline(this.message) == true) {
             // 辞退
             logger.info(`target message is decline. : mes = ${mes}`);
-            this.type = DiscordAnalyzer.TYPE_DECLINE;
+            this.type = constants.TYPE_DECLINE;
             this.id = DiscordAnalyzer.GetDeclineId(this.message);
         }
         else if (DiscordAnalyzer.CheckTypeList(this.message) == true) {
             // 一覧表示
             logger.info(`target message is listing. : mes = ${mes}`);
-            this.type = DiscordAnalyzer.TYPE_LIST;
+            this.type = constants.TYPE_LIST;
         }
         else {
             // どのメッセージでもない

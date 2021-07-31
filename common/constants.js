@@ -13,5 +13,12 @@ module.exports = class Constants {
         // message section
         this.DISCORD_ACTIVITY_NAME = process.env.DISCORD_ACTIVITY_NAME;
         this.DISCORD_MESSAGE_IS_INVALID = process.env.DISCORD_MESSAGE_IS_INVALID;
+
+        // static values
+        this.TYPE_INIT = 0;
+        this.TYPE_RECRUITEMENT = 1;
+        this.TYPE_JOIN = 2;
+        this.TYPE_DECLINE = 3;
+        this.TYPE_LIST = 4;
     }
 };
