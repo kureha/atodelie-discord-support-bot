@@ -20,5 +20,8 @@ module.exports = class Constants {
         this.TYPE_JOIN = 2;
         this.TYPE_DECLINE = 3;
         this.TYPE_LIST = 4;
+
+        this.STATUS_DISABLED = 0;
+        this.STATUS_ENABLED = 1;
     }
 };

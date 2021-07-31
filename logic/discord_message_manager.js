@@ -31,7 +31,7 @@ module.exports = class DiscordMessageManager {
         let result = `募集一覧 : \n`;
 
         data.forEach(v => {
-            result = result + `ID : ${v.id}、募集名 : ${v.title}、参加者：${v.user_name}\n`;
+            result = result + `ID : ${v.id}、募集名 : ${v.name}、参加者：${v.user_name}\n`;
         });
 
         return result;

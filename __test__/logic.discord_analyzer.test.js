@@ -28,27 +28,27 @@ test("Test for GetRecruitmentText", () => {
 });
 
 test("Test for constructor", () => {
-    var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', '868275869540569110');
+    var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', 'SENDER_ID', '868275869540569110');
     expect(v.channel_id).toEqual('CHR');
     expect(v.valid).toEqual(true);
     expect(v.type).toEqual(constants.TYPE_RECRUITEMENT);
     expect(v.message).toEqual('ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）');
-    expect(v.title).toEqual('もーーー！（バグだらけじゃん自分で作っておきながらー！）');
+    expect(v.name).toEqual('もーーー！（バグだらけじゃん自分で作っておきながらー！）');
     expect(v.max_number).toEqual(DiscordAnalyzer.MAX_NUMBERS_DEFAULT);
 })
 
 test("Test for constructor", () => {
-    var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', '868275869540569110');
+    var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', 'SENDER_ID', '868275869540569110');
     expect(v.channel_id).toEqual('CHR');
     expect(v.valid).toEqual(true);
     expect(v.type).toEqual(constants.TYPE_RECRUITEMENT);
     expect(v.message).toEqual('ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
-    expect(v.title).toEqual('21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
+    expect(v.name).toEqual('21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
     expect(v.max_number).toEqual(3);
 })
 
 test("Test for constructor", () => {
-    var v = new DiscordAnalyzer('<@!868275869540569110> 123 参加', 'CHR', '868275869540569110');
+    var v = new DiscordAnalyzer('<@!868275869540569110> 123 参加', 'CHR', 'SENDER_ID', '868275869540569110');
     expect(v.channel_id).toEqual('CHR');
     expect(v.valid).toEqual(true);
     expect(v.type).toEqual(constants.TYPE_JOIN);

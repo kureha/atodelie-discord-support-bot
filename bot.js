@@ -9,7 +9,9 @@ const client = new Discord.Client();
 const Constants = require('./common/constants');
 const constants = new Constants();
 
+// import modules
 const DiscordAnalyzer = require('./logic/discord_analyzer');
+const Recruitment = require('./db/recruitement');
 
 client.on('ready', () => {
   client.user.setPresence(
@@ -26,8 +28,43 @@ client.on('message', message => {
 
     // TODO
     // メッセージを解析する
-    const analyzer = new DiscordAnalyzer(message.content, message.channel.id, client.user.id);
+    const analyzer = new DiscordAnalyzer(message.content, message.channel.id, message.author.id, client.user.id);
     logger.trace(analyzer);
+    const recruitment = new Recruitment();
+
+    switch (analyzer.type) {
+      case constants.TYPE_RECRUITEMENT:
+        // get next id first
+        recruitment.get_m_recruitment_id()
+          .then((id) => { 
+            // set id and master registration
+            analyzer.id = id;
+            return recruitment.insert_m_recruitment(analyzer);
+          })
+          .then(() => {
+            // participate registration
+            const participate = {
+              token: analyzer.token,
+              status: constants.STATUS_ENABLED,
+              user_id: analyzer.owner_id,
+              description: "",
+              delete: false
+            };
+            return recruitment.insert_t_participate(participate);
+          })
+          .then(() => {
+            // compete all tasks
+            logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}`);
+          })
+          .catch((err) => {
+            logger.error(err);
+          });
+        break;
+      case constants.TYPE_JOIN:
+        break;
+      case constants.TYPE_DECLINE:
+        break;
+    }
 
     return
   }

@@ -14,10 +14,11 @@ module.exports = class DiscordAnalyzer {
     /**
      * メッセージを解析し、解析結果を返却する
      * @param {string} mes メッセージ本体
-     * @param {string} user_id DiscordユーザID
+     * @param {string} message_user_id メッセージを送信したユーザID
+     * @param {string} user_id botのDiscordユーザID
      * @returns 解析結果オブジェクト
      */
-    constructor(mes, channel_id, user_id) {
+    constructor(mes, channel_id, message_user_id, user_id) {
         if (typeof (mes) == "string") {
             if (typeof (user_id) == "string") {
                 // user.idは消去する
@@ -54,25 +55,33 @@ module.exports = class DiscordAnalyzer {
         if (DiscordAnalyzer.CheckRecruitment(this.message) == true) {
             logger.info(`target message is new recruitment. : mes = ${this.message}`);
             this.type = constants.TYPE_RECRUITEMENT;
-            this.title = DiscordAnalyzer.GetRecruitmentText(this.message);
-            logger.debug(`recruitment's title : ${this.title}`);
+            this.name = DiscordAnalyzer.GetRecruitmentText(this.message);
+            this.owner_id = message_user_id;
+            logger.debug(`recruitment's name, owner_id : name = ${this.name}, owner_id = ${message_user_id}`);
+
+            // token算出
+            this.token = DiscordAnalyzer.Create4DigitsToken();
+            logger.debug(`recruitment's token : ${this.token}`);
 
             // 以下は可能なら切り出す…　時間指定と人数指定
-            this.time = DiscordAnalyzer.GetRecruitmentTime(this.message);
-            if (this.time === undefined) {
+            this.limit_time = DiscordAnalyzer.GetRecruitmentTime(this.message);
+            if (this.limit_time === undefined) {
                 // 取得できない場合はデフォルト適用
                 logger.debug(`target time is not found on message, apply default time. : ${default_date}`);
-                this.time = default_date;
+                this.limit_time = default_date;
             }
-            logger.debug(`recruitment's target time : ${this.time}`);
+            logger.debug(`recruitment's target time : ${this.limit_time}`);
 
             this.max_number = DiscordAnalyzer.GetRecruitmentNumbers(this.message);
             if (this.max_number === undefined) {
                 // 取得できない場合はデフォルト適用
                 logger.debug(`max members number is not found on message, apply default number. : ${DiscordAnalyzer.MAX_NUMBERS_DEFAULT}`);
-                this.max_number = DiscordAnalyzer.MAX_NUMBERS_DEFAULT;
+                this.max_number = DiscordAnalyzer.MAX_NUMBERS_DEFAULT.toISOString();
             }
             logger.debug(`recruitment's target number : ${this.max_number}`);
+
+            // その他必要な値を付与
+            this.status = constants.STATUS_ENABLED;
         }
         else if (DiscordAnalyzer.CheckJoin(this.message) == true) {
             // 参加
@@ -132,6 +141,14 @@ module.exports = class DiscordAnalyzer {
     }
 
     /**
+     * 4桁のDigitを取得します
+     * @returns 4桁のDigits
+     */
+    static Create4DigitsToken() {
+        return String(Math.floor(Math.random() * 9999) + 1);
+    }
+
+    /**
      * 時刻を認識し、日時オブジェクトを返却します
      * @param {string} mes 
      * @returns 
@@ -166,7 +183,7 @@ module.exports = class DiscordAnalyzer {
         if (hour === undefined || minute === undefined) {
             return undefined;
         } else {
-            return DiscordAnalyzer.GetRecruitmentDate(hour, minute);
+            return DiscordAnalyzer.GetRecruitmentDate(hour, minute).toISOString();
         }
     }
 
