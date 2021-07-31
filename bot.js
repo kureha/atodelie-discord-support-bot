@@ -7,10 +7,11 @@ const client = new Discord.Client();
 
 // import constants
 const Constants = require('./common/constants');
+const constants = new Constants();
 
 client.on('ready', () => {
   client.user.setPresence(
-    { activity: { name: 'ぱすふぁいんだー起動中...' }, status: 'online' }
+    { activity: { name: constants.DISCORD_ACTIVITY_NAME }, status: 'online' }
   );
   logger.info(`logged on discord server.`);
 })
