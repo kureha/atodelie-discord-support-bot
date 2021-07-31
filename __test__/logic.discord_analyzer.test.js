@@ -62,7 +62,7 @@ test("Test for get numbers", () => {
     expect(DiscordAnalyzer.GetRecruitmentNumbers("募集します @a")).toEqual(undefined);
 });
 
-test("Test for Join", () => {
+test("Test for Check decline", () => {
     expect(DiscordAnalyzer.CheckDecline("12345行けない")).toBe(true);
     expect(DiscordAnalyzer.CheckDecline("12345 いけない")).toBe(true);
     expect(DiscordAnalyzer.CheckDecline("12345　行けない")).toBe(true);
@@ -73,15 +73,15 @@ test("Test for Join", () => {
     expect(DiscordAnalyzer.CheckDecline("参加")).toBe(false);
 });
 
-test("Get for Join", () => {
-    expect(DiscordAnalyzer.GetDeclineId("12345行けない")).toBe("12345");
-    expect(DiscordAnalyzer.GetDeclineId("12345 いけない")).toBe("12345");
-    expect(DiscordAnalyzer.GetDeclineId("12345　行けない")).toBe("12345");
-    expect(DiscordAnalyzer.GetDeclineId(" 12345いけない")).toBe("12345");
-    expect(DiscordAnalyzer.GetDeclineId("　12345行けない")).toBe("12345");
-    expect(DiscordAnalyzer.GetDeclineId("募集　やります")).toBe(undefined);
-    expect(DiscordAnalyzer.GetDeclineId("参加")).toBe(undefined);
-    expect(DiscordAnalyzer.GetDeclineId("参加")).toBe(undefined);
+test("Get for decline id", () => {
+    expect(DiscordAnalyzer.GetDeclineToken("12345行けない")).toBe("12345");
+    expect(DiscordAnalyzer.GetDeclineToken("12345 いけない")).toBe("12345");
+    expect(DiscordAnalyzer.GetDeclineToken("12345　行けない")).toBe("12345");
+    expect(DiscordAnalyzer.GetDeclineToken(" 12345いけない")).toBe("12345");
+    expect(DiscordAnalyzer.GetDeclineToken("　12345行けない")).toBe("12345");
+    expect(DiscordAnalyzer.GetDeclineToken("募集　やります")).toBe(undefined);
+    expect(DiscordAnalyzer.GetDeclineToken("参加")).toBe(undefined);
+    expect(DiscordAnalyzer.GetDeclineToken("参加")).toBe(undefined);
 });
 
 test("Test for List", () => {

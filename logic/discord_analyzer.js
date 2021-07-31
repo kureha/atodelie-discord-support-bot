@@ -82,18 +82,30 @@ module.exports = class DiscordAnalyzer {
 
             // その他必要な値を付与
             this.status = constants.STATUS_ENABLED;
+            // copy user id for participate registration.
+            this.user_id = message_user_id;
+            this.description = "";
+            this.delete = false;
         }
         else if (DiscordAnalyzer.CheckJoin(this.message) == true) {
             // 参加
             logger.info(`target message is join. : mes = ${this.message}`);
             this.type = constants.TYPE_JOIN;
-            this.id = DiscordAnalyzer.GetJoinId(this.message);
+            this.token = DiscordAnalyzer.GetJoinToken(this.message);
+            this.user_id = message_user_id;
+            this.status = constants.STATUS_ENABLED;
+            this.description = this.message;
+            this.delete = false;
         }
         else if (DiscordAnalyzer.CheckDecline(this.message) == true) {
             // 辞退
             logger.info(`target message is decline. : mes = ${this.message}`);
             this.type = constants.TYPE_DECLINE;
-            this.id = DiscordAnalyzer.GetDeclineId(this.message);
+            this.token = DiscordAnalyzer.GetDeclineToken(this.message);
+            this.user_id = message_user_id;
+            this.status = constants.STATUS_ENABLED;
+            this.description = this.message;
+            this.delete = false;
         }
         else if (DiscordAnalyzer.CheckTypeList(this.message) == true) {
             // 一覧表示
@@ -277,10 +289,10 @@ module.exports = class DiscordAnalyzer {
     }
 
     /**
-     * 対象の参加IDを取得します
+     * 対象の参加トークンを取得します
      * @param {string} mes 
      */
-    static GetJoinId(mes) {
+    static GetJoinToken(mes) {
         let result = undefined;
         let re_result = mes.match(/^[ 　]*(\d{1,})[ 　]*参加/);
 
@@ -310,7 +322,7 @@ module.exports = class DiscordAnalyzer {
      * 対象の辞退IDを取得します
      * @param {string} mes 
      */
-    static GetDeclineId(mes) {
+    static GetDeclineToken(mes) {
         let result = undefined;
         let re_result = mes.match(/^[ 　]*(\d{1,})[ 　]*(行|い)けない/);
 

@@ -42,15 +42,8 @@ client.on('message', message => {
             return recruitment.insert_m_recruitment(analyzer);
           })
           .then(() => {
-            // participate registration
-            const participate = {
-              token: analyzer.token,
-              status: constants.STATUS_ENABLED,
-              user_id: analyzer.owner_id,
-              description: "",
-              delete: false
-            };
-            return recruitment.insert_t_participate(participate);
+            // participate registration.
+            return recruitment.insert_t_participate(analyzer);
           })
           .then(() => {
             // compete all tasks
@@ -61,6 +54,18 @@ client.on('message', message => {
           });
         break;
       case constants.TYPE_JOIN:
+        // join to target plan
+        recruitment.insert_t_participate(analyzer)
+        .then(() => {
+          // OK
+        })
+        .catch((err) => {
+          // failed to insert, try to update
+          return recruitment.update_t_participate(analyzer);
+        })
+        .catch((err) => {
+          logger.error(err);
+        });
         break;
       case constants.TYPE_DECLINE:
         break;
