@@ -4,19 +4,19 @@ test("Test for CheckReqcruitement", () => {
     expect(DiscordAnalyzer.CheckRecruitment("test")).toBe(false);
     expect(DiscordAnalyzer.CheckRecruitment(5)).toBe(false);
 
-    expect(DiscordAnalyzer.CheckRecruitment("Apexのぼしゅうです！！！！！")).toBe(false);
+    expect(DiscordAnalyzer.CheckRecruitment("ゲームのぼしゅうです！！！！！")).toBe(false);
     expect(DiscordAnalyzer.CheckRecruitment("ぼしゅうします 今晩やります")).toBe(true);
     expect(DiscordAnalyzer.CheckRecruitment("ぼしゅうする　今晩やります")).toBe(true);
     expect(DiscordAnalyzer.CheckRecruitment("ぼしゅう　今晩やります")).toBe(true);
-    expect(DiscordAnalyzer.CheckRecruitment("Apexのぼしゅう")).toBe(false);
+    expect(DiscordAnalyzer.CheckRecruitment("ゲームのぼしゅう")).toBe(false);
     expect(DiscordAnalyzer.CheckRecruitment("ぼしゅう")).toBe(false);
 
-    expect(DiscordAnalyzer.CheckRecruitment("Apex募集します")).toBe(false);
+    expect(DiscordAnalyzer.CheckRecruitment("ゲーム募集します")).toBe(false);
     expect(DiscordAnalyzer.CheckRecruitment("募集します やります")).toBe(true);
     expect(DiscordAnalyzer.CheckRecruitment("募集します　やります")).toBe(true);
     expect(DiscordAnalyzer.CheckRecruitment("募集 やります")).toBe(true);
     expect(DiscordAnalyzer.CheckRecruitment("募集　やります")).toBe(true);
-    expect(DiscordAnalyzer.CheckRecruitment("Apex募集")).toBe(false);
+    expect(DiscordAnalyzer.CheckRecruitment("ゲーム募集")).toBe(false);
     expect(DiscordAnalyzer.CheckRecruitment("募集")).toBe(false);
 });
 
