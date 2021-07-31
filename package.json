@@ -1,0 +1,22 @@
+{
+  "name": "atodelie-support-bot",
+  "version": "0.0.0",
+  "description": "discord bot for support bot",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "log4js": "^6.3.0",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "jest": "^27.0.6"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node index.js"
+  },
+  "engines": {
+    "node": "12.x"
+  }
+}
