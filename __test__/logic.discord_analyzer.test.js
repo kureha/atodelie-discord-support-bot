@@ -28,14 +28,16 @@ test("Test for GetRecruitmentText", () => {
 test("Test for constructor", () => {
     var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', '868275869540569110');
     expect(v.channel_id).toEqual('CHR');
+    expect(v.valid).toEqual(true);
     expect(v.message).toEqual('ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）');
-    expect(v.title).toEqual('もーーー！（バグだらけじゃん自分で作っておきながらー！） (最大人数 : 6人)');
+    expect(v.title).toEqual('もーーー！（バグだらけじゃん自分で作っておきながらー！）');
     expect(v.max_number).toEqual(DiscordAnalyzer.MAX_NUMBERS_DEFAULT);
 })
 
 test("Test for constructor", () => {
     var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', '868275869540569110');
     expect(v.channel_id).toEqual('CHR');
+    expect(v.valid).toEqual(true);
     expect(v.message).toEqual('ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
     expect(v.title).toEqual('21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
     expect(v.max_number).toEqual(3);
@@ -44,18 +46,18 @@ test("Test for constructor", () => {
 test("Test for constructor", () => {
     var v = new DiscordAnalyzer('<@!868275869540569110> 123 参加', 'CHR', '868275869540569110');
     expect(v.channel_id).toEqual('CHR');
+    expect(v.valid).toEqual(true);
     expect(v.type).toEqual(DiscordAnalyzer.TYPE_JOIN);
     expect(v.id).toEqual("123");
 })
 
-test("Test for get times", () => {
+test("Test for get numbers", () => {
     expect(DiscordAnalyzer.GetRecruitmentNumbers("募集します @3")).toEqual(3);
     expect(DiscordAnalyzer.GetRecruitmentNumbers("募集します @99")).toEqual(99);
 
     expect(DiscordAnalyzer.GetRecruitmentNumbers("募集します @a")).toEqual(undefined);
 });
 
-/**
 test("Test for Join", () => {
     expect(DiscordAnalyzer.CheckDecline("12345行けない")).toBe(true);
     expect(DiscordAnalyzer.CheckDecline("12345 いけない")).toBe(true);
@@ -66,7 +68,6 @@ test("Test for Join", () => {
     expect(DiscordAnalyzer.CheckDecline("参加")).toBe(false);
     expect(DiscordAnalyzer.CheckDecline("参加")).toBe(false);
 });
-
 
 test("Get for Join", () => {
     expect(DiscordAnalyzer.GetDeclineId("12345行けない")).toBe("12345");
@@ -79,31 +80,8 @@ test("Get for Join", () => {
     expect(DiscordAnalyzer.GetDeclineId("参加")).toBe(undefined);
 });
 
-
 test("Test for List", () => {
     expect(DiscordAnalyzer.CheckTypeList("リストください")).toEqual(true);
     expect(DiscordAnalyzer.CheckTypeList("一覧ください")).toEqual(true);
     expect(DiscordAnalyzer.CheckTypeList("募集　やります")).toEqual(false);
 });
-
-test("Test for ListMes", () => {
-    var res = DiscordAnalyzer.GetEmbedList([
-        {
-            "id": 1,
-            "title": "あああ",
-            "user_name": "いいい"
-        },
-        {
-            "id": 1,
-            "title": "あああ",
-            "user_name": "ううう"
-        },
-        {
-            "id": 2,
-            "title": "かかか",
-            "user_name": "ききき"
-        }
-    ]);
-    console.log(res);
-});
-*/

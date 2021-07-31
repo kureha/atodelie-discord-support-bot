@@ -32,13 +32,15 @@ module.exports = class DiscordAnalyzer {
                 this.message = mes;
             }
         } else {
+            logger.error(`message is not string. : mes = ${mes}, channel_id = ${channel_id}`);
             return;
         }
 
         if (typeof (channel_id) == "string") {
             this.channel_id = channel_id;
         } else {
-            this.channel_id = DiscordAnalyzer.ERROR_CHANNEL_ID;
+            logger.error(`can't analyze channel id. : mes = ${mes}, channel_id = ${channel_id}`);
+            return;
         }
 
         // 募集の有効無効を示す
@@ -46,6 +48,8 @@ module.exports = class DiscordAnalyzer {
         this.id = 0;
         this.error_messages = [];
         this.type = DiscordAnalyzer.TYPE_INIT;
+
+        // エラーメッセージ格納用配列（一時的）
         let error_messages_list = [];
         // 現在時刻
         let default_date = new Date();
@@ -53,45 +57,54 @@ module.exports = class DiscordAnalyzer {
 
         // 募集検知
         if (DiscordAnalyzer.CheckRecruitment(this.message) == true) {
+            logger.info(`target message is new recruitment. : mes = ${mes}`);
             this.type = DiscordAnalyzer.TYPE_RECRUITEMENT;
             this.title = DiscordAnalyzer.GetRecruitmentText(this.message);
+            logger.debug(`recruitment's title : ${this.title}`);
 
             // 以下は可能なら切り出す…　時間指定と人数指定
             this.time = DiscordAnalyzer.GetRecruitmentTime(this.message);
             if (this.time === undefined) {
                 // 取得できない場合はデフォルト適用
-                logger.info(`時刻文字列が存在しないため、デフォルトを適用する : ${default_date}`);
+                logger.debug(`target time is not found on message, apply default time. : ${default_date}`);
                 this.time = default_date;
             }
-            logger.debug(`時刻解析結果 : ${this.time}`);
+            logger.debug(`recruitment's target time : ${this.time}`);
 
             this.max_number = DiscordAnalyzer.GetRecruitmentNumbers(this.message);
             if (this.max_number === undefined) {
+                // 取得できない場合はデフォルト適用
+                logger.debug(`max members number is not found on message, apply default number. : ${DiscordAnalyzer.MAX_NUMBERS_DEFAULT}`);
                 this.max_number = DiscordAnalyzer.MAX_NUMBERS_DEFAULT;
-                // この場合のみ最大人数を自動付与
-                this.title = this.title + ` (最大人数 : ${this.max_number}人)`;
             }
+            logger.debug(`recruitment's target number : ${this.max_number}`);
         }
         else if (DiscordAnalyzer.CheckJoin(this.message) == true) {
+            // 参加
+            logger.info(`target message is join. : mes = ${mes}`);
             this.type = DiscordAnalyzer.TYPE_JOIN;
             this.id = DiscordAnalyzer.GetJoinId(this.message);
         }
         else if (DiscordAnalyzer.CheckDecline(this.message) == true) {
+            // 辞退
+            logger.info(`target message is decline. : mes = ${mes}`);
             this.type = DiscordAnalyzer.TYPE_DECLINE;
             this.id = DiscordAnalyzer.GetDeclineId(this.message);
         }
         else if (DiscordAnalyzer.CheckTypeList(this.message) == true) {
+            // 一覧表示
+            logger.info(`target message is listing. : mes = ${mes}`);
             this.type = DiscordAnalyzer.TYPE_LIST;
         }
         else {
+            // どのメッセージでもない
+            logger.info(`target message is not valid. : mes = ${mes}`);
             this.valid = false;
             error_messages_list.push(constants.DISCORD_MESSAGE_IS_INVALID);
         }
 
-        // 有効な場合はインスタンスを返す
-        if (this.valid === true) {
-
-        } else {
+        // エラーメッセージを必要日応じて格納する
+        if (this.valid === false) {
             this.error_messages = error_messages_list;
         }
     }
@@ -171,11 +184,13 @@ module.exports = class DiscordAnalyzer {
     static GetRecruitmentDate(hour, minute) {
         if (hour < 0 || hour > 23) {
             // error
+            logger.error(`hour is out of range, return undefined. : hour = ${hour}, minute = ${minute}`);
             return undefined;
         }
 
         if (minute < 0 || minute > 59) {
             // error
+            logger.error(`minute is out of range, return undefined. : hour = ${hour}, minute = ${minute}`);
             return undefined;
         }
 
@@ -188,8 +203,9 @@ module.exports = class DiscordAnalyzer {
         // compare time to now
         var now_date = new Date();
 
-        // if target is past time, add date
+        // 既にその時間は通過したので、次の日を対象とする
         if (target_date < now_date) {
+            logger.debug(`target date is past, add 1 date.`);
             target_date.setDate(target_date.getDate() + 1);
         }
 
@@ -305,36 +321,5 @@ module.exports = class DiscordAnalyzer {
         } else {
             return true;
         }
-    }
-
-    /**
-     * 募集文を返却します
-     * @param {string} title 
-     * @param {int} id 
-     * @param {Array(string)} user_id_list 
-     */
-    static GetEmbedMessage(title, id, user_id_list) {
-        let result = "";
-
-        result = `募集名 : ${title}\n識別ID : ${id}\n参加者 : `;
-        user_id_list.forEach(element => {
-            result = result + `<@!${element}> `;
-        });
-
-        return result;
-    }
-
-    /**
-     * 一覧を返却します
-     * @param {Array(hash)} data 
-     */
-    static GetEmbedList(data) {
-        let result = `募集一覧 : \n`;
-
-        data.forEach(element => {
-            result = result + `ID : ${element.id}、募集名 : ${element.title}、参加者：${element.user_name}\n`;
-        });
-
-        return result;
     }
 }
