@@ -1,3 +1,10 @@
+// create logger
+const logger = require('./../common/logger');
+
+// import constants
+const Constants = require('./../common/constants');
+const constants = new Constants();
+
 module.exports = class DiscordAnalyzer {
 
     static TYPE_INIT = 0;
@@ -11,9 +18,10 @@ module.exports = class DiscordAnalyzer {
     static ERROR_CHANNEL_ID = "ERR_CHR";
 
     /**
-     * 
-     * @param {string} mes 
-     * @param {string} user_id
+     * メッセージを解析し、解析結果を返却する
+     * @param {string} mes メッセージ本体
+     * @param {string} user_id DiscordユーザID
+     * @returns 解析結果オブジェクト
      */
     constructor(mes, channel_id, user_id) {
         if (typeof (mes) == "string") {
@@ -70,7 +78,7 @@ module.exports = class DiscordAnalyzer {
         }
         else {
             this.isValid = false;
-            tmpErrorMsg.push("募集や参加以外で話しかけられても困る…");
+            tmpErrorMsg.push(constants.DISCORD_MESSAGE_IS_INVALID);
         }
 
         // 有効な場合はインスタンスを返す
