@@ -117,7 +117,7 @@ module.exports = class DiscordAnalyzer {
     }
 
     /**
-     * 時刻を認識し、hh24:mi形式で返却します
+     * 時刻を認識し、日時オブジェクトを返却します
      * @param {string} mes 
      * @returns 
      */
@@ -176,6 +176,7 @@ module.exports = class DiscordAnalyzer {
         var targetDate = new Date();
         targetDate.setHours(hour);
         targetDate.setMinutes(minute);
+        targetDate.setSeconds(0);
 
         // compare time to now
         var nowDate = new Date();
