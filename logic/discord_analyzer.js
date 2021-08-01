@@ -108,7 +108,7 @@ module.exports = class DiscordAnalyzer {
             this.user_id = message_user_id;
             this.status = constants.STATUS_ENABLED;
             this.description = this.message;
-            this.delete = false;
+            this.delete = true;
         }
         else if (DiscordAnalyzer.CheckTypeList(this.message) == true) {
             // 一覧表示

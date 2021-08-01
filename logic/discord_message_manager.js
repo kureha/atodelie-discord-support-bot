@@ -3,6 +3,7 @@ const logger = require('../common/logger');
 
 // import constants
 const Constants = require('../common/constants');
+const DiscordAnalyzer = require('./discord_analyzer');
 const constants = new Constants();
 
 module.exports = class DiscordMessageManager {
@@ -75,6 +76,18 @@ module.exports = class DiscordMessageManager {
         analyzer.user_list.forEach((v) => {
             result = `${result}<@!${v}> `;
         });
+
+        return result;
+    }
+
+    /**
+     * 参加取りやめのメッセージを返します
+     * @param {DiscordAnalyzer} analyzer 
+     * @returns 
+     */
+    get_decline_recruitment(analyzer) {
+        let result = constants.DISCORD_MESSAGE_SUCCESS_DECLINE;
+        result = this.enable_lf(result);
 
         return result;
     }

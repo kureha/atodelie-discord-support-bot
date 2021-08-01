@@ -400,7 +400,7 @@ module.exports = class Recruitment {
                     $user_id: data.user_id,
                     $status: data.status,
                     $description: data.description,
-                    $delete: data.delete
+                    $delete: data.delete,
                 }, (err) => {
                     if (err) {
                         logger.error(err);
@@ -457,7 +457,7 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and m1.[limit_time] >= datetime(\'now\', \'localtime\') order by t1.[update_time] `;
+                const sql = `${Recruitment.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and m1.[limit_time] >= datetime(\'now\', \'localtime\') order by t1.[update_time] `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 db.all(sql, [token], ((err, rows) => {
                     if (err) {

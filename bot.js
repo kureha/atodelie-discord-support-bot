@@ -33,6 +33,7 @@ client.on('message', message => {
     const analyzer = new DiscordAnalyzer(message.content, message.channel.id, message.author.id, client.user.id);
     logger.trace(analyzer);
     const recruitment = new Recruitment();
+    let recruitment_data = undefined;
 
     switch (analyzer.type) {
       case constants.TYPE_RECRUITEMENT:
@@ -84,7 +85,7 @@ client.on('message', message => {
           });
         break;
       case constants.TYPE_JOIN:
-        let recruitment_data = undefined;
+        recruitment_data = undefined;
         // join to target plan
         recruitment.insert_t_participate(analyzer)
           .catch((err) => {
@@ -123,6 +124,38 @@ client.on('message', message => {
           });
         break;
       case constants.TYPE_DECLINE:
+        recruitment_data = undefined;
+        recruitment.update_t_participate(analyzer)
+          .then(() => {
+            // success to delete, get master data
+            return recruitment.get_m_recruitment(analyzer.token);
+          })
+          .then((data) => {
+            recruitment_data = data;
+            // get user list
+            return recruitment.get_t_participate(recruitment_data.token);
+          })
+          .then((user_list) => {
+            // get user information
+            recruitment_data.user_list = [];
+            user_list.forEach((v) => {
+              recruitment_data.user_list.push(v.user_id);
+            });
+
+            // send message
+            message.channel.send(messageManager.get_decline_recruitment(recruitment_data));
+            message.channel.send(
+              {
+                embed: {
+                  description: messageManager.get_join_recruitment_embed_message(recruitment_data),
+                }
+              });
+          })
+          .catch((err) => {
+            // send error message
+            message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+            logger.error(err);
+          });
         break;
       default:
         // send error message
