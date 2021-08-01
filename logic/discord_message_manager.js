@@ -32,7 +32,9 @@ module.exports = class DiscordMessageManager {
      */
     get_new_recruitment_message(analyzer) {
         let result = constants.DISCORD_MESSAGE_NEW_RECRUITMENT;
-        result = this.enable_lf(result.replace('%%TOKEN%%', analyzer.token));
+        result = this.enable_lf(result
+            .replace('%%DISCORD_REPLY_ROLE%%', constants.DISCORD_REPLY_ROLE)
+            .replace('%%TOKEN%%', analyzer.token));
 
         return result;
     }
