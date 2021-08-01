@@ -328,7 +328,7 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT} WHERE M1.[token] = ? and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') `;
+                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT} WHERE m1.[token] = ? and m1.[delete] = false and m1.[limit_time] >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 db.get(sql, [token], ((err, row) => {
                     if (err) {
