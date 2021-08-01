@@ -39,7 +39,7 @@ module.exports = class Recruitment {
     /**
      * マスタテーブルから一致するトークンが有効募集で使われてるかを確認するSQL
      */
-     static SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT = 'SELECT COUNT(*) AS [count] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') ';
+    static SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT = 'SELECT COUNT(*) AS [count] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') ';
 
     /**
      * 募集テーブル作成用SQL
@@ -269,7 +269,8 @@ module.exports = class Recruitment {
     }
 
     /**
-     * 募集マスタ用のTOKENを生成します
+     * 募集マスタ用のTOKENを生成します。
+     * 生成値がかぶっていた場合にRejectするため、呼び出し時にRetry処理が必要です
      */
     get_m_recruitment_token() {
         // Promise処理
@@ -277,21 +278,41 @@ module.exports = class Recruitment {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
+                // get sample token
+                let token = Recruitment.create_digits_token();
+                logger.debug(`token : ${token}`);
+
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT_MAX_ID}`;
+                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT} `;
                 logger.info(`sql = ${sql}`);
-                db.get(sql, [], ((err, row) => {
+                db.get(sql, {
+                    $token: token
+                }, ((err, row) => {
                     if (err) {
-                        logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_M_RECRUITMENT}`);
+                        logger.error(`sql exception occured when select token count. sql = ${Recruitment.SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT}`);
                         reject(err);
                     }
-                    logger.info(`selected max m_reqruitement id successed. : result = ${row.id}`);
-                    resolve(row.id);
+
+                    if (row.count === 0) {
+                        logger.info(`generate unique token id successed. : result = ${token}`);
+                        resolve(token);
+                    } else {
+                        logger.info(`generated token is not unique, rejected.`);
+                        reject(`generated token is not unique, rejected.`);
+                    }
                 }));
             });
 
             db.close();
         });
+    }
+
+    /**
+     * 3桁のDigitを取得します
+     * @returns 3桁のDigits
+     */
+    static create_digits_token() {
+        return ('000' + String(Math.floor(Math.random() * 9999) + 1)).slice(-3);
     }
 
     /**

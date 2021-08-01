@@ -15,13 +15,16 @@ test("test for m_recruitment c/r/u/d", () => {
         // get id test
         recruitment.get_m_recruitment_id()
             .then((id) => {
-                // insert test
+                // get id
                 test_id = id;
-                test_token = `test_token_${id}`;
+                return recruitment.get_m_recruitment_token();
+            }).then((token) => {
+                // get token
+                test_token = token;
                 console.log(`test_id = ${test_id}, test_token = ${test_token}`);
 
                 return recruitment.insert_m_recruitment({
-                    id: id,
+                    id: test_id,
                     channel_id: "testingid",
                     token: test_token,
                     status: 2,
