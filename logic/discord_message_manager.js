@@ -17,6 +17,15 @@ module.exports = class DiscordMessageManager {
     }
 
     /**
+     * 日付のISO表現を読みやすい形に変形し返却します
+     * @param {string} iso_date_str 
+     */
+    get_date_string(iso_date_str) {
+        let parsed_date = new Date(iso_date_str);
+        return `${parsed_date.toLocaleString()}`
+    }
+
+    /**
      * 新規募集時のメッセージを返却します
      * @param {DiscordAnalyzer} analyzer 
      * @returns 募集文字列
@@ -35,7 +44,7 @@ module.exports = class DiscordMessageManager {
      */
     get_new_recruitment_embed_message(analyzer) {
         let result = '';
-        result = `${result}\n\n募集名 : ${analyzer.name}\n主催者 : <@!${analyzer.owner_id}>\n募集期限 : ${analyzer.limit_time}`;
+        result = `${result}\n\n募集名 : ${analyzer.name}\n主催者 : <@!${analyzer.owner_id}>\n募集期限 : ${this.get_date_string(analyzer.limit_time)}`;
 
         return result;
     }
@@ -59,7 +68,7 @@ module.exports = class DiscordMessageManager {
      */
     get_join_recruitment_embed_message(analyzer) {
         let result = '';
-        result = `${result}\n\n募集名 : ${analyzer.name}\n主催者 : <@!${analyzer.owner_id}>\n募集期限 : ${analyzer.limit_time}\n参加者 : `;
+        result = `${result}\n\n募集名 : ${analyzer.name}\n主催者 : <@!${analyzer.owner_id}>\n募集期限 : ${this.get_date_string(analyzer.limit_time)}\n参加者 : `;
 
         analyzer.user_list.forEach((v) => {
             result = `${result}<@!${v}> `;
