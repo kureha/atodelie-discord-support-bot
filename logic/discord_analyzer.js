@@ -55,10 +55,10 @@ module.exports = class DiscordAnalyzer {
         default_date.setHours(default_date.getHours() + DiscordAnalyzer.HOURS_DEFAULT);
 
         // 募集検知
-        if (DiscordAnalyzer.CheckRecruitment(this.message) == true) {
+        if (DiscordAnalyzer.check_recruitment(this.message) == true) {
             logger.info(`target message is new recruitment. : mes = ${this.message}`);
             this.type = constants.TYPE_RECRUITEMENT;
-            this.name = DiscordAnalyzer.GetRecruitmentText(this.message);
+            this.name = DiscordAnalyzer.get_recruitment_text(this.message);
             this.owner_id = message_user_id;
             logger.debug(`recruitment's name, owner_id : name = ${this.name}, owner_id = ${message_user_id}`);
 
@@ -66,7 +66,7 @@ module.exports = class DiscordAnalyzer {
             this.token = '';
 
             // 以下は可能なら切り出す…　時間指定と人数指定
-            this.limit_time = DiscordAnalyzer.GetRecruitmentTime(this.message);
+            this.limit_time = DiscordAnalyzer.get_recruitment_time(this.message);
             if (this.limit_time === undefined) {
                 // 取得できない場合はデフォルト適用
                 logger.debug(`target time is not found on message, apply default time. : ${default_date}`);
@@ -74,7 +74,7 @@ module.exports = class DiscordAnalyzer {
             }
             logger.debug(`recruitment's target time : ${this.limit_time}`);
 
-            this.max_number = DiscordAnalyzer.GetRecruitmentNumbers(this.message);
+            this.max_number = DiscordAnalyzer.get_recruitment_numbers(this.message);
             if (this.max_number === undefined) {
                 // 取得できない場合はデフォルト適用
                 logger.debug(`max members number is not found on message, apply default number. : ${DiscordAnalyzer.MAX_NUMBERS_DEFAULT}`);
@@ -90,27 +90,27 @@ module.exports = class DiscordAnalyzer {
             this.description = "";
             this.delete = false;
         }
-        else if (DiscordAnalyzer.CheckJoin(this.message) == true) {
+        else if (DiscordAnalyzer.check_join(this.message) == true) {
             // 参加
             logger.info(`target message is join. : mes = ${this.message}`);
             this.type = constants.TYPE_JOIN;
-            this.token = DiscordAnalyzer.GetJoinToken(this.message);
+            this.token = DiscordAnalyzer.get_join_token(this.message);
             this.user_id = message_user_id;
             this.status = constants.STATUS_ENABLED;
             this.description = this.message;
             this.delete = false;
         }
-        else if (DiscordAnalyzer.CheckDecline(this.message) == true) {
+        else if (DiscordAnalyzer.check_decline(this.message) == true) {
             // 辞退
             logger.info(`target message is decline. : mes = ${this.message}`);
             this.type = constants.TYPE_DECLINE;
-            this.token = DiscordAnalyzer.GetDeclineToken(this.message);
+            this.token = DiscordAnalyzer.get_decline_token(this.message);
             this.user_id = message_user_id;
             this.status = constants.STATUS_ENABLED;
             this.description = this.message;
             this.delete = true;
         }
-        else if (DiscordAnalyzer.CheckTypeList(this.message) == true) {
+        else if (DiscordAnalyzer.check_type_list(this.message) == true) {
             // 一覧表示
             logger.info(`target message is listing. : mes = ${this.message}`);
             this.type = constants.TYPE_LIST;
@@ -133,7 +133,7 @@ module.exports = class DiscordAnalyzer {
      * @param {string} mes 
      * @param {string} regexp 
      */
-    static ExtractByRegexp(mes, regexp) {
+    static extract_by_regexp(mes, regexp) {
         var result = undefined;
 
         if (typeof (mes) == "string") {
@@ -160,7 +160,7 @@ module.exports = class DiscordAnalyzer {
      * @param {string} mes 
      * @returns 
      */
-    static GetRecruitmentTime(mes) {
+    static get_recruitment_time(mes) {
         // needed variables
         var hour = undefined;
         var minute = undefined;
@@ -190,7 +190,7 @@ module.exports = class DiscordAnalyzer {
         if (hour === undefined || minute === undefined) {
             return undefined;
         } else {
-            return DiscordAnalyzer.GetRecruitmentDate(hour, minute).toISOString();
+            return DiscordAnalyzer.get_recruitment_date(hour, minute).toISOString();
         }
     }
 
@@ -200,7 +200,7 @@ module.exports = class DiscordAnalyzer {
      * @param {int} hour 
      * @param {int} minute 
      */
-    static GetRecruitmentDate(hour, minute) {
+    static get_recruitment_date(hour, minute) {
         if (hour < 0 || hour > 23) {
             // error
             logger.error(`hour is out of range, return undefined. : hour = ${hour}, minute = ${minute}`);
@@ -237,7 +237,7 @@ module.exports = class DiscordAnalyzer {
      * @param {string}} mes 
      * @returns 
      */
-    static GetRecruitmentNumbers(mes) {
+    static get_recruitment_numbers(mes) {
         // check1
         var re_result = mes.match(/@([0-9]{1,2})/);
         if (re_result != undefined && re_result != null && re_result.length > 1) {
@@ -253,8 +253,8 @@ module.exports = class DiscordAnalyzer {
      * @param {string} mes 
      * @returns 
      */
-    static CheckRecruitment(mes) {
-        if (this.ExtractByRegexp(mes, '^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]') === undefined) {
+    static check_recruitment(mes) {
+        if (this.extract_by_regexp(mes, '^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]') === undefined) {
             return false;
         } else {
             return true;
@@ -266,7 +266,7 @@ module.exports = class DiscordAnalyzer {
      * @param {string}} mes 
      * @returns 
      */
-    static GetRecruitmentText(mes) {
+    static get_recruitment_text(mes) {
         return mes.replace(/^^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]/, "");
     }
 
@@ -275,8 +275,8 @@ module.exports = class DiscordAnalyzer {
      * @param {string} mes 
      * @returns 
      */
-    static CheckJoin(mes) {
-        if (this.ExtractByRegexp(mes, '^[ 　]*\\d{1,}[ 　]*参加') === undefined) {
+    static check_join(mes) {
+        if (this.extract_by_regexp(mes, '^[ 　]*\\d{1,}[ 　]*参加') === undefined) {
             return false;
         } else {
             return true;
@@ -287,7 +287,7 @@ module.exports = class DiscordAnalyzer {
      * 対象の参加トークンを取得します
      * @param {string} mes 
      */
-    static GetJoinToken(mes) {
+    static get_join_token(mes) {
         let result = undefined;
         let re_result = mes.match(/^[ 　]*(\d{1,})[ 　]*参加/);
 
@@ -305,8 +305,8 @@ module.exports = class DiscordAnalyzer {
      * @param {string} mes 
      * @returns 
      */
-    static CheckDecline(mes) {
-        if (this.ExtractByRegexp(mes, '^[ 　]*\\d{1,}[ 　]*(行|い)けない') === undefined) {
+    static check_decline(mes) {
+        if (this.extract_by_regexp(mes, '^[ 　]*\\d{1,}[ 　]*(行|い)けない') === undefined) {
             return false;
         } else {
             return true;
@@ -317,7 +317,7 @@ module.exports = class DiscordAnalyzer {
      * 対象の辞退IDを取得します
      * @param {string} mes 
      */
-    static GetDeclineToken(mes) {
+    static get_decline_token(mes) {
         let result = undefined;
         let re_result = mes.match(/^[ 　]*(\d{1,})[ 　]*(行|い)けない/);
 
@@ -334,8 +334,8 @@ module.exports = class DiscordAnalyzer {
      * メッセージがリストであるかを確認します
      * @param {string} mes 
      */
-    static CheckTypeList(mes) {
-        if (this.ExtractByRegexp(mes, '^[ 　]*(リスト|一覧)') === undefined) {
+    static check_type_list(mes) {
+        if (this.extract_by_regexp(mes, '^[ 　]*(リスト|一覧)') === undefined) {
             return false;
         } else {
             return true;

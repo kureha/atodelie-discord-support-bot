@@ -1,7 +1,7 @@
 const DiscordAnalyzer = require('../logic/discord_analyzer');
 
 test('test for times analyze', () => {
-    let result = DiscordAnalyzer.GetRecruitmentDate(0, 0);
+    let result = DiscordAnalyzer.get_recruitment_date(0, 0);
     expect(result).not.toBe(undefined);
 
     expect(result.getHours()).toEqual(0);
@@ -23,7 +23,7 @@ test('test for times analyze', () => {
 });
 
 test('test for times analyze', () => {
-    let result = DiscordAnalyzer.GetRecruitmentDate(23, 59);
+    let result = DiscordAnalyzer.get_recruitment_date(23, 59);
     expect(result).not.toBe(undefined);
 
     expect(result.getHours()).toEqual(23);
