@@ -30,5 +30,9 @@ module.exports = class Constants {
 
         this.STATUS_DISABLED = 0;
         this.STATUS_ENABLED = 1;
+
+        this.RECRUITMENT_DEFAULT_LIMIT_HOURS = 8;
+        this.RECRUITMENT_DEFAULT_MAX_NUMBERS = 6;
+        this.RECRUITMENT_DEFAULT_INVALID_CHANNEL = 'ERROR';
     }
 };

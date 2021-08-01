@@ -59,7 +59,9 @@ module.exports = class DiscordMessageManager {
      */
     get_join_recruitment(analyzer) {
         let result = constants.DISCORD_MESSAGE_SUCCESS_JOIN;
-        result = this.enable_lf(result);
+        result = this.enable_lf(result)
+            .replace('%%DISCORD_REPLY_ROLE%%', constants.DISCORD_REPLY_ROLE)
+            .replace('%%TOKEN%%', analyzer.token);
 
         return result;
     }
@@ -87,7 +89,9 @@ module.exports = class DiscordMessageManager {
      */
     get_decline_recruitment(analyzer) {
         let result = constants.DISCORD_MESSAGE_SUCCESS_DECLINE;
-        result = this.enable_lf(result);
+        result = this.enable_lf(result)
+            .replace('%%DISCORD_REPLY_ROLE%%', constants.DISCORD_REPLY_ROLE)
+            .replace('%%TOKEN%%', analyzer.token);
 
         return result;
     }
