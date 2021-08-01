@@ -279,7 +279,7 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // get sample token
-                let token = Recruitment.create_digits_token();
+                let token = Recruitment.create_digits_token(constants.DISCORD_TOKEN_LENGTH);
                 logger.debug(`token : ${token}`);
 
                 // run serialize
@@ -308,11 +308,12 @@ module.exports = class Recruitment {
     }
 
     /**
-     * 3桁のDigitを取得します
+     * 指定桁数のDigitを取得します]
+     * @param length 桁数
      * @returns 3桁のDigits
      */
-    static create_digits_token() {
-        return ('000' + String(Math.floor(Math.random() * 9999) + 1)).slice(-3);
+    static create_digits_token(length) {
+        return ('0'.repeat(length) + String(Math.floor(Math.random() * '9'.repeat(length)) + 1)).slice(-1 * length);
     }
 
     /**

@@ -6,6 +6,7 @@ module.exports = class Constants {
         // common section
         this.DISCORD_COMMON = process.env.DISCORD_COMMON;
         this.DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+        this.DISCORD_TOKEN_LENGTH = process.env.DISCORD_TOKEN_LENGTH;
 
         // sqlite section
         this.SQLITE_FILE = process.env.SQLITE_FILE;

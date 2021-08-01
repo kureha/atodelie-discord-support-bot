@@ -34,9 +34,20 @@ client.on('message', message => {
 
     switch (analyzer.type) {
       case constants.TYPE_RECRUITEMENT:
-        // get next id first
-        recruitment.get_m_recruitment_id()
-          .then((id) => { 
+        // get token function for retry
+        const token_function = recruitment.get_m_recruitment_token();
+        // get token first with retry
+        token_function
+          // retry max 3 times
+          .catch(token_function)
+          .catch(token_function)
+          .catch(token_function)
+          .then((token) => {
+            analyzer.token = token;
+            // get registration id
+            return recruitment.get_m_recruitment_id();
+          })
+          .then((id) => {
             // set id and master registration
             analyzer.id = id;
             return recruitment.insert_m_recruitment(analyzer);
@@ -47,7 +58,10 @@ client.on('message', message => {
           })
           .then(() => {
             // compete all tasks
+            logger.trace(analyzer);
             logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}`);
+
+            // TODO send message
           })
           .catch((err) => {
             logger.error(err);
@@ -56,16 +70,19 @@ client.on('message', message => {
       case constants.TYPE_JOIN:
         // join to target plan
         recruitment.insert_t_participate(analyzer)
-        .then(() => {
-          // OK
-        })
-        .catch((err) => {
-          // failed to insert, try to update
-          return recruitment.update_t_participate(analyzer);
-        })
-        .catch((err) => {
-          logger.error(err);
-        });
+          .then(() => {
+            // insert OK, TODO send message
+          })
+          .catch((err) => {
+            // failed to insert, try to update
+            return recruitment.update_t_participate(analyzer);
+          })
+          .then(() => {
+            // update OK, send message
+          })
+          .catch((err) => {
+            logger.error(err);
+          });
         break;
       case constants.TYPE_DECLINE:
         break;
