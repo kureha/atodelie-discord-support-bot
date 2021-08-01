@@ -13,6 +13,9 @@ const constants = new Constants();
 const DiscordAnalyzer = require('./logic/discord_analyzer');
 const Recruitment = require('./db/recruitement');
 
+const MessageManager = require('./logic/discord_message_manager');
+const messageManager = new MessageManager();
+
 client.on('ready', () => {
   client.user.setPresence(
     { activity: { name: constants.DISCORD_ACTIVITY_NAME }, status: 'online' }
@@ -46,6 +49,11 @@ client.on('message', message => {
             // get registration id
             return recruitment.get_m_recruitment_id();
           })
+          .catch((err) => {
+            logger.error(`generate token limit exceeded. : error = ${err}`);
+            // send error limit exceeded message
+            message.channel.send(`${constants.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED} (Error : ${err})`);
+          })
           .then((id) => {
             // set id and master registration
             analyzer.id = id;
@@ -60,9 +68,18 @@ client.on('message', message => {
             logger.trace(analyzer);
             logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}`);
 
-            // TODO send message
+            // send success message
+            message.channel.send(messageManager.get_new_recruitment_message(analyzer));
+            message.channel.send(
+              {
+                embed: {
+                  description: messageManager.get_new_recruitment_embed_message(analyzer),
+                }
+              });
           })
           .catch((err) => {
+            // send error message
+            message.channel.send(`${constants.DISCORD_MESSAGE_TYPE_INVALID} (Error : ${err})`);
             logger.error(err);
           });
         break;
@@ -84,6 +101,10 @@ client.on('message', message => {
           });
         break;
       case constants.TYPE_DECLINE:
+        break;
+      default:
+        // send error message
+        message.channel.send(`${constants.DISCORD_MESSAGE_TYPE_INVALID} (Error : ${analyzer.error_messages.join(',')})`);
         break;
     }
 
