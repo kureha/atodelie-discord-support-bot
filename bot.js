@@ -79,24 +79,46 @@ client.on('message', message => {
           })
           .catch((err) => {
             // send error message
-            message.channel.send(`${constants.DISCORD_MESSAGE_TYPE_INVALID} (Error : ${err})`);
+            message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
             logger.error(err);
           });
         break;
       case constants.TYPE_JOIN:
+        let recruitment_data = undefined;
         // join to target plan
         recruitment.insert_t_participate(analyzer)
-          .then(() => {
-            // insert OK, TODO send message
-          })
           .catch((err) => {
             // failed to insert, try to update
             return recruitment.update_t_participate(analyzer);
           })
           .then(() => {
             // update OK, send message
+            return recruitment.get_m_recruitment(analyzer.token);
+          })
+          .then((data) => {
+            recruitment_data = data;
+            // get user list
+            return recruitment.get_t_participate(recruitment_data.token);
+          })
+          .then((user_list) => {
+            // get user information
+            recruitment_data.user_list = [];
+            user_list.forEach((v) => {
+              recruitment_data.user_list.push(v.user_id);
+            });
+
+            // send message
+            message.channel.send(messageManager.get_join_recruitment(recruitment_data));
+            message.channel.send(
+              {
+                embed: {
+                  description: messageManager.get_join_recruitment_embed_message(recruitment_data),
+                }
+              });
           })
           .catch((err) => {
+            // send error message
+            message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
             logger.error(err);
           });
         break;

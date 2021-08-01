@@ -45,6 +45,9 @@ module.exports = class DiscordAnalyzer {
         this.error_messages = [];
         this.type = constants.TYPE_INIT;
 
+        // 参加者一覧を示す変数
+        this.user_list = [];
+
         // エラーメッセージ格納用配列（一時的）
         let error_messages_list = [];
         // 現在時刻
@@ -83,6 +86,7 @@ module.exports = class DiscordAnalyzer {
             this.status = constants.STATUS_ENABLED;
             // copy user id for participate registration.
             this.user_id = message_user_id;
+            this.user_list.push(this.user_id);
             this.description = "";
             this.delete = false;
         }

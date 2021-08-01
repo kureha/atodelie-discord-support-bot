@@ -13,7 +13,9 @@ test("Test for constants", () => {
     expect(v.DISCORD_ACTIVITY_NAME).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_IS_INVALID).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_EXCEPTION).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_NEW_RECRUITMENT).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_SUCCESS_JOIN).not.toBe(undefined);
 })
 
