@@ -26,7 +26,6 @@ client.on('message', message => {
     logger.info(`recieved message : ${message.content}`);
     logger.trace(message);
 
-    // TODO
     // メッセージを解析する
     const analyzer = new DiscordAnalyzer(message.content, message.channel.id, message.author.id, client.user.id);
     logger.trace(analyzer);

@@ -308,9 +308,9 @@ module.exports = class Recruitment {
     }
 
     /**
-     * 指定桁数のDigitを取得します]
+     * 指定桁数のDigitを取得します
      * @param length 桁数
-     * @returns 3桁のDigits
+     * @returns 指定された桁数のDigits
      */
     static create_digits_token(length) {
         return ('0'.repeat(length) + String(Math.floor(Math.random() * '9'.repeat(length)) + 1)).slice(-1 * length);
