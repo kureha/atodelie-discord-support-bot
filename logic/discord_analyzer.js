@@ -22,7 +22,7 @@ module.exports = class DiscordAnalyzer {
         if (typeof (mes) == "string") {
             if (typeof (user_id) == "string") {
                 // user.idは消去する
-                this.message = mes.replace('<@!' + user_id + '> ', "");
+                this.message = mes.replace(new RegExp('<@[!]*' + user_id + '> '), "");
             } else {
                 logger.warn(`can't remove user id. : mes = ${mes}, user_id = ${user_id}`);
                 this.message = mes;
