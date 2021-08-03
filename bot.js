@@ -98,6 +98,7 @@ client.on('messageCreate', message => {
           });
         break;
       case constants.TYPE_JOIN:
+        logger.warn(`join from message is deprecated.`);
         // join to target plan
         recruitment.insert_t_participate(analyzer)
           .catch((err) => {
@@ -136,6 +137,7 @@ client.on('messageCreate', message => {
           });
         break;
       case constants.TYPE_DECLINE:
+        logger.warn(`decline from message is deprecated.`);
         recruitment.update_t_participate(analyzer)
           .then(() => {
             // success to delete, get master data
