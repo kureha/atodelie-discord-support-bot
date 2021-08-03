@@ -4,7 +4,7 @@
   "description": "discord bot for support bot",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.0.0-dev.t1627949059.35fa3b3",
     "log4js": "^6.3.0",
     "sqlite3": "^5.0.2"
   },
