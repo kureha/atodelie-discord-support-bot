@@ -22,14 +22,14 @@ module.exports = class DiscordInteraction {
             this.delete = false;
 
             // get token from custom id
-            this.token = customId.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}(\\d+)$`))[1];
+            this.token = customId.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}(.+)$`))[1];
         } else if (customId.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}`))) {
             logger.debug(`interaction is valid.. type = ${constants.TYPE_DECLINE}`);
             this.type = constants.TYPE_DECLINE;
             this.delete = true;
 
             // get token from custom id
-            this.token = customId.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}(\\d+)$`))[1];
+            this.token = customId.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}(.+)$`))[1];
         } else {
             // error
             logger.warn(`this interaction dosen't match join recruitment. : customId = ${customId}`);

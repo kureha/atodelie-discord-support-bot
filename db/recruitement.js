@@ -10,64 +10,74 @@ const uuid = require('uuid');
 module.exports = class Recruitment {
 
     /**
-     * マスタテーブル作成用SQL
+     * 募集マスタテーブル作成用SQL
      */
     static SQL_CREATE_M_RECRUITMENT = 'CREATE TABLE IF NOT EXISTS [m_recruitment] ( [id] INTEGER NOT NULL UNIQUE, [channel_id] TEXT NOT NULL, [token] TEXT NOT NULL UNIQUE, [status] INTEGER NOT NULL, [limit_time] DATETIME NOT NULL, [name] TEXT NOT NULL, [owner_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id]) )';
 
     /**
-     * マスタテーブル選択用SQL
+     * 募集マスタテーブル選択用SQL
      */
     static SQL_SELECT_M_RECRUITMENT = 'SELECT m1.[id], m1.[channel_id], m1.[token], m1.[status], m1.[limit_time], m1.[name], m1.[owner_id], m1.[description], m1.[regist_time], m1.[update_time], m1.[delete] FROM [m_recruitment] m1 ';
 
     /**
-     * マスタテーブル挿入用SQL
+     * 募集マスタテーブル挿入用SQL
      */
     static SQL_INSERT_M_RECRUITMENT = 'INSERT INTO [m_recruitment] ([id], [channel_id], [token], [status], [limit_time], [name], [owner_id], [description], [regist_time], [update_time], [delete]) values ($id, $channel_id, $token, $status, $limit_time, $name, $owner_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false) ';
 
     /**
-     * マスタテーブル更新用SQL
+     * 募集マスタテーブル更新用SQL
      */
     static SQL_UPDATE_m_recruitment = 'UPDATE [m_recruitment] SET [channel_id] = $channel_id, [status] = $status, [limit_time] = $limit_time, [name] = $name, [owner_id] = $owner_id, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
 
     /**
-     * マスタテーブル削除用SQL
+     * 募集マスタテーブル削除用SQL
      */
     static SQL_DELETE_M_RECRUITMENT = 'DELETE FROM [m_recruitment] ';
 
     /**
-     * マスタテーブルから次のIDを取得するSQL
+     * 募集マスタテーブルから次のIDを取得するSQL
      */
     static SQL_SELECT_M_RECRUITMENT_MAX_ID = 'SELECT IFNULL(MAX(id) + 1, 1) AS id FROM [m_recruitment] ';
 
     /**
-     * マスタテーブルから一致するトークンが有効募集で使われてるかを確認するSQL
+     * 募集マスタテーブルから一致するトークンが有効募集で使われてるかを確認するSQL
      */
     static SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT = 'SELECT COUNT(*) AS [count] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') ';
 
     /**
-     * 募集テーブル作成用SQL
+     * 募集データテーブル作成用SQL
      */
     static SQL_CREATE_T_PARTICIPATE = 'CREATE TABLE IF NOT EXISTS [t_participate] ( [id] INTEGER NOT NULL, [status] INTEGER NOT NULL, [user_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id],[user_id]) )';
 
     /**
-     * 募集テーブル選択用SQL
+     * 募集データテーブル選択用SQL
      */
     static SQL_SELECT_T_PARTICIPATE = 'SELECT t1.[id], t1.[status], t1.[user_id], t1.[description], t1.[regist_time], t1.[update_time], t1.[delete] FROM [t_participate] t1 ';
 
     /**
-     * 募集テーブル挿入用SQL
+     * 募集データテーブル挿入用SQL
      */
     static SQL_INSERT_T_PARTICIPATE = 'INSERT INTO [t_participate] ([id], [status], [user_id], [description], [regist_time], [update_time], [delete]) SELECT [id], $status, $user_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false FROM [m_recruitment] WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') ';
 
     /**
-     * 募集テーブル更新用SQL
+     * 募集データテーブル更新用SQL
      */
     static SQL_UPDATE_T_PARTICIPATE = 'UPDATE [t_participate] SET [status] = $status, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
 
     /**
-     * 募集テーブル作成用SQL
+     * 募集データテーブル削除用SQL
      */
     static SQL_DELETE_T_PARTICIPATE = 'DELETE FROM [t_participate] ';
+
+    /**
+     * チャンネル情報マスタテーブル作成用SQL
+     */
+    static SQL_CREATE_M_CHANNEL_INFO = 'CREATE TABLE IF NOT EXISTS [m_channel_info] ( [channel_id] TEXT NOT NULL UNIQUE, [recruitment_target_role] TEXT NOT NULL, PRIMARY KEY([channel_id]) )';
+
+    /**
+     * チャンネル情報マスタテーブル選択用SQL
+     */
+    static SQL_SELECT_M_CHANNEL_INFO = 'SELECT m1.[channel_id] , m1.[recruitment_target_role] FROM [m_channel_info] m1 ';
 
     /**
      * SQLIET3のモジュール名称
@@ -132,9 +142,15 @@ module.exports = class Recruitment {
                         reject(err);
                     }
                 }));
+                db.run(Recruitment.SQL_CREATE_M_CHANNEL_INFO, [], ((err) => {
+                    if (err) {
+                        logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_T_PARTICIPATE}`);
+                        reject(err);
+                    }
 
-                // 全処理後に完了とする
-                resolve();
+                    // 全SQL処理後に完了とする
+                    resolve();
+                }));
             });
 
             db.close();
@@ -483,6 +499,40 @@ module.exports = class Recruitment {
                     logger.info(`selected t_participate successed. : key = ${token}`);
                     logger.trace(rows);
                     resolve(rows);
+                }));
+            });
+
+            db.close();
+        });
+    }
+
+    /**
+     * チャンネルマスタから情報を取得します
+     * @param {string} channel_id 
+     * @returns Promiseオブジェクト、データベースの選択内容
+     */
+    get_m_channel_info(channel_id) {
+        // Promise処理
+        return new Promise((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = `${Recruitment.SQL_SELECT_M_CHANNEL_INFO} WHERE m1.[channel_id] = ? `;
+                logger.info(`sql = ${sql}, channel_id = ${channel_id}`);
+                db.get(sql, [channel_id], ((err, row) => {
+                    if (err) {
+                        logger.error(`select m_channel_info failed. sql = ${sql}, key = ${channel_id}`);
+                        reject(err);
+                    }
+                    if (row === undefined) {
+                        logger.error(`data not found on m_channel_info. sql = ${sql}, key = ${channel_id}`);
+                        reject(`data not found on m_channel_info. sql = ${sql}, key = ${channel_id}`);
+                    }
+
+                    logger.info(`selected m_channel_info successed. : channel_id = ${channel_id}`);
+                    logger.trace(row);
+                    resolve(row);
                 }));
             });
 

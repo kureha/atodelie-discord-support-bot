@@ -31,10 +31,10 @@ module.exports = class DiscordMessageManager {
      * @param {DiscordAnalyzer} analyzer 
      * @returns 募集文字列
      */
-    get_new_recruitment_message(analyzer) {
+    get_new_recruitment_message(analyzer, recruitment_target_role) {
         let result = constants.DISCORD_MESSAGE_NEW_RECRUITMENT;
         result = this.enable_lf(result
-            .replace('%%DISCORD_REPLY_ROLE%%', constants.DISCORD_REPLY_ROLE)
+            .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
             .replace('%%TOKEN%%', analyzer.token));
 
         return result;
@@ -57,10 +57,10 @@ module.exports = class DiscordMessageManager {
      * @param {DiscordAnalyzer}} analyzer 
      * @returns 
      */
-    get_join_recruitment(analyzer) {
+    get_join_recruitment(analyzer, recruitment_target_role) {
         let result = constants.DISCORD_MESSAGE_SUCCESS_JOIN;
         result = this.enable_lf(result)
-            .replace('%%DISCORD_REPLY_ROLE%%', constants.DISCORD_REPLY_ROLE)
+            .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
             .replace('%%TOKEN%%', analyzer.token);
 
         return result;
@@ -87,10 +87,10 @@ module.exports = class DiscordMessageManager {
      * @param {DiscordAnalyzer} analyzer 
      * @returns 
      */
-    get_decline_recruitment(analyzer) {
+    get_decline_recruitment(analyzer, recruitment_target_role) {
         let result = constants.DISCORD_MESSAGE_SUCCESS_DECLINE;
         result = this.enable_lf(result)
-            .replace('%%DISCORD_REPLY_ROLE%%', constants.DISCORD_REPLY_ROLE)
+            .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
             .replace('%%TOKEN%%', analyzer.token);
 
         return result;

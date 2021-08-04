@@ -90,26 +90,6 @@ module.exports = class DiscordAnalyzer {
             this.description = "";
             this.delete = false;
         }
-        else if (DiscordAnalyzer.check_join(this.message) == true) {
-            // 参加
-            logger.info(`target message is join. : mes = ${this.message}`);
-            this.type = constants.TYPE_JOIN;
-            this.token = DiscordAnalyzer.get_join_token(this.message);
-            this.user_id = message_user_id;
-            this.status = constants.STATUS_ENABLED;
-            this.description = this.message;
-            this.delete = false;
-        }
-        else if (DiscordAnalyzer.check_decline(this.message) == true) {
-            // 辞退
-            logger.info(`target message is decline. : mes = ${this.message}`);
-            this.type = constants.TYPE_DECLINE;
-            this.token = DiscordAnalyzer.get_decline_token(this.message);
-            this.user_id = message_user_id;
-            this.status = constants.STATUS_ENABLED;
-            this.description = this.message;
-            this.delete = true;
-        }
         else if (DiscordAnalyzer.check_type_list(this.message) == true) {
             // 一覧表示
             logger.info(`target message is listing. : mes = ${this.message}`);
@@ -268,66 +248,6 @@ module.exports = class DiscordAnalyzer {
      */
     static get_recruitment_text(mes) {
         return mes.replace(/^^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]/, "");
-    }
-
-    /**
-     * メッセージが参加文であるかを確認します
-     * @param {string} mes 
-     * @returns 
-     */
-    static check_join(mes) {
-        if (this.extract_by_regexp(mes, '^[ 　]*\\d{1,}[ 　]*参加') === undefined) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * 対象の参加トークンを取得します
-     * @param {string} mes 
-     */
-    static get_join_token(mes) {
-        let result = undefined;
-        let re_result = mes.match(/^[ 　]*(\d{1,})[ 　]*参加/);
-
-        if (re_result === undefined || re_result === null) {
-            // no action
-        } else if (re_result.length >= 2) {
-            result = re_result[1];
-        }
-
-        return result;
-    }
-
-    /**
-     * メッセージが辞退であるかを確認します
-     * @param {string} mes 
-     * @returns 
-     */
-    static check_decline(mes) {
-        if (this.extract_by_regexp(mes, '^[ 　]*\\d{1,}[ 　]*(行|い)けない') === undefined) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * 対象の辞退IDを取得します
-     * @param {string} mes 
-     */
-    static get_decline_token(mes) {
-        let result = undefined;
-        let re_result = mes.match(/^[ 　]*(\d{1,})[ 　]*(行|い)けない/);
-
-        if (re_result === undefined || re_result === null) {
-            // no action
-        } else if (re_result.length >= 2) {
-            result = re_result[1];
-        }
-
-        return result;
     }
 
     /**

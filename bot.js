@@ -36,6 +36,7 @@ client.on('messageCreate', message => {
     logger.trace(analyzer);
     let recruitment = new Recruitment();
     let recruitment_data = undefined;
+    let recruitment_target_role = '';
 
     switch (analyzer.type) {
       case constants.TYPE_RECRUITEMENT:
@@ -58,9 +59,16 @@ client.on('messageCreate', message => {
             return recruitment.insert_t_participate(analyzer);
           })
           .then(() => {
+            // get target role
+            return recruitment.get_m_channel_info(message.channel.id);
+          })
+          .then((channel_info) => {
+            // get target role
+            recruitment_target_role = channel_info.recruitment_target_role;
+
             // compete all tasks
             logger.trace(analyzer);
-            logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}`);
+            logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, recruitment_target_role = ${recruitment_target_role}`);
 
             // create join button
             let join_button = new Discord.MessageButton()
@@ -76,84 +84,11 @@ client.on('messageCreate', message => {
 
             // send success message
             message.channel.send({
-              content: `${messageManager.get_new_recruitment_message(analyzer)}${messageManager.get_new_recruitment_embed_message(analyzer)}`,
+              content: `${messageManager.get_new_recruitment_message(analyzer, recruitment_target_role)}${messageManager.get_new_recruitment_embed_message(analyzer)}`,
               components: [
                 new Discord.MessageActionRow().addComponents(join_button, decline_button),
               ],
             });
-          })
-          .catch((err) => {
-            // send error message
-            message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
-            logger.error(err);
-          });
-        break;
-      case constants.TYPE_JOIN:
-        logger.warn(`join from message is deprecated.`);
-        // join to target plan
-        recruitment.insert_t_participate(analyzer)
-          .catch((err) => {
-            // failed to insert, try to update
-            return recruitment.update_t_participate(analyzer);
-          })
-          .then(() => {
-            // update OK, send message
-            return recruitment.get_m_recruitment(analyzer.token);
-          })
-          .then((data) => {
-            recruitment_data = data;
-            // get user list
-            return recruitment.get_t_participate(recruitment_data.token);
-          })
-          .then((user_list) => {
-            // get user information
-            recruitment_data.user_list = [];
-            user_list.forEach((v) => {
-              recruitment_data.user_list.push(v.user_id);
-            });
-
-            // send message
-            message.channel.send(messageManager.get_join_recruitment(recruitment_data));
-            message.channel.send(
-              {
-                embed: {
-                  description: messageManager.get_join_recruitment_embed_message(recruitment_data),
-                }
-              });
-          })
-          .catch((err) => {
-            // send error message
-            message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
-            logger.error(err);
-          });
-        break;
-      case constants.TYPE_DECLINE:
-        logger.warn(`decline from message is deprecated.`);
-        recruitment.update_t_participate(analyzer)
-          .then(() => {
-            // success to delete, get master data
-            return recruitment.get_m_recruitment(analyzer.token);
-          })
-          .then((data) => {
-            recruitment_data = data;
-            // get user list
-            return recruitment.get_t_participate(recruitment_data.token);
-          })
-          .then((user_list) => {
-            // get user information
-            recruitment_data.user_list = [];
-            user_list.forEach((v) => {
-              recruitment_data.user_list.push(v.user_id);
-            });
-
-            // send message
-            message.channel.send(messageManager.get_decline_recruitment(recruitment_data));
-            message.channel.send(
-              {
-                embed: {
-                  description: messageManager.get_join_recruitment_embed_message(recruitment_data),
-                }
-              });
           })
           .catch((err) => {
             // send error message
@@ -182,6 +117,7 @@ client.on('interactionCreate', async (interaction) => {
 
   let recruitment = new Recruitment();
   let recruitment_data = undefined;
+  let recruitment_target_role = '';
 
   switch (analyzer.type) {
     case constants.TYPE_JOIN:
@@ -192,6 +128,13 @@ client.on('interactionCreate', async (interaction) => {
           return recruitment.update_t_participate(analyzer);
         })
         .then(() => {
+          // get target role
+          return recruitment.get_m_channel_info(interaction.channelId);
+        })
+        .then((channel_info) => {
+          // get target role
+          recruitment_target_role = channel_info.recruitment_target_role;
+
           // update OK, send message
           return recruitment.get_m_recruitment(analyzer.token);
         })
@@ -222,6 +165,13 @@ client.on('interactionCreate', async (interaction) => {
     case constants.TYPE_DECLINE:
       recruitment.update_t_participate(analyzer)
         .then(() => {
+          // get target role
+          return recruitment.get_m_channel_info(interaction.channelId);
+        })
+        .then((channel_info) => {
+          // get target role
+          recruitment_target_role = channel_info.recruitment_target_role;
+
           // success to delete, get master data
           return recruitment.get_m_recruitment(analyzer.token);
         })

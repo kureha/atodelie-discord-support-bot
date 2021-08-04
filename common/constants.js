@@ -4,7 +4,6 @@ module.exports = class Constants {
         require('dotenv').config();
 
         // common section
-        this.DISCORD_REPLY_ROLE = process.env.DISCORD_REPLY_ROLE;
         this.DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
         this.DISCORD_TOKEN_LENGTH = process.env.DISCORD_TOKEN_LENGTH;
 
