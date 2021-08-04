@@ -6,7 +6,8 @@
   "dependencies": {
     "discord.js": "^13.0.0-dev.t1627949059.35fa3b3",
     "log4js": "^6.3.0",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "dotenv": "^10.0.0",

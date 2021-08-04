@@ -4,6 +4,9 @@ const logger = require('./../common/logger');
 const Constants = require('../common/constants');
 const constants = new Constants();
 
+// UUID有効化
+const uuid = require('uuid');
+
 module.exports = class Recruitment {
 
     /**
@@ -279,7 +282,7 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // get sample token
-                let token = Recruitment.create_digits_token(constants.DISCORD_TOKEN_LENGTH);
+                let token = Recruitment.create_uuid_token();
                 logger.debug(`token : ${token}`);
 
                 // run serialize
@@ -305,6 +308,14 @@ module.exports = class Recruitment {
 
             db.close();
         });
+    }
+
+    /**
+     * UUIDのTokenを取得します
+     * @returns UUIDベースのToken
+     */
+    static create_uuid_token() {
+        return uuid.v4();
     }
 
     /**

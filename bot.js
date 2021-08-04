@@ -43,19 +43,10 @@ client.on('messageCreate', message => {
         const token_function = recruitment.get_m_recruitment_token();
         // get token first with retry
         token_function
-          // retry max 3 times
-          .catch(token_function)
-          .catch(token_function)
-          .catch(token_function)
           .then((token) => {
             analyzer.token = token;
             // get registration id
             return recruitment.get_m_recruitment_id();
-          })
-          .catch((err) => {
-            logger.error(`generate token limit exceeded. : error = ${err}`);
-            // send error limit exceeded message
-            message.channel.send(`${constants.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED} (Error : ${err})`);
           })
           .then((id) => {
             // set id and master registration
