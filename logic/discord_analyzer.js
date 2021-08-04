@@ -9,7 +9,6 @@ module.exports = class DiscordAnalyzer {
 
     static HOURS_DEFAULT = constants.RECRUITMENT_DEFAULT_LIMIT_HOURS;
     static MAX_NUMBERS_DEFAULT = constants.RECRUITMENT_DEFAULT_MAX_NUMBERS;
-    static ERROR_CHANNEL_ID = constants.RECRUITMENT_DEFAULT_INVALID_CHANNEL;
 
     /**
      * メッセージを解析し、解析結果を返却する

@@ -32,7 +32,7 @@ module.exports = class Constants {
 
         this.RECRUITMENT_DEFAULT_LIMIT_HOURS = 8;
         this.RECRUITMENT_DEFAULT_MAX_NUMBERS = 6;
-        this.RECRUITMENT_DEFAULT_INVALID_CHANNEL = 'ERROR';
+        this.RECRUITMENT_INVALID_ROLE = 'TARGET_ROLE_IS_NOT_FOUND';
 
         this.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX = 'join-recruite-token=';
         this.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX = 'decline-recruite-token=';

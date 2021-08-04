@@ -35,7 +35,6 @@ client.on('messageCreate', message => {
     let analyzer = new DiscordAnalyzer(message.content, message.channel.id, message.author.id, client.user.id);
     logger.trace(analyzer);
     let recruitment = new Recruitment();
-    let recruitment_data = undefined;
     let recruitment_target_role = '';
 
     switch (analyzer.type) {

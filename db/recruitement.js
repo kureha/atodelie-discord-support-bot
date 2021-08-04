@@ -522,12 +522,20 @@ module.exports = class Recruitment {
                 logger.info(`sql = ${sql}, channel_id = ${channel_id}`);
                 db.get(sql, [channel_id], ((err, row) => {
                     if (err) {
-                        logger.error(`select m_channel_info failed. sql = ${sql}, key = ${channel_id}`);
-                        reject(err);
+                        logger.error(`select m_channel_info failed. please setting m_channel info. sql = ${sql}, key = ${channel_id}`);
+                        // return blank data
+                        resolve({
+                            channel_id: channel_id,
+                            recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
+                        });
                     }
                     if (row === undefined) {
-                        logger.error(`data not found on m_channel_info. sql = ${sql}, key = ${channel_id}`);
-                        reject(`data not found on m_channel_info. sql = ${sql}, key = ${channel_id}`);
+                        logger.error(`data not found on m_channel_info. please setting m_channel info. sql = ${sql}, key = ${channel_id}`);
+                        // return blank data
+                        resolve({
+                            channel_id: channel_id,
+                            recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
+                        });
                     }
 
                     logger.info(`selected m_channel_info successed. : channel_id = ${channel_id}`);
