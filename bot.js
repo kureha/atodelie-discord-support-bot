@@ -152,7 +152,7 @@ client.on('interactionCreate', async (interaction) => {
 
           // send message
           interaction.reply({
-            content: messageManager.get_join_recruitment_embed_message(recruitment_data),
+            content: `${messageManager.get_join_recruitment(recruitment_data, recruitment_target_role)}${messageManager.get_join_recruitment_embed_message(recruitment_data)}`,
           });
         })
         .catch((err) => {
@@ -189,7 +189,7 @@ client.on('interactionCreate', async (interaction) => {
 
           // send message
           interaction.reply({
-            content: messageManager.get_join_recruitment_embed_message(recruitment_data),
+            content: `${messageManager.get_decline_recruitment(recruitment_data, recruitment_target_role)}${messageManager.get_join_recruitment_embed_message(recruitment_data)}`,
           });
         })
         .catch((err) => {
