@@ -197,6 +197,7 @@ module.exports = class DiscordAnalyzer {
         target_date.setHours(hour);
         target_date.setMinutes(minute);
         target_date.setSeconds(0);
+        target_date.setMilliseconds(0);
 
         // compare time to now
         var now_date = new Date();

@@ -27,7 +27,7 @@ module.exports = class Recruitment {
     /**
      * 募集マスタテーブル更新用SQL
      */
-    static SQL_UPDATE_m_recruitment = 'UPDATE [m_recruitment] SET [server_id] = $server_id, [status] = $status, [limit_time] = $limit_time, [name] = $name, [owner_id] = $owner_id, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
+    static SQL_UPDATE_M_RECRUITMENT = 'UPDATE [m_recruitment] SET [server_id] = $server_id, [status] = $status, [limit_time] = $limit_time, [name] = $name, [owner_id] = $owner_id, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
 
     /**
      * 募集マスタテーブル削除用SQL
@@ -77,7 +77,7 @@ module.exports = class Recruitment {
     /**
      * チャンネル情報マスタテーブル選択用SQL
      */
-    static SQL_SELECT_m_server_info = 'SELECT m1.[server_id] , m1.[recruitment_target_role] FROM [m_server_info] m1 ';
+    static SQL_SELECT_m_server_info = 'SELECT m1.[server_id] , m1.[channel_id], m1.[recruitment_target_role] FROM [m_server_info] m1 ';
 
     /**
      * SQLIET3のモジュール名称
@@ -203,7 +203,7 @@ module.exports = class Recruitment {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Recruitment.SQL_UPDATE_m_recruitment} WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') `;
+                const sql = `${Recruitment.SQL_UPDATE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and [limit_time] >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
