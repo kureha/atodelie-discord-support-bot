@@ -229,19 +229,19 @@ cron.schedule(constants.DISCORD_FOLLOW_CRON, () => {
       // get follow lists
       return recruitment.get_m_recruitment_for_follow(server_info.server_id, server_info.follow_time, to_datetime.toISOString());
     })
-    .then((data) => {
+    .then((recruitment_data_list) => {
       logger.info(`select follow data list completed.`)
-      logger.trace(data);
+      logger.trace(recruitment_data_list);
 
       // get join data and send message
-      data.forEach((rec) => {
-        recruitment.get_t_participate(rec.token)
+      recruitment_data_list.forEach((recruitment_data) => {
+        recruitment.get_t_participate(recruitment_data.token)
         .then((user_list) => {
           // get user list
-          rec.user_list = user_list;
+          recruitment_data.user_list = user_list;
           // if user more than 0 member, followup executed.
-          if (rec.user_list.length > 0) {
-            client.channels.cache.get(server_info.channel_id).send(messageManager.get_join_recruitment_follow_message(rec));
+          if (recruitment_data.user_list.length > 0) {
+            client.channels.cache.get(server_info.channel_id).send(messageManager.get_join_recruitment_follow_message(recruitment_data));
           }
         })
       })
