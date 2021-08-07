@@ -72,12 +72,12 @@ module.exports = class Recruitment {
     /**
      * チャンネル情報マスタテーブル作成用SQL
      */
-    static SQL_CREATE_m_server_info = 'CREATE TABLE IF NOT EXISTS [m_server_info] ( [server_id] TEXT NOT NULL UNIQUE, [channel_id] TEXT NOT NULL, [recruitment_target_role] TEXT NOT NULL, PRIMARY KEY([server_id]) )';
+    static SQL_CREATE_M_SERVER_INFO = 'CREATE TABLE IF NOT EXISTS [m_server_info] ( [server_id] TEXT NOT NULL UNIQUE, [channel_id] TEXT NOT NULL, [recruitment_target_role] TEXT NOT NULL, [follow_time] DATETIME, PRIMARY KEY([server_id]) )';
 
     /**
      * チャンネル情報マスタテーブル選択用SQL
      */
-    static SQL_SELECT_m_server_info = 'SELECT m1.[server_id] , m1.[channel_id], m1.[recruitment_target_role] FROM [m_server_info] m1 ';
+    static SQL_SELECT_M_SERVER_INFO = 'SELECT m1.[server_id] , m1.[channel_id], m1.[recruitment_target_role], m1.[follow_time] FROM [m_server_info] m1 ';
 
     /**
      * SQLIET3のモジュール名称
@@ -142,7 +142,7 @@ module.exports = class Recruitment {
                         reject(err);
                     }
                 }));
-                db.run(Recruitment.SQL_CREATE_m_server_info, [], ((err) => {
+                db.run(Recruitment.SQL_CREATE_M_SERVER_INFO, [], ((err) => {
                     if (err) {
                         logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_T_PARTICIPATE}`);
                         reject(err);
@@ -155,6 +155,23 @@ module.exports = class Recruitment {
 
             db.close();
         });
+    }
+
+    /**
+     * UUIDのTokenを取得します
+     * @returns UUIDベースのToken
+     */
+    static create_uuid_token() {
+        return uuid.v4();
+    }
+
+    /**
+     * 指定桁数のDigitを取得します
+     * @param length 桁数
+     * @returns 指定された桁数のDigits
+     */
+    static create_digits_token(length) {
+        return ('0'.repeat(length) + String(Math.floor(Math.random() * '9'.repeat(length)) + 1)).slice(-1 * length);
     }
 
     /**
@@ -287,6 +304,9 @@ module.exports = class Recruitment {
         });
     }
 
+    // 募集フォロー用SQL
+    // SELECT m1.[id] FROM [m_recruitment] m1 WHERE [server_id] = $server_id AND datetime(m1.[limit_time], 'localtime') > datetime($from_datetime) AND datetime(m1.[limit_time], 'localtime') < datetime($to_datetime) ORDER BY m1.[limit_time], m1.[id]
+
     /**
      * 募集マスタ用のTOKENを生成します。
      * 生成値がかぶっていた場合にRejectするため、呼び出し時にRetry処理が必要です
@@ -327,23 +347,6 @@ module.exports = class Recruitment {
     }
 
     /**
-     * UUIDのTokenを取得します
-     * @returns UUIDベースのToken
-     */
-    static create_uuid_token() {
-        return uuid.v4();
-    }
-
-    /**
-     * 指定桁数のDigitを取得します
-     * @param length 桁数
-     * @returns 指定された桁数のDigits
-     */
-    static create_digits_token(length) {
-        return ('0'.repeat(length) + String(Math.floor(Math.random() * '9'.repeat(length)) + 1)).slice(-1 * length);
-    }
-
-    /**
      * 募集マスタを1行選択します
      * @param {string} token 
      * @returns Promiseオブジェクト、データベースの選択内容
@@ -365,7 +368,7 @@ module.exports = class Recruitment {
                     else if (row === undefined) {
                         logger.error(`data not found on m_recruitment. sql = ${sql}, key = ${token}`);
                         reject(`data not found on m_recruitment. sql = ${sql}, key = ${token}`);
-                    } 
+                    }
                     else {
                         logger.info(`selected single m_reqruitement successed. : key = ${token}`);
                         logger.trace(row);
@@ -383,7 +386,7 @@ module.exports = class Recruitment {
      * @param {string} server_id 
      * @returns Promiseオブジェクト、データベースの選択内容
      */
-     get_m_recruitment_latests(server_id, count) {
+    get_m_recruitment_latests(server_id, count) {
         // Promise処理
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -400,7 +403,7 @@ module.exports = class Recruitment {
                     else if (rows === undefined) {
                         logger.error(`data not found on m_recruitment. sql = ${sql}, key = ${token}`);
                         reject(`data not found on m_recruitment. sql = ${sql}, key = ${token}`);
-                    } 
+                    }
                     else {
                         logger.info(`selected single m_reqruitement successed. : key = ${token}`);
                         logger.trace(rows);
@@ -554,7 +557,7 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_m_server_info} WHERE m1.[server_id] = ? `;
+                const sql = `${Recruitment.SQL_SELECT_M_SERVER_INFO} WHERE m1.[server_id] = ? `;
                 logger.info(`sql = ${sql}, server_id = ${server_id}`);
                 db.get(sql, [server_id], ((err, row) => {
                     if (err) {
@@ -562,7 +565,9 @@ module.exports = class Recruitment {
                         // return blank data
                         resolve({
                             server_id: server_id,
+                            channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
                             recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
+                            follow_time: null,
                         });
                     }
                     if (row === undefined) {
@@ -570,7 +575,9 @@ module.exports = class Recruitment {
                         // return blank data
                         resolve({
                             server_id: server_id,
+                            channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
                             recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
+                            follow_time: null,
                         });
                     }
 
