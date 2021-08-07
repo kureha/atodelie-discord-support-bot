@@ -95,4 +95,14 @@ module.exports = class DiscordMessageManager {
 
         return result;
     }
+
+    /**
+     * 募集が見つからないことを示すメッセージを返します
+     * @returns 
+     */
+    get_no_recruitment() {
+        let result = constants.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT;
+
+        return result;
+    }
 };

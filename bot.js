@@ -157,7 +157,7 @@ client.on('interactionCreate', async (interaction) => {
         })
         .catch((err) => {
           // send error message
-          interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+          interaction.reply(`${messageManager.get_no_recruitment()}`);
           logger.error(err);
         });
       break;
@@ -194,7 +194,7 @@ client.on('interactionCreate', async (interaction) => {
         })
         .catch((err) => {
           // send error message
-          interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+          interaction.reply(`${messageManager.get_no_recruitment()}`);
           logger.error(err);
         });
       break;
@@ -208,8 +208,25 @@ client.on('interactionCreate', async (interaction) => {
 // cron event
 const cron = require('node-cron');
 cron.schedule('*/10 * * * * *', () => {
-  // logger.info(`executed cron message`);
-  // message.channel.send(`cron executed : ${new Date()}`)
+  // loop for guild id
+  client.guilds.cache.forEach((guild) => {
+    // send message from master
+    /**
+    let recruitment = new Recruitment();
+    let server_info = undefined;
+    recruitment.get_m_server_info(guild.id)
+    .then((temp_server_info) => {
+      server_info = temp_server_info;
+      logger.info(`cron message sended guild info : server_id = ${server_info.server_id}, channel_id = ${server_info.channel_id}`)
+      // client.channels.cache.get(server_info.channel_id).send(`message from cron sended.`);
+    })
+    .catch((err) => {
+      // send error message
+      logger.error(`cron command failed for error.`);
+      logger.error(err);
+    });
+     */
+  });
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN)
