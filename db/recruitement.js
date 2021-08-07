@@ -379,6 +379,41 @@ module.exports = class Recruitment {
     }
 
     /**
+     * 募集マスタを指定行選択します
+     * @param {string} server_id 
+     * @returns Promiseオブジェクト、データベースの選択内容
+     */
+     get_m_recruitment_latests(server_id, count) {
+        // Promise処理
+        return new Promise((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT} WHERE [server_id] = ? AND datetime(m1.[limit_time], 'localtime') > datetime('now', 'localtime') ORDER BY m1.[limit_time], m1.[id] LIMIT ${count}`;
+                logger.info(`sql = ${sql}, token = ${server_id}`);
+                db.all(sql, [server_id], ((err, rows) => {
+                    if (err) {
+                        logger.error(`select m_recruitment failed. sql = ${sql}, key = ${token}`);
+                        reject(err);
+                    }
+                    else if (rows === undefined) {
+                        logger.error(`data not found on m_recruitment. sql = ${sql}, key = ${token}`);
+                        reject(`data not found on m_recruitment. sql = ${sql}, key = ${token}`);
+                    } 
+                    else {
+                        logger.info(`selected single m_reqruitement successed. : key = ${token}`);
+                        logger.trace(rows);
+                        resolve(rows);
+                    }
+                }));
+            });
+
+            db.close();
+        });
+    }
+
+    /**
      * 参加データを1行追加します
      * @param {Object} data 
      */
