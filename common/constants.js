@@ -16,6 +16,7 @@ module.exports = class Constants {
             // set default
             this.DISCORD_FOLLOW_MINUTE = 30;
         }
+        this.DISCORD_FOLLOW_CRON = process.env.DISCORD_FOLLOW_CRON;
 
         // sqlite section
         this.SQLITE_FILE = process.env.SQLITE_FILE;

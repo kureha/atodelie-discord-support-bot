@@ -10,6 +10,7 @@ test("Test for constants", () => {
     expect(v.DISCORD_FOLLOW_MINUTE).not.toBe(undefined);
     expect(v.DISCORD_FOLLOW_MINUTE).not.toBe(NaN);
     expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toBe(undefined);
+    expect(v.DISCORD_FOLLOW_CRON).not.toBe(undefined);
     
     expect(v.SQLITE_FILE).not.toBe(undefined);
 

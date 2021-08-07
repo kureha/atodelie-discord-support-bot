@@ -201,7 +201,8 @@ client.on('interactionCreate', async (interaction) => {
 
 // cron event
 const cron = require('node-cron');
-cron.schedule('0 */1 * * * *', () => {
+logger.info(`follow cron setting : ${constants.DISCORD_FOLLOW_CRON}`);
+cron.schedule(constants.DISCORD_FOLLOW_CRON, () => {
   // loop for guild id
   client.guilds.cache.forEach((guild) => {
     // send message from master
