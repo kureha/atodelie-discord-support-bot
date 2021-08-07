@@ -30,6 +30,7 @@ module.exports = class Constants {
         this.DISCORD_MESSAGE_NEW_RECRUITMENT = process.env.DISCORD_MESSAGE_NEW_RECRUITMENT;
         this.DISCORD_MESSAGE_SUCCESS_JOIN = process.env.DISCORD_MESSAGE_SUCCESS_JOIN;
         this.DISCORD_MESSAGE_SUCCESS_DECLINE = process.env.DISCORD_MESSAGE_SUCCESS_DECLINE;
+        this.DISCORD_MESSAGE_FOLLOW_RECRUITMENT = process.env.DISCORD_MESSAGE_FOLLOW_RECRUITMENT;
 
         // static values
         this.TYPE_INIT = 0;
@@ -48,5 +49,22 @@ module.exports = class Constants {
 
         this.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX = 'join-recruite-token=';
         this.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX = 'decline-recruite-token=';
+    }
+
+    /**
+     * デフォルトとする日時を返却します
+     * @returns 2000-01-01 00:00:00の日時
+     */
+     static get_default_date() {
+        const temp_date = new Date();
+        temp_date.setFullYear(2000);
+        temp_date.setMonth(0);
+        temp_date.setDate(1);
+        temp_date.setHours(0);
+        temp_date.setMinutes(0);
+        temp_date.setSeconds(0);
+        temp_date.setMilliseconds(0);
+
+        return temp_date;
     }
 };

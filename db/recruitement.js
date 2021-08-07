@@ -304,8 +304,14 @@ module.exports = class Recruitment {
         });
     }
 
-    // 募集フォロー用SQL
-    get_m_recruitment_id_for_follow(server_id, from_datetime, to_datetime) {
+    /**
+     * 募集フォロー対象の一覧を取得します
+     * @param {string} server_id 
+     * @param {string} from_datetime 
+     * @param {string} to_datetime 
+     * @returns 対象の募集マスタデータ
+     */
+    get_m_recruitment_for_follow(server_id, from_datetime, to_datetime) {
         // Promise処理
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);

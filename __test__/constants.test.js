@@ -21,6 +21,8 @@ test("Test for constants", () => {
     expect(v.DISCORD_MESSAGE_NEW_RECRUITMENT).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_SUCCESS_JOIN).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_SUCCESS_DECLINE).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_FOLLOW_RECRUITMENT).not.toBe(undefined);
+
     expect(v.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX).not.toBe(undefined);
     expect(v.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX).not.toBe(undefined);
 })

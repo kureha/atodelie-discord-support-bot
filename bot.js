@@ -217,7 +217,9 @@ cron.schedule('*/30 * * * * *', () => {
     // follow to date
     let to_datetime = new Date();
     to_datetime.setMinutes(to_datetime.getMinutes() + constants.DISCORD_FOLLOW_MINUTE);
+    logger.info(`follow recruitment cron start. : to_datetime = ${to_datetime}`);
 
+    // get server info (send target channel, get latest follow_time)
     recruitment.get_m_server_info(guild.id)
     .then((temp_server_info) => {
       server_info = temp_server_info;
@@ -225,32 +227,25 @@ cron.schedule('*/30 * * * * *', () => {
       
       // if follow time is null, apply default.
       if (server_info.follow_time === null) {
-        const temp_from_date = new Date();
-        temp_from_date.setFullYear(2000);
-        temp_from_date.setMonth(1);
-        temp_from_date.setDate(1);
-        temp_from_date.setHours(0);
-        temp_from_date.setMinutes(0);
-        temp_from_date.setSeconds(0);
-        temp_from_date.setMilliseconds(0);
-        server_info.follow_time = temp_from_date.toISOString();
+        server_info.follow_time = Constants.get_default_date().toISOString();
         logger.warn(`server follow_time is null, apply default. : date = ${server_info.follow_time}`);
       }
 
-      return recruitment.get_m_recruitment_id_for_follow(server_info.server_id, server_info.follow_time, to_datetime.toISOString());
+      // get follow lists
+      return recruitment.get_m_recruitment_for_follow(server_info.server_id, server_info.follow_time, to_datetime.toISOString());
     })
     .then((data) => {
       logger.info(`select follow data list completed.`)
       logger.trace(data);
 
+      // get join data and send message
       data.forEach((rec) => {
-        // 各募集ごとにループ
         recruitment.get_t_participate(rec.token)
         .then((user_list) => {
+          // get user list
           rec.user_list = user_list;
-          // ユーザが1人でもいたらフォロー
+          // if user more than 0 member, followup executed.
           if (rec.user_list.length > 0) {
-            logger.trace(rec);
             client.channels.cache.get(server_info.channel_id).send(messageManager.get_join_recruitment_follow_message(rec));
           }
         })
@@ -259,6 +254,7 @@ cron.schedule('*/30 * * * * *', () => {
     .then(() => {
       // update master
       recruitment.update_m_server_info_follow_time(server_info.server_id, to_datetime);
+      logger.info(`follow recruitment cron completed.`);
     })
     .catch((err) => {
       // send error message
