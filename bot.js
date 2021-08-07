@@ -212,7 +212,7 @@ cron.schedule(constants.DISCORD_FOLLOW_CRON, () => {
     // follow to date
     let to_datetime = new Date();
     to_datetime.setMinutes(to_datetime.getMinutes() + constants.DISCORD_FOLLOW_MINUTE);
-    logger.info(`follow recruitment cron start. : to_datetime = ${to_datetime}`);
+    logger.info(`follow recruitment cron start. : to_datetime = ${to_datetime.toISOString()}`);
 
     // get server info (send target channel, get latest follow_time)
     recruitment.get_m_server_info(guild.id)
