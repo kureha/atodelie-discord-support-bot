@@ -29,7 +29,7 @@ test("Test for get_recruitment_text", () => {
 
 test("Test for constructor", () => {
     var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', 'SENDER_ID', '868275869540569110');
-    expect(v.channel_id).toEqual('CHR');
+    expect(v.server_id).toEqual('CHR');
     expect(v.valid).toEqual(true);
     expect(v.type).toEqual(constants.TYPE_RECRUITEMENT);
     expect(v.message).toEqual('ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）');
@@ -39,7 +39,7 @@ test("Test for constructor", () => {
 
 test("Test for constructor", () => {
     var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', 'SENDER_ID', '868275869540569110');
-    expect(v.channel_id).toEqual('CHR');
+    expect(v.server_id).toEqual('CHR');
     expect(v.valid).toEqual(true);
     expect(v.type).toEqual(constants.TYPE_RECRUITEMENT);
     expect(v.message).toEqual('ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
@@ -47,41 +47,11 @@ test("Test for constructor", () => {
     expect(v.max_number).toEqual(3);
 })
 
-test("Test for constructor", () => {
-    var v = new DiscordAnalyzer('<@!868275869540569110> 123 参加', 'CHR', 'SENDER_ID', '868275869540569110');
-    expect(v.channel_id).toEqual('CHR');
-    expect(v.valid).toEqual(true);
-    expect(v.type).toEqual(constants.TYPE_JOIN);
-    expect(v.token).toEqual("123");
-})
-
 test("Test for get numbers", () => {
     expect(DiscordAnalyzer.get_recruitment_numbers("募集します @3")).toEqual(3);
     expect(DiscordAnalyzer.get_recruitment_numbers("募集します @99")).toEqual(99);
 
     expect(DiscordAnalyzer.get_recruitment_numbers("募集します @a")).toEqual(undefined);
-});
-
-test("Test for Check decline", () => {
-    expect(DiscordAnalyzer.check_decline("12345行けない")).toBe(true);
-    expect(DiscordAnalyzer.check_decline("12345 いけない")).toBe(true);
-    expect(DiscordAnalyzer.check_decline("12345　行けない")).toBe(true);
-    expect(DiscordAnalyzer.check_decline(" 12345いけない")).toBe(true);
-    expect(DiscordAnalyzer.check_decline("　12345行けない")).toBe(true);
-    expect(DiscordAnalyzer.check_decline("募集　やります")).toBe(false);
-    expect(DiscordAnalyzer.check_decline("参加")).toBe(false);
-    expect(DiscordAnalyzer.check_decline("参加")).toBe(false);
-});
-
-test("Get for decline id", () => {
-    expect(DiscordAnalyzer.get_decline_token("12345行けない")).toBe("12345");
-    expect(DiscordAnalyzer.get_decline_token("12345 いけない")).toBe("12345");
-    expect(DiscordAnalyzer.get_decline_token("12345　行けない")).toBe("12345");
-    expect(DiscordAnalyzer.get_decline_token(" 12345いけない")).toBe("12345");
-    expect(DiscordAnalyzer.get_decline_token("　12345行けない")).toBe("12345");
-    expect(DiscordAnalyzer.get_decline_token("募集　やります")).toBe(undefined);
-    expect(DiscordAnalyzer.get_decline_token("参加")).toBe(undefined);
-    expect(DiscordAnalyzer.get_decline_token("参加")).toBe(undefined);
 });
 
 test("Test for List", () => {

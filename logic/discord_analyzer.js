@@ -17,7 +17,7 @@ module.exports = class DiscordAnalyzer {
      * @param {string} user_id botのDiscordユーザID
      * @returns 解析結果オブジェクト
      */
-    constructor(mes, channel_id, message_user_id, user_id) {
+    constructor(mes, server_id, message_user_id, user_id) {
         if (typeof (mes) == "string") {
             if (typeof (user_id) == "string") {
                 // user.idは消去する
@@ -27,14 +27,14 @@ module.exports = class DiscordAnalyzer {
                 this.message = mes;
             }
         } else {
-            logger.error(`message is not string. : mes = ${mes}, channel_id = ${channel_id}`);
+            logger.error(`message is not string. : mes = ${mes}, server_id = ${server_id}`);
             return;
         }
 
-        if (typeof (channel_id) == "string") {
-            this.channel_id = channel_id;
+        if (typeof (server_id) == "string") {
+            this.server_id = server_id;
         } else {
-            logger.error(`can't analyze channel id. : mes = ${mes}, channel_id = ${channel_id}`);
+            logger.error(`can't analyze server id. : mes = ${mes}, server_id = ${server_id}`);
             return;
         }
 

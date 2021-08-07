@@ -12,22 +12,22 @@ module.exports = class Recruitment {
     /**
      * 募集マスタテーブル作成用SQL
      */
-    static SQL_CREATE_M_RECRUITMENT = 'CREATE TABLE IF NOT EXISTS [m_recruitment] ( [id] INTEGER NOT NULL UNIQUE, [channel_id] TEXT NOT NULL, [token] TEXT NOT NULL UNIQUE, [status] INTEGER NOT NULL, [limit_time] DATETIME NOT NULL, [name] TEXT NOT NULL, [owner_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id]) )';
+    static SQL_CREATE_M_RECRUITMENT = 'CREATE TABLE IF NOT EXISTS [m_recruitment] ( [id] INTEGER NOT NULL UNIQUE, [server_id] TEXT NOT NULL, [token] TEXT NOT NULL UNIQUE, [status] INTEGER NOT NULL, [limit_time] DATETIME NOT NULL, [name] TEXT NOT NULL, [owner_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id]) )';
 
     /**
      * 募集マスタテーブル選択用SQL
      */
-    static SQL_SELECT_M_RECRUITMENT = 'SELECT m1.[id], m1.[channel_id], m1.[token], m1.[status], m1.[limit_time], m1.[name], m1.[owner_id], m1.[description], m1.[regist_time], m1.[update_time], m1.[delete] FROM [m_recruitment] m1 ';
+    static SQL_SELECT_M_RECRUITMENT = 'SELECT m1.[id], m1.[server_id], m1.[token], m1.[status], m1.[limit_time], m1.[name], m1.[owner_id], m1.[description], m1.[regist_time], m1.[update_time], m1.[delete] FROM [m_recruitment] m1 ';
 
     /**
      * 募集マスタテーブル挿入用SQL
      */
-    static SQL_INSERT_M_RECRUITMENT = 'INSERT INTO [m_recruitment] ([id], [channel_id], [token], [status], [limit_time], [name], [owner_id], [description], [regist_time], [update_time], [delete]) values ($id, $channel_id, $token, $status, $limit_time, $name, $owner_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false) ';
+    static SQL_INSERT_M_RECRUITMENT = 'INSERT INTO [m_recruitment] ([id], [server_id], [token], [status], [limit_time], [name], [owner_id], [description], [regist_time], [update_time], [delete]) values ($id, $server_id, $token, $status, $limit_time, $name, $owner_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false) ';
 
     /**
      * 募集マスタテーブル更新用SQL
      */
-    static SQL_UPDATE_m_recruitment = 'UPDATE [m_recruitment] SET [channel_id] = $channel_id, [status] = $status, [limit_time] = $limit_time, [name] = $name, [owner_id] = $owner_id, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
+    static SQL_UPDATE_m_recruitment = 'UPDATE [m_recruitment] SET [server_id] = $server_id, [status] = $status, [limit_time] = $limit_time, [name] = $name, [owner_id] = $owner_id, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
 
     /**
      * 募集マスタテーブル削除用SQL
@@ -72,12 +72,12 @@ module.exports = class Recruitment {
     /**
      * チャンネル情報マスタテーブル作成用SQL
      */
-    static SQL_CREATE_M_CHANNEL_INFO = 'CREATE TABLE IF NOT EXISTS [m_channel_info] ( [channel_id] TEXT NOT NULL UNIQUE, [recruitment_target_role] TEXT NOT NULL, PRIMARY KEY([channel_id]) )';
+    static SQL_CREATE_m_server_info = 'CREATE TABLE IF NOT EXISTS [m_server_info] ( [server_id] TEXT NOT NULL UNIQUE, [channel_id] TEXT NOT NULL, [recruitment_target_role] TEXT NOT NULL, PRIMARY KEY([server_id]) )';
 
     /**
      * チャンネル情報マスタテーブル選択用SQL
      */
-    static SQL_SELECT_M_CHANNEL_INFO = 'SELECT m1.[channel_id] , m1.[recruitment_target_role] FROM [m_channel_info] m1 ';
+    static SQL_SELECT_m_server_info = 'SELECT m1.[server_id] , m1.[recruitment_target_role] FROM [m_server_info] m1 ';
 
     /**
      * SQLIET3のモジュール名称
@@ -142,7 +142,7 @@ module.exports = class Recruitment {
                         reject(err);
                     }
                 }));
-                db.run(Recruitment.SQL_CREATE_M_CHANNEL_INFO, [], ((err) => {
+                db.run(Recruitment.SQL_CREATE_m_server_info, [], ((err) => {
                     if (err) {
                         logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_T_PARTICIPATE}`);
                         reject(err);
@@ -172,7 +172,7 @@ module.exports = class Recruitment {
                 const stmt = db.prepare(sql);
                 stmt.run({
                     $id: data.id,
-                    $channel_id: data.channel_id,
+                    $server_id: data.server_id,
                     $token: data.token,
                     $status: data.status,
                     $limit_time: data.limit_time,
@@ -207,7 +207,7 @@ module.exports = class Recruitment {
                 logger.info(`sql = ${sql}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
-                    $channel_id: data.channel_id,
+                    $server_id: data.server_id,
                     $token: data.token,
                     $status: data.status,
                     $limit_time: data.limit_time,
@@ -508,37 +508,37 @@ module.exports = class Recruitment {
 
     /**
      * チャンネルマスタから情報を取得します
-     * @param {string} channel_id 
+     * @param {string} server_id 
      * @returns Promiseオブジェクト、データベースの選択内容
      */
-    get_m_channel_info(channel_id) {
+    get_m_server_info(server_id) {
         // Promise処理
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_M_CHANNEL_INFO} WHERE m1.[channel_id] = ? `;
-                logger.info(`sql = ${sql}, channel_id = ${channel_id}`);
-                db.get(sql, [channel_id], ((err, row) => {
+                const sql = `${Recruitment.SQL_SELECT_m_server_info} WHERE m1.[server_id] = ? `;
+                logger.info(`sql = ${sql}, server_id = ${server_id}`);
+                db.get(sql, [server_id], ((err, row) => {
                     if (err) {
-                        logger.error(`select m_channel_info failed. please setting m_channel info. sql = ${sql}, key = ${channel_id}`);
+                        logger.error(`select m_server_info failed. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
                         // return blank data
                         resolve({
-                            channel_id: channel_id,
+                            server_id: server_id,
                             recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
                         });
                     }
                     if (row === undefined) {
-                        logger.error(`data not found on m_channel_info. please setting m_channel info. sql = ${sql}, key = ${channel_id}`);
+                        logger.error(`data not found on m_server_info. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
                         // return blank data
                         resolve({
-                            channel_id: channel_id,
+                            server_id: server_id,
                             recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
                         });
                     }
 
-                    logger.info(`selected m_channel_info successed. : channel_id = ${channel_id}`);
+                    logger.info(`selected m_server_info successed. : server_id = ${server_id}`);
                     logger.trace(row);
                     resolve(row);
                 }));

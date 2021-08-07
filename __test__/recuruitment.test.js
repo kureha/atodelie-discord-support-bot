@@ -25,7 +25,7 @@ test("test for m_recruitment c/r/u/d", () => {
 
                 return recruitment.insert_m_recruitment({
                     id: test_id,
-                    channel_id: "testingid",
+                    server_id: "testingid",
                     token: test_token,
                     status: 2,
                     limit_time: "2099-12-31 11:59:59",
@@ -41,7 +41,7 @@ test("test for m_recruitment c/r/u/d", () => {
             .then((data) => {
                 // expect
                 expect(data.id).toEqual(test_id);
-                expect(data.channel_id).toEqual("testingid");
+                expect(data.server_id).toEqual("testingid");
                 expect(data.token).toEqual(test_token);
                 expect(data.status).toEqual(2);
                 expect(data.name).toEqual("myname");
@@ -62,7 +62,7 @@ test("test for m_recruitment c/r/u/d", () => {
             }).then((data) => {
                 // expect
                 expect(data.id).toEqual(test_id);
-                expect(data.channel_id).toEqual("testingid");
+                expect(data.server_id).toEqual("testingid");
                 expect(data.token).toEqual(test_token);
                 expect(data.status).toEqual(3);
                 expect(data.name).toEqual("myname");
@@ -116,7 +116,7 @@ test('test for t_participate c/r/u/d', () => {
 
                 return recruitment.insert_m_recruitment({
                     id: id,
-                    channel_id: "testingid",
+                    server_id: "testingid",
                     token: test_token,
                     status: 2,
                     limit_time: "2099-12-31 11:59:59",

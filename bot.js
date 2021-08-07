@@ -14,6 +14,7 @@ const DiscordAnalyzer = require('./logic/discord_analyzer');
 const DiscordInteraction = require('./logic/discord_interaction');
 const Recruitment = require('./db/recruitement');
 
+// create message modules
 const MessageManager = require('./logic/discord_message_manager');
 const messageManager = new MessageManager();
 
@@ -32,7 +33,7 @@ client.on('messageCreate', message => {
     logger.trace(message);
 
     // メッセージを解析する
-    let analyzer = new DiscordAnalyzer(message.content, message.channel.id, message.author.id, client.user.id);
+    let analyzer = new DiscordAnalyzer(message.content, message.guild.id, message.author.id, client.user.id);
     logger.trace(analyzer);
     let recruitment = new Recruitment();
     let recruitment_target_role = '';
@@ -59,11 +60,11 @@ client.on('messageCreate', message => {
           })
           .then(() => {
             // get target role
-            return recruitment.get_m_channel_info(message.channel.id);
+            return recruitment.get_m_server_info(message.guild.id);
           })
-          .then((channel_info) => {
+          .then((server_info) => {
             // get target role
-            recruitment_target_role = channel_info.recruitment_target_role;
+            recruitment_target_role = server_info.recruitment_target_role;
 
             // compete all tasks
             logger.trace(analyzer);
@@ -128,11 +129,11 @@ client.on('interactionCreate', async (interaction) => {
         })
         .then(() => {
           // get target role
-          return recruitment.get_m_channel_info(interaction.channelId);
+          return recruitment.get_m_server_info(interaction.guildId);
         })
-        .then((channel_info) => {
+        .then((server_info) => {
           // get target role
-          recruitment_target_role = channel_info.recruitment_target_role;
+          recruitment_target_role = server_info.recruitment_target_role;
 
           // update OK, send message
           return recruitment.get_m_recruitment(analyzer.token);
@@ -165,11 +166,11 @@ client.on('interactionCreate', async (interaction) => {
       recruitment.update_t_participate(analyzer)
         .then(() => {
           // get target role
-          return recruitment.get_m_channel_info(interaction.channelId);
+          return recruitment.get_m_server_info(interaction.guildId);
         })
-        .then((channel_info) => {
+        .then((server_info) => {
           // get target role
-          recruitment_target_role = channel_info.recruitment_target_role;
+          recruitment_target_role = server_info.recruitment_target_role;
 
           // success to delete, get master data
           return recruitment.get_m_recruitment(analyzer.token);
@@ -202,6 +203,13 @@ client.on('interactionCreate', async (interaction) => {
       interaction.reply(`${constants.DISCORD_MESSAGE_TYPE_INVALID} (Error : ${analyzer.error_messages.join(',')})`);
       break;
   }
+});
+
+// cron event
+const cron = require('node-cron');
+cron.schedule('*/10 * * * * *', () => {
+  // logger.info(`executed cron message`);
+  // message.channel.send(`cron executed : ${new Date()}`)
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN)
