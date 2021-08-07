@@ -312,18 +312,18 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `SELECT m1.[id] FROM [m_recruitment] m1 WHERE m1.[server_id] = $server_id AND datetime(m1.[limit_time], 'utc') > datetime($from_datetime) AND datetime(m1.[limit_time], 'utc') < datetime($to_datetime) ORDER BY m1.[limit_time], m1.[id]`;
-                logger.info(`sql = ${sql}, server_id = ${server_id}, from_time = ${from_datetime.toISOString()}, to_datetime = ${to_datetime.toISOString()}`);
+                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT} WHERE m1.[server_id] = $server_id AND datetime(m1.[limit_time], 'utc') > datetime($from_datetime) AND datetime(m1.[limit_time], 'utc') < datetime($to_datetime) ORDER BY m1.[limit_time], m1.[id]`;
+                logger.info(`sql = ${sql}, server_id = ${server_id}, from_time = ${from_datetime}, to_datetime = ${to_datetime}`);
                 db.all(sql, {
                     $server_id: server_id,
-                    $from_datetime: from_datetime.toISOString(),
-                    $to_datetime: to_datetime.toISOString(),
+                    $from_datetime: from_datetime,
+                    $to_datetime: to_datetime,
                 }, ((err, rows) => {
                     if (err) {
                         logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_M_RECRUITMENT}`);
                         reject(err);
                     }
-                    logger.info(`selected m_reqruitement followup id successed.`);
+                    logger.info(`selected m_reqruitement followup list successed.`);
                     logger.trace(rows);
                     resolve(rows);
                 }));
@@ -610,6 +610,39 @@ module.exports = class Recruitment {
                     logger.info(`selected m_server_info successed. : server_id = ${server_id}`);
                     logger.trace(row);
                     resolve(row);
+                }));
+            });
+
+            db.close();
+        });
+    }
+
+    /**
+     * チャンネルマスタから情報を取得します
+     * @param {string} server_id 
+     * @param {Date} follow_time
+     * @returns Promiseオブジェクト、データベースの選択内容
+     */
+    update_m_server_info_follow_time(server_id, follow_time) {
+        // Promise処理
+        return new Promise((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = `UPDATE [m_server_info] SET follow_time = $follow_time WHERE server_id = $server_id`;
+                logger.info(`sql = ${sql}, server_id = ${server_id}, follow_time = ${follow_time.toISOString()}`);
+                db.run(sql, {
+                    $server_id: server_id,
+                    $follow_time: follow_time.toISOString(),
+                }, ((err) => {
+                    if (err) {
+                        logger.error(`update m_server_info failed. err = ${err}`);
+                        reject(err);
+                    }
+
+                    logger.info(`update m_server_info successed. : server_id = ${server_id}, follow_time = ${follow_time.toISOString()}`);
+                    resolve();
                 }));
             });
 

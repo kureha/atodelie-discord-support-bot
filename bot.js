@@ -207,7 +207,7 @@ client.on('interactionCreate', async (interaction) => {
 
 // cron event
 const cron = require('node-cron');
-cron.schedule('*/10 * * * * *', () => {
+cron.schedule('*/30 * * * * *', () => {
   // loop for guild id
   client.guilds.cache.forEach((guild) => {
     // send message from master
@@ -225,22 +225,40 @@ cron.schedule('*/10 * * * * *', () => {
       
       // if follow time is null, apply default.
       if (server_info.follow_time === null) {
-        server_info.follow_time = new Date();
-        server_info.follow_time.setFullYear(2000);
-        server_info.follow_time.setMonth(1);
-        server_info.follow_time.setDate(1);
-        server_info.follow_time.setHours(0);
-        server_info.follow_time.setMinutes(0);
-        server_info.follow_time.setSeconds(0);
-        server_info.follow_time.setMilliseconds(0);
-        logger.warn(`server follow_time is null, apply default. : date = ${server_info.follow_time.toLocaleString()}`);
+        const temp_from_date = new Date();
+        temp_from_date.setFullYear(2000);
+        temp_from_date.setMonth(1);
+        temp_from_date.setDate(1);
+        temp_from_date.setHours(0);
+        temp_from_date.setMinutes(0);
+        temp_from_date.setSeconds(0);
+        temp_from_date.setMilliseconds(0);
+        server_info.follow_time = temp_from_date.toISOString();
+        logger.warn(`server follow_time is null, apply default. : date = ${server_info.follow_time}`);
       }
 
-      return recruitment.get_m_recruitment_id_for_follow(server_info.server_id, server_info.follow_time, to_datetime);
+      return recruitment.get_m_recruitment_id_for_follow(server_info.server_id, server_info.follow_time, to_datetime.toISOString());
     })
-    .then((id_list) => {
-      logger.info(`select follow id list completed.`)
-      logger.trace(id_list);
+    .then((data) => {
+      logger.info(`select follow data list completed.`)
+      logger.trace(data);
+
+      data.forEach((rec) => {
+        // 各募集ごとにループ
+        recruitment.get_t_participate(rec.token)
+        .then((user_list) => {
+          rec.user_list = user_list;
+          // ユーザが1人でもいたらフォロー
+          if (rec.user_list.length > 0) {
+            logger.trace(rec);
+            client.channels.cache.get(server_info.channel_id).send(messageManager.get_join_recruitment_follow_message(rec));
+          }
+        })
+      })
+    })
+    .then(() => {
+      // update master
+      recruitment.update_m_server_info_follow_time(server_info.server_id, to_datetime);
     })
     .catch((err) => {
       // send error message

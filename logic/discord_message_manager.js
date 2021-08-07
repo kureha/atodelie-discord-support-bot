@@ -105,4 +105,20 @@ module.exports = class DiscordMessageManager {
 
         return result;
     }
+
+    /**
+     * 募集参加時の組み込みメッセージを返します
+     * @param {DiscordAnalyzer} analyzer 
+     * @returns 
+     */
+     get_join_recruitment_follow_message(analyzer) {
+        let result = '';
+        result = `${result}\n\n募集名 : ${analyzer.name}\n主催者 : <@!${analyzer.owner_id}>\n募集期限 : ${this.get_date_string(analyzer.limit_time)}\n参加者 : `;
+
+        analyzer.user_list.forEach((v) => {
+            result = `${result}<@!${v.user_id}> `;
+        });
+
+        return result;
+    }
 };
