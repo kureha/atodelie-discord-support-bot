@@ -7,6 +7,8 @@ test("Test for constants", () => {
     expect(v.DISCORD_TOKEN_LENGTH).not.toBe(undefined);
     expect(v.DISCORD_LATEST_LIST_LENGTH).not.toBe(undefined);
     expect(v.DISCORD_LATEST_LIST_LENGTH).not.toBe(NaN);
+    expect(v.DISCORD_FOLLOW_MINUTE).not.toBe(undefined);
+    expect(v.DISCORD_FOLLOW_MINUTE).not.toBe(NaN);
     expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toBe(undefined);
     
     expect(v.SQLITE_FILE).not.toBe(undefined);

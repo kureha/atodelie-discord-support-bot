@@ -211,21 +211,42 @@ cron.schedule('*/10 * * * * *', () => {
   // loop for guild id
   client.guilds.cache.forEach((guild) => {
     // send message from master
-    /**
     let recruitment = new Recruitment();
     let server_info = undefined;
+
+    // follow to date
+    let to_datetime = new Date();
+    to_datetime.setMinutes(to_datetime.getMinutes() + constants.DISCORD_FOLLOW_MINUTE);
+
     recruitment.get_m_server_info(guild.id)
     .then((temp_server_info) => {
       server_info = temp_server_info;
-      logger.info(`cron message sended guild info : server_id = ${server_info.server_id}, channel_id = ${server_info.channel_id}`)
-      // client.channels.cache.get(server_info.channel_id).send(`message from cron sended.`);
+      logger.info(`cron message sended guild info : server_id = ${server_info.server_id}, channel_id = ${server_info.channel_id}, from_time = ${server_info.follow_time}, to_time = ${to_datetime.toLocaleString()}`)
+      
+      // if follow time is null, apply default.
+      if (server_info.follow_time === null) {
+        server_info.follow_time = new Date();
+        server_info.follow_time.setFullYear(2000);
+        server_info.follow_time.setMonth(1);
+        server_info.follow_time.setDate(1);
+        server_info.follow_time.setHours(0);
+        server_info.follow_time.setMinutes(0);
+        server_info.follow_time.setSeconds(0);
+        server_info.follow_time.setMilliseconds(0);
+        logger.warn(`server follow_time is null, apply default. : date = ${server_info.follow_time.toLocaleString()}`);
+      }
+
+      return recruitment.get_m_recruitment_id_for_follow(server_info.server_id, server_info.follow_time, to_datetime);
+    })
+    .then((id_list) => {
+      logger.info(`select follow id list completed.`)
+      logger.trace(id_list);
     })
     .catch((err) => {
       // send error message
       logger.error(`cron command failed for error.`);
       logger.error(err);
     });
-     */
   });
 });
 

@@ -305,7 +305,33 @@ module.exports = class Recruitment {
     }
 
     // 募集フォロー用SQL
-    // SELECT m1.[id] FROM [m_recruitment] m1 WHERE [server_id] = $server_id AND datetime(m1.[limit_time], 'localtime') > datetime($from_datetime) AND datetime(m1.[limit_time], 'localtime') < datetime($to_datetime) ORDER BY m1.[limit_time], m1.[id]
+    get_m_recruitment_id_for_follow(server_id, from_datetime, to_datetime) {
+        // Promise処理
+        return new Promise((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = `SELECT m1.[id] FROM [m_recruitment] m1 WHERE m1.[server_id] = $server_id AND datetime(m1.[limit_time], 'utc') > datetime($from_datetime) AND datetime(m1.[limit_time], 'utc') < datetime($to_datetime) ORDER BY m1.[limit_time], m1.[id]`;
+                logger.info(`sql = ${sql}, server_id = ${server_id}, from_time = ${from_datetime.toISOString()}, to_datetime = ${to_datetime.toISOString()}`);
+                db.all(sql, {
+                    $server_id: server_id,
+                    $from_datetime: from_datetime.toISOString(),
+                    $to_datetime: to_datetime.toISOString(),
+                }, ((err, rows) => {
+                    if (err) {
+                        logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_M_RECRUITMENT}`);
+                        reject(err);
+                    }
+                    logger.info(`selected m_reqruitement followup id successed.`);
+                    logger.trace(rows);
+                    resolve(rows);
+                }));
+            });
+
+            db.close();
+        });
+    }
 
     /**
      * 募集マスタ用のTOKENを生成します。

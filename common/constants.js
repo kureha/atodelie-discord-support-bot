@@ -11,6 +11,11 @@ module.exports = class Constants {
             // set default
             this.DISCORD_LATEST_LIST_LENGTH = 3;
         }
+        this.DISCORD_FOLLOW_MINUTE = parseInt(process.env.DISCORD_FOLLOW_MINUTE);
+        if (isNaN(this.DISCORD_FOLLOW_MINUTE)) {
+            // set default
+            this.DISCORD_FOLLOW_MINUTE = 30;
+        }
 
         // sqlite section
         this.SQLITE_FILE = process.env.SQLITE_FILE;
