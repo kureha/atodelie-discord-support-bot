@@ -145,10 +145,7 @@ client.on('interactionCreate', async (interaction) => {
         })
         .then((user_list) => {
           // get user information
-          recruitment_data.user_list = [];
-          user_list.forEach((v) => {
-            recruitment_data.user_list.push(v.user_id);
-          });
+          recruitment_data.user_list = user_list;
 
           // send message
           interaction.reply({
@@ -182,10 +179,7 @@ client.on('interactionCreate', async (interaction) => {
         })
         .then((user_list) => {
           // get user information
-          recruitment_data.user_list = [];
-          user_list.forEach((v) => {
-            recruitment_data.user_list.push(v.user_id);
-          });
+          recruitment_data.user_list = user_list;
 
           // send message
           interaction.reply({
@@ -207,7 +201,7 @@ client.on('interactionCreate', async (interaction) => {
 
 // cron event
 const cron = require('node-cron');
-cron.schedule('*/30 * * * * *', () => {
+cron.schedule('0 */1 * * * *', () => {
   // loop for guild id
   client.guilds.cache.forEach((guild) => {
     // send message from master
