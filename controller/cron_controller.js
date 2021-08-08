@@ -13,17 +13,17 @@ const MessageManager = require('./../logic/discord_message_manager');
 
 module.exports = class CronController {
     static follow_recruitment_member(client) {
+        // follow to date
+        const to_datetime = new Date();
+        to_datetime.setMinutes(to_datetime.getMinutes() + constants.DISCORD_FOLLOW_MINUTE);
+        logger.info(`follow recruitment cron start. : to_datetime = ${to_datetime.toISOString()}`);
+
         const recruitment = new Recruitment();
         const messageManager = new MessageManager();
 
         // loop for guild id
         client.guilds.cache.forEach((guild) => {
             let server_info = undefined;
-
-            // follow to date
-            let to_datetime = new Date();
-            to_datetime.setMinutes(to_datetime.getMinutes() + constants.DISCORD_FOLLOW_MINUTE);
-            logger.info(`follow recruitment cron start. : to_datetime = ${to_datetime.toISOString()}`);
 
             // get server info (send target channel, get latest follow_time)
             recruitment.get_m_server_info(guild.id)
