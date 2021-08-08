@@ -113,7 +113,7 @@ module.exports = class DiscordMessageManager {
      */
      get_join_recruitment_follow_message(analyzer) {
         let result = constants.DISCORD_MESSAGE_FOLLOW_RECRUITMENT;
-        result = `${result}\n募集名 : ${analyzer.name}\n募集期限 : ${this.get_date_string(analyzer.limit_time)}\n参加者 : `;
+        result = `${result}\n募集名 : ${analyzer.name}\n開始時刻 : ${this.get_date_string(analyzer.limit_time)}\n参加者 : `;
 
         analyzer.user_list.forEach((v) => {
             result = `${result}<@!${v.user_id}> `;
