@@ -64,14 +64,20 @@ module.exports = class DiscordMessageController {
                             // create join button
                             let join_button = new Discord.MessageButton()
                                 .setCustomId(`${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}${analyzer.token}`)
-                                .setStyle("PRIMARY")
-                                .setLabel("参加");
+                                .setStyle(constants.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT)
+                                .setLabel(constants.DISCORD_BUTTUN_JOIN);
 
                             // create decline button
                             let decline_button = new Discord.MessageButton()
                                 .setCustomId(`${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}${analyzer.token}`)
-                                .setStyle("DANGER")
-                                .setLabel("参加取り止め");
+                                .setStyle(constants.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT)
+                                .setLabel(constants.DISCORD_BUTTON_DECLINE);
+
+                            // create view button
+                            let view_button = new Discord.MessageButton()
+                                .setCustomId(`${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}${analyzer.token}`)
+                                .setStyle(constants.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT)
+                                .setLabel(constants.DISCORD_BUTTON_VIEW);
 
                             // send success message
                             message.channel.send({

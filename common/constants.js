@@ -36,6 +36,10 @@ module.exports = class Constants {
         this.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT = process.env.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT;
         this.DISCORD_MESSAGE_FOLLOW_RECRUITMENT = process.env.DISCORD_MESSAGE_FOLLOW_RECRUITMENT;
 
+        this.DISCORD_BUTTUN_JOIN = process.env.DISCORD_BUTTUN_JOIN;
+        this.DISCORD_BUTTON_DECLINE = process.env.DISCORD_BUTTON_DECLINE;
+        this.DISCORD_BUTTON_VIEW = process.env.DISCORD_BUTTON_VIEW;
+
         // message static values section
         this.DISCORD_MESSAGE_EMBED_NO_MEMBER = process.env.DISCORD_MESSAGE_EMBED_NO_MEMBER;
         this.DISCORD_MESSAGE_EMBED_TITLE = process.env.DISCORD_MESSAGE_EMBED_TITLE;
@@ -60,6 +64,11 @@ module.exports = class Constants {
 
         this.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX = 'join-recruite-token=';
         this.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX = 'decline-recruite-token=';
+        this.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX = 'view-recruite-token=';
+
+        this.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT = 'PRIMARY';
+        this.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT = 'DANGER';
+        this.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT = 'SECONDARY';
     }
 
     /**
