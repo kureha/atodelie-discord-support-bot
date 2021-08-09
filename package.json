@@ -4,7 +4,7 @@
   "description": "discord bot for support bot",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "^13.0.0-dev.t1627949059.35fa3b3",
+    "discord.js": "^13.0.0",
     "log4js": "^6.3.0",
     "node-cron": "^3.0.0",
     "sqlite3": "^5.0.2",
@@ -19,6 +19,6 @@
     "test": "node index.js"
   },
   "engines": {
-    "node": "12.x"
+    "node": "16.x"
   }
 }
