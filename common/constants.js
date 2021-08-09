@@ -38,11 +38,11 @@ module.exports = class Constants {
         this.DISCORD_MESSAGE_FOLLOW_RECRUITMENT = process.env.DISCORD_MESSAGE_FOLLOW_RECRUITMENT;
 
         // message static values section
-        this.DISCORD_MESSAGE_EMBED_NO_MEMBER = `参加者無し`;
-        this.DISCORD_MESSAGE_EMBED_TITLE = `パーティー名`;
-        this.DISCORD_MESSAGE_EMBED_OWNER = `主催者`;
-        this.DISCORD_MESSAGE_EMBED_START_TIME = `開始日時`;
-        this.DISCORD_MESSAGE_EMBED_MEMBERS = `参加者`;
+        this.DISCORD_MESSAGE_EMBED_NO_MEMBER = process.env.DISCORD_MESSAGE_EMBED_NO_MEMBER;
+        this.DISCORD_MESSAGE_EMBED_TITLE = process.env.DISCORD_MESSAGE_EMBED_TITLE;
+        this.DISCORD_MESSAGE_EMBED_OWNER = process.env.DISCORD_MESSAGE_EMBED_OWNER;
+        this.DISCORD_MESSAGE_EMBED_START_TIME = process.env.DISCORD_MESSAGE_EMBED_START_TIME;
+        this.DISCORD_MESSAGE_EMBED_MEMBERS = process.env.DISCORD_MESSAGE_EMBED_MEMBERS;
 
         // static values
         this.TYPE_INIT = 0;

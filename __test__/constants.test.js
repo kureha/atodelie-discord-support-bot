@@ -27,6 +27,12 @@ test("Test for constants", () => {
     expect(v.DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_FOLLOW_RECRUITMENT).not.toBe(undefined);
 
+    expect(v.DISCORD_MESSAGE_EMBED_NO_MEMBER).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_EMBED_TITLE).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_EMBED_OWNER).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_EMBED_START_TIME).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_EMBED_MEMBERS).not.toBe(undefined);
+
     expect(v.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX).not.toBe(undefined);
     expect(v.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX).not.toBe(undefined);
 })
