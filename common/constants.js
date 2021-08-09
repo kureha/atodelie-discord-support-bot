@@ -5,7 +5,6 @@ module.exports = class Constants {
 
         // common section
         this.DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-        this.DISCORD_TOKEN_LENGTH = process.env.DISCORD_TOKEN_LENGTH;
         this.DISCORD_LATEST_LIST_LENGTH = parseInt(process.env.DISCORD_LATEST_LIST_LENGTH);
         if (isNaN(this.DISCORD_LATEST_LIST_LENGTH)) {
             // set default

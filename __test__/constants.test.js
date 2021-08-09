@@ -4,7 +4,6 @@ test("Test for constants", () => {
     var v = new Constants();
     
     expect(v.DISCORD_BOT_TOKEN).not.toBe(undefined);
-    expect(v.DISCORD_TOKEN_LENGTH).not.toBe(undefined);
     expect(v.DISCORD_LATEST_LIST_LENGTH).not.toBe(undefined);
     expect(v.DISCORD_LATEST_LIST_LENGTH).not.toBe(NaN);
     expect(v.DISCORD_FOLLOW_MINUTE).not.toBe(undefined);
