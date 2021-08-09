@@ -57,7 +57,9 @@ module.exports = class DiscordInteractionController {
 
                         // send message
                         interaction.reply({
-                            content: `${messageManager.get_join_recruitment(recruitment_data, recruitment_target_role)}${messageManager.get_join_recruitment_embed_message(recruitment_data)}`,
+                            embeds: [
+                                messageManager.get_join_recruitment(recruitment_data, recruitment_target_role)
+                            ],
                         });
                     })
                     .catch((err) => {
@@ -91,7 +93,9 @@ module.exports = class DiscordInteractionController {
 
                         // send message
                         interaction.reply({
-                            content: `${messageManager.get_decline_recruitment(recruitment_data, recruitment_target_role)}${messageManager.get_join_recruitment_embed_message(recruitment_data)}`,
+                            embeds: [
+                                messageManager.get_decline_recruitment(recruitment_data, recruitment_target_role)
+                            ],
                         });
                     })
                     .catch((err) => {

@@ -46,13 +46,19 @@ module.exports = class CronController {
 
                     // get join data and send message
                     recruitment_data_list.forEach((recruitment_data) => {
+                        logger.info(`follow target : name = ${recruitment_data.name}`)
                         recruitment.get_t_participate(recruitment_data.token)
                             .then((user_list) => {
+                                logger.info(`follow target select user list completed. : name = ${recruitment_data.name}, user_list_length = ${user_list.length}`)
                                 // get user list
                                 recruitment_data.user_list = user_list;
                                 // if user more than 0 member, followup executed.
                                 if (recruitment_data.user_list.length > 0) {
-                                    client.channels.cache.get(server_info.channel_id).send(messageManager.get_join_recruitment_follow_message(recruitment_data));
+                                    client.channels.cache.get(server_info.channel_id).send({
+                                        embeds: [
+                                            messageManager.get_join_recruitment_follow_message(recruitment_data, server_info.recruitment_target_role),
+                                        ]
+                                    });
                                 }
                             })
                     })

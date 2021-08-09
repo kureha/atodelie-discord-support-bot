@@ -75,7 +75,10 @@ module.exports = class DiscordMessageController {
 
                             // send success message
                             message.channel.send({
-                                content: `${messageManager.get_new_recruitment_message(analyzer, recruitment_target_role)}${messageManager.get_new_recruitment_embed_message(analyzer)}`,
+                                //content: `${messageManager.get_new_recruitment_message(analyzer, recruitment_target_role)}${messageManager.get_new_recruitment_embed_message(analyzer)}`,
+                                embeds: [
+                                    messageManager.get_new_recruitment_message(analyzer, recruitment_target_role)
+                                ],
                                 components: [
                                     new Discord.MessageActionRow().addComponents(join_button, decline_button),
                                 ],

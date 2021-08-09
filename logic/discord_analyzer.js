@@ -85,7 +85,13 @@ module.exports = class DiscordAnalyzer {
             this.status = constants.STATUS_ENABLED;
             // copy user id for participate registration.
             this.user_id = message_user_id;
-            this.user_list.push(this.user_id);
+            // create dummy user_list object (for emebed message)
+            this.user_list.push({
+                user_id: this.user_id,
+                status: constants.STATUS_ENABLED,
+                description: '',
+                delete: false,
+            });
             this.description = "";
             this.delete = false;
         }
