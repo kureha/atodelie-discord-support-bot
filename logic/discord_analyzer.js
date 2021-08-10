@@ -151,24 +151,25 @@ module.exports = class DiscordAnalyzer {
         var minute = undefined;
 
         // check1
-        var re_result = mes.match(/(\d{1,2})時/);
-        if (re_result != undefined && re_result != null && re_result.length > 1) {
+        var re_result = mes.match(/(\d{2})[:]{0,1}(\d{2})/);
+        if (re_result != undefined && re_result != null && re_result.length > 2) {
             hour = re_result[1];
-            // 24時だけは特殊処理
-            if (hour == 24) {
-                hour = "0";
-            }
-            minute = "0";
+            minute = re_result[2];
         }
 
         // if failed check 1
         if (hour === undefined || minute === undefined) {
             // check2
-            re_result = mes.match(/(\d{2})[:]{0,1}(\d{2})/);
-            if (re_result != undefined && re_result != null && re_result.length > 2) {
+            re_result = mes.match(/(\d{1,2})時/)
+            if (re_result != undefined && re_result != null && re_result.length > 1) {
                 hour = re_result[1];
-                minute = re_result[2];
+                minute = '0';
             }
+        }
+
+        // hourが24の場合は0として扱う
+        if (hour == '24') {
+            hour = '0';
         }
 
         // 値をチェックし、有効であれば値を返します
