@@ -5,12 +5,16 @@ const logger = require('./../common/logger');
 const Constants = require('./../common/constants');
 const constants = new Constants();
 
+// エンティティ有効化
+const Participate = require('../entity/participate');
+
 module.exports = class DiscordInteraction {
 
     static DESCRIPTION_FOR_JOIN_FROM_BUTTON = `ボタンからの参加`;
 
     constructor(customId, user_id) {
         // properties
+        this.id = ``;
         this.valid = false;
         this.token = ``;
         this.error_messages = [];
@@ -45,5 +49,42 @@ module.exports = class DiscordInteraction {
         this.status = constants.STATUS_ENABLED
         this.user_id = user_id;
         this.description = DiscordInteraction.DESCRIPTION_FOR_JOIN_FROM_BUTTON;
+    }
+
+    /**
+     * 新規IDをインスタンスに適用します
+     * @param {string} new_id 
+     */
+    set_id(new_id) {
+        this.id = new_id;
+    }
+
+    /**
+     * 新規トークンをインスタンスに適用します
+     * @param {string} new_token 
+     */
+    set_token(new_token) {
+        this.token = new_token;
+    }
+
+    /**
+     * 参加情報を返却します
+     * @returns 参加オブジェクト
+     */
+    get_join_participate() {
+        const participate = new Participate();
+
+        if (this.valid === false) {
+            return undefined;
+        } else {
+            participate.id = this.id;
+            participate.token = this.token;
+            participate.status = this.status;
+            participate.user_id = this.user_id;
+            participate.description = this.description;
+            participate.delete = this.delete;
+
+            return participate;
+        }
     }
 }

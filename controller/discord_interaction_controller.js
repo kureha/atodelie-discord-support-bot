@@ -15,6 +15,7 @@ const ServerInfoRepository = require('../db/server_info');
 
 // create message modules
 const MessageManager = require('./../logic/discord_message_manager');
+const Recruitment = require('../entity/recruitment');
 
 module.exports = class DiscordInteractionController {
     static recirve_controller(client, interaction) {
@@ -33,16 +34,16 @@ module.exports = class DiscordInteractionController {
         let analyzer = new DiscordInteraction(interaction.customId, interaction.user.id);
         logger.trace(analyzer);
 
-        let recruitment_data = undefined;
+        let recruitment_data = new Recruitment();
         let recruitment_target_role = '';
 
         switch (analyzer.type) {
             case constants.TYPE_JOIN:
                 // join to target plan
-                participate_repo.insert_t_participate(analyzer)
+                participate_repo.insert_t_participate(analyzer.get_join_participate())
                     .catch((err) => {
                         // failed to insert, try to update
-                        return participate_repo.update_t_participate(analyzer);
+                        return participate_repo.update_t_participate(analyzer.get_join_participate());
                     })
                     .then(() => {
                         // get target role
@@ -57,6 +58,8 @@ module.exports = class DiscordInteractionController {
                     })
                     .then((data) => {
                         recruitment_data = data;
+                        // set id to analyzer
+                        analyzer.set_id(recruitment_data.id);
                         // get user list
                         return participate_repo.get_t_participate(recruitment_data.token);
                     })
@@ -79,7 +82,7 @@ module.exports = class DiscordInteractionController {
                 break;
 
             case constants.TYPE_DECLINE:
-                participate_repo.update_t_participate(analyzer)
+                participate_repo.update_t_participate(analyzer.get_join_participate())
                     .then(() => {
                         // get target role
                         return server_info_repo.get_m_server_info(interaction.guildId);
@@ -93,6 +96,8 @@ module.exports = class DiscordInteractionController {
                     })
                     .then((data) => {
                         recruitment_data = data;
+                        // set id to analyzer
+                        analyzer.set_id(recruitment_data.id);
                         // get user list
                         return participate_repo.get_t_participate(recruitment_data.token);
                     })
