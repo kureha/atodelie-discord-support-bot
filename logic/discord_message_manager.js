@@ -31,21 +31,21 @@ module.exports = class DiscordMessageManager {
 
     /**
      * 募集用の組み込みメッセージを返す内部処理です。
-     * @param {DiscordInteraction} analyzer 
+     * @param {Recruitment} recruitment 
      * @param {string} recruitment_target_role 
      * @param {string} title 
      * @param {string} desription 
      * @returns Discord.MessageEmbed形式のメッセージ
      */
-    get_recruitment_embed_message(analyzer, recruitment_target_role, title, desription) {
+    get_recruitment_embed_message(recruitment, recruitment_target_role, title, desription) {
         // create description
         let description_converted = this.enable_lf(desription)
             .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
-            .replace('%%TOKEN%%', analyzer.token);
+            .replace('%%TOKEN%%', recruitment.token);
 
         // create user list string
         let join_users = '';
-        analyzer.user_list.forEach((v) => {
+        recruitment.user_list.forEach((v) => {
             join_users = `${join_users}<@!${v.user_id}> `;
         });
         if (join_users.length === 0) {
@@ -59,11 +59,11 @@ module.exports = class DiscordMessageManager {
             fields: [
                 {
                     name: constants.DISCORD_MESSAGE_EMBED_TITLE,
-                    value: `${analyzer.name}`,
+                    value: `${recruitment.name}`,
                 },
                 {
                     name: constants.DISCORD_MESSAGE_EMBED_START_TIME,
-                    value: `${this.get_date_string(analyzer.limit_time)}`
+                    value: `${this.get_date_string(recruitment.limit_time)}`
                 },
                 {
                     name: constants.DISCORD_MESSAGE_EMBED_MEMBERS,

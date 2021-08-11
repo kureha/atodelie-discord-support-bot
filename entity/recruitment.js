@@ -15,5 +15,8 @@ module.exports = class Recruitment {
         this.owner_id = '';
         this.description = '';
         this.delete = false;
+
+        // insert participate array
+        this.user_list = [];
     }
 }

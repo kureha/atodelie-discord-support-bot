@@ -5,6 +5,10 @@ const logger = require('./../common/logger');
 const Constants = require('./../common/constants');
 const constants = new Constants();
 
+// エンティティ有効化
+const Recruitment = require('./../entity/recruitment');
+const Participate = require('../entity/participate');
+
 module.exports = class DiscordAnalyzer {
 
     static HOURS_DEFAULT = constants.RECRUITMENT_DEFAULT_LIMIT_HOURS;
@@ -83,17 +87,11 @@ module.exports = class DiscordAnalyzer {
 
             // その他必要な値を付与
             this.status = constants.STATUS_ENABLED;
-            // copy user id for participate registration.
-            this.user_id = message_user_id;
-            // create dummy user_list object (for emebed message)
-            this.user_list.push({
-                user_id: this.user_id,
-                status: constants.STATUS_ENABLED,
-                description: '',
-                delete: false,
-            });
             this.description = "";
             this.delete = false;
+
+            // ユーザリストにオーナーの情報を追加
+            this.user_list.push(this.get_owner_participate());
         }
         else if (DiscordAnalyzer.check_type_list(this.message) == true) {
             // 一覧表示
@@ -110,6 +108,77 @@ module.exports = class DiscordAnalyzer {
         // エラーメッセージを必要日応じて格納する
         if (this.valid === false) {
             this.error_messages = error_messages_list;
+        }
+    }
+
+    /**
+     * 新規IDをインスタンスに適用します。
+     * @param {string} new_id 
+     */
+    set_id(new_id) {
+        this.id = new_id;
+        this.user_list.forEach((v) => {
+            v.id = new_id;
+        })
+    }
+    
+    /**
+     * 新規トークンをインスタンスに適用します。
+     * @param {string} new_token 
+     */
+     set_token(new_token) {
+        this.token = new_token;
+        this.user_list.forEach((v) => {
+            v.token = new_token;
+        })
+    }
+
+    /**
+     * Analyzerの結果を募集オブジェクトとして返却します。
+     * 募集が有効でない場合はundefinedが帰ります。
+     * @returns 募集オブジェクト
+     */
+    get_recruitment() {
+        const recruitment = new Recruitment();
+        
+        if (this.valid === false) {
+            return undefined;
+        } else {
+            recruitment.id = this.id;
+            recruitment.server_id = this.server_id;
+            recruitment.token = this.token;
+            recruitment.status = this.status;
+            recruitment.limit_time = this.limit_time;
+            recruitment.name = this.name;
+            recruitment.owner_id = this.owner_id;
+            recruitment.description = this.description;
+            recruitment.delete = this.delete;
+
+            // insert user list
+            recruitment.user_list = this.user_list;
+
+            return recruitment;
+        }
+    }
+
+    /**
+     * 募集主の参加情報を返却します。
+     * @returns 参加オブジェクト
+     */
+    get_owner_participate() {
+        const participate = new Participate();
+
+        if (this.valid === false) {
+            return undefined;
+        } else {
+            participate.id = this.id;
+            participate.token = this.token;
+            participate.status = this.status;
+            participate.user_id = this.owner_id;
+            participate.description = this.description;
+            participate.delete = this.delete;
+
+            return participate;
         }
     }
 

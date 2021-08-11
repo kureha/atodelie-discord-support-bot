@@ -40,23 +40,21 @@ module.exports = class DiscordMessageController {
 
             switch (analyzer.type) {
                 case constants.TYPE_RECRUITEMENT:
-                    // get token function for retry
-                    const token_function = recruitment_repo.get_m_recruitment_token();
-                    // get token first with retry
-                    token_function
+                    // get token function
+                    recruitment_repo.get_m_recruitment_token()
                         .then((token) => {
-                            analyzer.token = token;
+                            analyzer.set_token(token);
                             // get registration id
                             return recruitment_repo.get_m_recruitment_id();
                         })
                         .then((id) => {
                             // set id and master registration
-                            analyzer.id = id;
-                            return recruitment_repo.insert_m_recruitment(analyzer);
+                            analyzer.set_id(id);
+                            return recruitment_repo.insert_m_recruitment(analyzer.get_recruitment());
                         })
                         .then(() => {
                             // participate registration.
-                            return participate_repo.insert_t_participate(analyzer);
+                            return participate_repo.insert_t_participate(analyzer.user_list[0]);
                         })
                         .then(() => {
                             // get target role
@@ -67,8 +65,9 @@ module.exports = class DiscordMessageController {
                             recruitment_target_role = server_info.recruitment_target_role;
 
                             // compete all tasks
-                            logger.trace(analyzer);
                             logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, recruitment_target_role = ${recruitment_target_role}`);
+                            logger.trace(analyzer.get_recruitment());
+                            logger.trace(analyzer.get_owner_participate());
 
                             // create join button
                             let join_button = new Discord.MessageButton()
@@ -90,9 +89,8 @@ module.exports = class DiscordMessageController {
 
                             // send success message
                             message.channel.send({
-                                //content: `${messageManager.get_new_recruitment_message(analyzer, recruitment_target_role)}${messageManager.get_new_recruitment_embed_message(analyzer)}`,
                                 embeds: [
-                                    messageManager.get_new_recruitment_message(analyzer, recruitment_target_role)
+                                    messageManager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                 ],
                                 components: [
                                     new Discord.MessageActionRow().addComponents(join_button, decline_button),
