@@ -5,6 +5,10 @@ const Constants = require('../common/constants');
 const constants = new Constants();
 
 module.exports = class ServerInfo {
+    /**
+     * コンストラクタ
+     * @constructor
+     */
     constructor() {
         this.server_id = '';
         this.channel_id = '';

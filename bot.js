@@ -21,7 +21,7 @@ client.on('ready', () => {
 const discord_message_controller = require('./controller/discord_message_controller');
 client.on('messageCreate', message => {
   // call message recieve controller
-  discord_message_controller.recirve_controller(client, message);  
+  discord_message_controller.recirve_controller(client, message);
 });
 
 // interaction event

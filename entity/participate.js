@@ -5,6 +5,10 @@ const Constants = require('../common/constants');
 const constants = new Constants();
 
 module.exports = class Participate {
+    /**
+     * コンストラクタ
+     * @constructor
+     */
     constructor() {
         this.id = -1;
         this.token = '';
