@@ -12,6 +12,7 @@ const ServerInfoRepository = require('../db/server_info');
 
 // create message modules
 const MessageManager = require('./../logic/discord_message_manager');
+const ServerInfo = require('../entity/server_info');
 
 module.exports = class CronController {
     static follow_recruitment_member(client) {
@@ -30,7 +31,7 @@ module.exports = class CronController {
 
         // loop for guild id
         client.guilds.cache.forEach((guild) => {
-            let server_info_data = undefined;
+            let server_info_data = new ServerInfo();
 
             // get server info (send target channel, get latest follow_time)
             server_info_repo.get_m_server_info(guild.id)

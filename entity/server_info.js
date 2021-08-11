@@ -9,6 +9,6 @@ module.exports = class ServerInfo {
         this.server_id = '';
         this.channel_id = '';
         this.recruitment_target_role = '';
-        this.follow_time = null;
+        this.follow_time = new Date('2000-01-01T00:00:00.000Z');
     }
 }
