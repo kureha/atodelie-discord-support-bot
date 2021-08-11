@@ -69,6 +69,8 @@ module.exports = class Constants {
         this.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT = 'PRIMARY';
         this.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT = 'DANGER';
         this.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT = 'SECONDARY';
+
+        this.REQUIRE_NAME_SQLITE3 = 'sqlite3';
     }
 
     /**

@@ -1,0 +1,161 @@
+const logger = require('../common/logger');
+
+// 定数定義を読み込む
+const Constants = require('../common/constants');
+const constants = new Constants();
+
+// UUID有効化
+const uuid = require('uuid');
+
+module.exports = class ServerInfo {
+
+    /**
+     * チャンネル情報マスタテーブル作成用SQL
+     */
+    static SQL_CREATE_M_SERVER_INFO = 'CREATE TABLE IF NOT EXISTS [m_server_info] ( [server_id] TEXT NOT NULL UNIQUE, [channel_id] TEXT NOT NULL, [recruitment_target_role] TEXT NOT NULL, [follow_time] DATETIME, PRIMARY KEY([server_id]) )';
+
+    /**
+     * チャンネル情報マスタテーブル選択用SQL
+     */
+    static SQL_SELECT_M_SERVER_INFO = 'SELECT m1.[server_id] , m1.[channel_id], m1.[recruitment_target_role], m1.[follow_time] FROM [m_server_info] m1 ';
+
+    /**
+     * インスタンス化を行い、同時に、テーブルがない場合は作成する
+     * @returns {Promise} インスタンス
+     */
+    constructor() {
+        const db = this.get_db_instance(constants.SQLITE_FILE);
+        logger.info(`database open successed. db = ${db}`);
+
+        this.create_all_database(db)
+            .then(() => {
+                logger.info(`database initialize succeeded.`);
+            })
+            .catch((err) => {
+                logger.error(err);
+                throw err;
+            });
+    }
+
+    /**
+     * sqlite3のデータベースのインスタンスを取得する
+     * @param {string} file_path sqlite3ファイルパス
+     * @returns {Database} sqlite3データベース用インスタンス
+     */
+    get_db_instance(file_path) {
+        // SQLite初期化
+        const sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
+        var db = new sqlite.Database(file_path);
+
+        // インスタンス化できているかでエラーを判定する
+        if (db === undefined || db === null) {
+            logger.error(`database instance is undefined or null.`);
+            throw `database instance is undefined or null.`;
+        } else {
+            // 正常時はインスタンスを返す
+            return db;
+        }
+    }
+
+    /**
+     * 全テーブルを作成する
+     * @param {Database} db sqlite3データベース用インスタンス
+     */
+    create_all_database(db) {
+        return new Promise((resolve, reject) => {
+            db.serialize(function () {
+                // run serialize
+                db.run(ServerInfo.SQL_CREATE_M_SERVER_INFO, [], ((err) => {
+                    if (err) {
+                        logger.error(`sql exception occured when create table. sql = ${ServerInfo.SQL_CREATE_T_PARTICIPATE}`);
+                        reject(err);
+                    }
+
+                    // 全SQL処理後に完了とする
+                    resolve();
+                }));
+            });
+
+            db.close();
+        });
+    }
+
+    /**
+     * チャンネルマスタから情報を取得します
+     * @param {string} server_id 
+     * @returns Promiseオブジェクト、データベースの選択内容
+     */
+    get_m_server_info(server_id) {
+        // Promise処理
+        return new Promise((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = `${ServerInfo.SQL_SELECT_M_SERVER_INFO} WHERE m1.[server_id] = ? `;
+                logger.info(`sql = ${sql}, server_id = ${server_id}`);
+                db.get(sql, [server_id], ((err, row) => {
+                    if (err) {
+                        logger.error(`select m_server_info failed. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
+                        // return blank data
+                        resolve({
+                            server_id: server_id,
+                            channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
+                            recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
+                            follow_time: null,
+                        });
+                    }
+                    if (row === undefined) {
+                        logger.error(`data not found on m_server_info. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
+                        // return blank data
+                        resolve({
+                            server_id: server_id,
+                            channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
+                            recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
+                            follow_time: null,
+                        });
+                    }
+
+                    logger.info(`selected m_server_info successed. : server_id = ${server_id}`);
+                    logger.trace(row);
+                    resolve(row);
+                }));
+            });
+
+            db.close();
+        });
+    }
+
+    /**
+     * チャンネルマスタから情報を取得します
+     * @param {string} server_id 
+     * @param {Date} follow_time
+     * @returns Promiseオブジェクト、データベースの選択内容
+     */
+    update_m_server_info_follow_time(server_id, follow_time) {
+        // Promise処理
+        return new Promise((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = `UPDATE [m_server_info] SET follow_time = $follow_time WHERE server_id = $server_id`;
+                logger.info(`sql = ${sql}, server_id = ${server_id}, follow_time = ${follow_time.toISOString()}`);
+                db.run(sql, {
+                    $server_id: server_id,
+                    $follow_time: follow_time.toISOString(),
+                }, ((err) => {
+                    if (err) {
+                        logger.error(`update m_server_info failed. err = ${err}`);
+                        reject(err);
+                    }
+
+                    logger.info(`update m_server_info successed. : server_id = ${server_id}, follow_time = ${follow_time.toISOString()}`);
+                    resolve();
+                }));
+            });
+
+            db.close();
+        });
+    }
+}

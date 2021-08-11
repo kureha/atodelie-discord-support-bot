@@ -10,7 +10,11 @@ const constants = new Constants();
 
 // import modules
 const DiscordAnalyzer = require('./../logic/discord_analyzer');
+
+// import modules
 const Recruitment = require('./../db/recruitement');
+const Participate = require('../db/participate')
+const ServerInfo = require('../db/server_info');
 
 // create message modules
 const MessageManager = require('./../logic/discord_message_manager');
@@ -21,7 +25,12 @@ module.exports = class DiscordMessageController {
             logger.info(`recieved message : ${message.content}`);
             logger.trace(message);
 
+            // create db instances
             const recruitment = new Recruitment();
+            const participate = new Participate();
+            const server_info = new ServerInfo();
+
+            // create message manager instance
             const messageManager = new MessageManager();
 
             // メッセージを解析する
@@ -47,11 +56,11 @@ module.exports = class DiscordMessageController {
                         })
                         .then(() => {
                             // participate registration.
-                            return recruitment.insert_t_participate(analyzer);
+                            return participate.insert_t_participate(analyzer);
                         })
                         .then(() => {
                             // get target role
-                            return recruitment.get_m_server_info(message.guild.id);
+                            return server_info.get_m_server_info(message.guild.id);
                         })
                         .then((server_info) => {
                             // get target role

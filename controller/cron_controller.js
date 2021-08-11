@@ -7,6 +7,8 @@ const constants = new Constants();
 
 // import modules
 const Recruitment = require('./../db/recruitement');
+const Participate = require('../db/participate')
+const ServerInfo = require('../db/server_info');
 
 // create message modules
 const MessageManager = require('./../logic/discord_message_manager');
@@ -18,27 +20,32 @@ module.exports = class CronController {
         to_datetime.setMinutes(to_datetime.getMinutes() + constants.DISCORD_FOLLOW_MINUTE);
         logger.info(`follow recruitment cron start. : to_datetime = ${to_datetime.toISOString()}`);
 
+        // create db instances
         const recruitment = new Recruitment();
+        const participate = new Participate();
+        const server_info = new ServerInfo();
+
+        // create message manager instance
         const messageManager = new MessageManager();
 
         // loop for guild id
         client.guilds.cache.forEach((guild) => {
-            let server_info = undefined;
+            let server_info_data = undefined;
 
             // get server info (send target channel, get latest follow_time)
-            recruitment.get_m_server_info(guild.id)
-                .then((temp_server_info) => {
-                    server_info = temp_server_info;
-                    logger.info(`cron message sended guild info : server_id = ${server_info.server_id}, channel_id = ${server_info.channel_id}, from_time = ${server_info.follow_time}, to_time = ${to_datetime.toLocaleString()}`)
+            server_info.get_m_server_info(guild.id)
+                .then((temp_server_info_data) => {
+                    server_info_data = temp_server_info_data;
+                    logger.info(`cron message sended guild info : server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, from_time = ${server_info_data.follow_time}, to_time = ${to_datetime.toLocaleString()}`)
 
                     // if follow time is null, apply default.
-                    if (server_info.follow_time === null) {
-                        server_info.follow_time = Constants.get_default_date().toISOString();
-                        logger.warn(`server follow_time is null, apply default. : date = ${server_info.follow_time}`);
+                    if (server_info_data.follow_time === null) {
+                        server_info_data.follow_time = Constants.get_default_date().toISOString();
+                        logger.warn(`server follow_time is null, apply default. : date = ${server_info_data.follow_time}`);
                     }
 
                     // get follow lists
-                    return recruitment.get_m_recruitment_for_follow(server_info.server_id, server_info.follow_time, to_datetime.toISOString());
+                    return recruitment.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time, to_datetime.toISOString());
                 })
                 .then((recruitment_data_list) => {
                     logger.info(`select follow data list completed.`)
@@ -47,16 +54,16 @@ module.exports = class CronController {
                     // get join data and send message
                     recruitment_data_list.forEach((recruitment_data) => {
                         logger.info(`follow target : name = ${recruitment_data.name}`)
-                        recruitment.get_t_participate(recruitment_data.token)
+                        participate.get_t_participate(recruitment_data.token)
                             .then((user_list) => {
                                 logger.info(`follow target select user list completed. : name = ${recruitment_data.name}, user_list_length = ${user_list.length}`)
                                 // get user list
                                 recruitment_data.user_list = user_list;
                                 // if user more than 0 member, followup executed.
                                 if (recruitment_data.user_list.length > 0) {
-                                    client.channels.cache.get(server_info.channel_id).send({
+                                    client.channels.cache.get(server_info_data.channel_id).send({
                                         embeds: [
-                                            messageManager.get_join_recruitment_follow_message(recruitment_data, server_info.recruitment_target_role),
+                                            messageManager.get_join_recruitment_follow_message(recruitment_data, server_info_data.recruitment_target_role),
                                         ]
                                     });
                                 }
@@ -65,7 +72,7 @@ module.exports = class CronController {
                 })
                 .then(() => {
                     // update master
-                    recruitment.update_m_server_info_follow_time(server_info.server_id, to_datetime);
+                    server_info.update_m_server_info_follow_time(server_info_data.server_id, to_datetime);
                     logger.info(`follow recruitment cron completed.`);
                 })
                 .catch((err) => {

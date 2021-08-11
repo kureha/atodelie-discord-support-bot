@@ -1,14 +1,23 @@
 const logger = require('../common/logger');
-const Recruitment = require('./../db/recruitement');
+const Recruitment = require('../db/recruitement');
+const Participate = require('../db/participate')
+const ServerInfo = require('../db/server_info');
 
 test("test for database initialize", () => {
-    var recruitment = new Recruitment();
+    let recruitment = new Recruitment();
     expect(recruitment).not.toBe(undefined);
+    let participate = new Participate();
+    expect(participate).not.toBe(undefined);
+    let server_info = new ServerInfo();
+    expect(server_info).not.toBe(undefined);
 });
 
 test("test for m_recruitment c/r/u/d", () => {
     return new Promise((resolve, reject) => {
         let recruitment = new Recruitment();
+        let participate = new Participate();
+        let server_info = new ServerInfo();
+
         let test_token = 'token_';
         let test_id = undefined;
 
@@ -87,6 +96,8 @@ test("test for m_recruitment c/r/u/d", () => {
 test('test for t_participate c/r/u/d', () => {
     return new Promise((resolve, reject) => {
         let recruitment = new Recruitment();
+        let participate = new Participate();
+        let server_info = new ServerInfo();
         let test_token = 'token_';
         let test_id = undefined;
 
@@ -129,13 +140,13 @@ test('test for t_participate c/r/u/d', () => {
                 p01.token = test_token;
 
                 // insert participate
-                return recruitment.insert_t_participate(p01);
+                return participate.insert_t_participate(p01);
             })
             .then(() => {
                 p02.token = test_token;
 
                 // insert participate
-                return recruitment.insert_t_participate(p02);
+                return participate.insert_t_participate(p02);
             })
             .then(() => {
                 p01.status = 5;
@@ -143,11 +154,11 @@ test('test for t_participate c/r/u/d', () => {
                 p01.delete = false;
 
                 // update
-                return recruitment.update_t_participate(p01);
+                return participate.update_t_participate(p01);
             })
             .then(() => {
                 // get
-                return recruitment.get_t_participate(test_token);
+                return participate.get_t_participate(test_token);
             })
             .then((datas) => {
                 expect(datas.length).toBe(2);
@@ -169,7 +180,7 @@ test('test for t_participate c/r/u/d', () => {
                 });
 
                 // delete test
-                return recruitment.delete_t_participate(test_token);
+                return participate.delete_t_participate(test_token);
             })
             .then(() => {
                 // delete master

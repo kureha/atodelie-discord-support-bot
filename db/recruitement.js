@@ -45,46 +45,6 @@ module.exports = class Recruitment {
     static SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT = 'SELECT COUNT(*) AS [count] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') ';
 
     /**
-     * 募集データテーブル作成用SQL
-     */
-    static SQL_CREATE_T_PARTICIPATE = 'CREATE TABLE IF NOT EXISTS [t_participate] ( [id] INTEGER NOT NULL, [status] INTEGER NOT NULL, [user_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id],[user_id]) )';
-
-    /**
-     * 募集データテーブル選択用SQL
-     */
-    static SQL_SELECT_T_PARTICIPATE = 'SELECT t1.[id], t1.[status], t1.[user_id], t1.[description], t1.[regist_time], t1.[update_time], t1.[delete] FROM [t_participate] t1 ';
-
-    /**
-     * 募集データテーブル挿入用SQL
-     */
-    static SQL_INSERT_T_PARTICIPATE = 'INSERT INTO [t_participate] ([id], [status], [user_id], [description], [regist_time], [update_time], [delete]) SELECT [id], $status, $user_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') ';
-
-    /**
-     * 募集データテーブル更新用SQL
-     */
-    static SQL_UPDATE_T_PARTICIPATE = 'UPDATE [t_participate] SET [status] = $status, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
-
-    /**
-     * 募集データテーブル削除用SQL
-     */
-    static SQL_DELETE_T_PARTICIPATE = 'DELETE FROM [t_participate] ';
-
-    /**
-     * チャンネル情報マスタテーブル作成用SQL
-     */
-    static SQL_CREATE_M_SERVER_INFO = 'CREATE TABLE IF NOT EXISTS [m_server_info] ( [server_id] TEXT NOT NULL UNIQUE, [channel_id] TEXT NOT NULL, [recruitment_target_role] TEXT NOT NULL, [follow_time] DATETIME, PRIMARY KEY([server_id]) )';
-
-    /**
-     * チャンネル情報マスタテーブル選択用SQL
-     */
-    static SQL_SELECT_M_SERVER_INFO = 'SELECT m1.[server_id] , m1.[channel_id], m1.[recruitment_target_role], m1.[follow_time] FROM [m_server_info] m1 ';
-
-    /**
-     * SQLIET3のモジュール名称
-     */
-    static REQUIRE_NAME_SQLITE3 = 'sqlite3';
-
-    /**
      * インスタンス化を行い、同時に、テーブルがない場合は作成する
      * @returns {Promise} インスタンス
      */
@@ -109,7 +69,7 @@ module.exports = class Recruitment {
      */
     get_db_instance(file_path) {
         // SQLite初期化
-        const sqlite = require(Recruitment.REQUIRE_NAME_SQLITE3).verbose();
+        const sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
         var db = new sqlite.Database(file_path);
 
         // インスタンス化できているかでエラーを判定する
@@ -133,18 +93,6 @@ module.exports = class Recruitment {
                 db.run(Recruitment.SQL_CREATE_M_RECRUITMENT, [], ((err) => {
                     if (err) {
                         logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_M_RECRUITMENT}`);
-                        reject(err);
-                    }
-                }));
-                db.run(Recruitment.SQL_CREATE_T_PARTICIPATE, [], ((err) => {
-                    if (err) {
-                        logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_T_PARTICIPATE}`);
-                        reject(err);
-                    }
-                }));
-                db.run(Recruitment.SQL_CREATE_M_SERVER_INFO, [], ((err) => {
-                    if (err) {
-                        logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_T_PARTICIPATE}`);
                         reject(err);
                     }
 
@@ -441,214 +389,6 @@ module.exports = class Recruitment {
                         logger.trace(rows);
                         resolve(rows);
                     }
-                }));
-            });
-
-            db.close();
-        });
-    }
-
-    /**
-     * 参加データを1行追加します
-     * @param {Object} data 
-     */
-    insert_t_participate(data) {
-        // Promise処理
-        return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(constants.SQLITE_FILE);
-            db.serialize(function () {
-                // get prepared statement
-                const sql = `${Recruitment.SQL_INSERT_T_PARTICIPATE}`;
-                logger.info(`sql = ${sql}, token = ${data.token}`);
-                const stmt = db.prepare(sql);
-                stmt.run({
-                    $token: data.token,
-                    $status: data.status,
-                    $user_id: data.user_id,
-                    $description: data.description,
-                }, (err) => {
-                    if (err) {
-                        logger.error(err);
-                        reject(err);
-                    }
-                    // resolve ended this sql
-                    resolve();
-                });
-                stmt.finalize();
-            });
-            db.close();
-        });
-    }
-
-    /**
-     * 参加データを1行更新します
-     * @param {Object} data キーは「data.token」「data.user_id」の二つ
-     */
-    update_t_participate(data) {
-        // Promise処理
-        return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(constants.SQLITE_FILE);
-            db.serialize(function () {
-                // get prepared statement
-                const sql = `${Recruitment.SQL_UPDATE_T_PARTICIPATE} where [id] = (select [id] from [m_recruitment] where [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\')) AND [user_id] = $user_id `;
-                logger.info(`sql = ${sql}, token = ${data.token}`);
-                const stmt = db.prepare(sql);
-                stmt.run({
-                    $token: data.token,
-                    $user_id: data.user_id,
-                    $status: data.status,
-                    $description: data.description,
-                    $delete: data.delete,
-                }, (err) => {
-                    if (err) {
-                        logger.error(err);
-                        reject(err);
-                    }
-                    // resolve ended this sql
-                    resolve();
-                });
-                stmt.finalize();
-            });
-            db.close();
-        });
-    }
-
-
-    /**
-     * 参加データを削除します
-     * @param {Object} data 
-     */
-    delete_t_participate(token) {
-        // Promise処理
-        return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(constants.SQLITE_FILE);
-            db.serialize(function () {
-                // get prepared statement
-                const sql = `${Recruitment.SQL_DELETE_T_PARTICIPATE} WHERE [id] = (SELECT [id] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\')) `;
-                logger.info(`sql = ${sql}, token = ${token}`);
-                const stmt = db.prepare(sql);
-                stmt.run({
-                    $token: token,
-                }, (err) => {
-                    if (err) {
-                        logger.error(err);
-                        reject(err);
-                    }
-                    // resolve ended this sql
-                    resolve();
-                });
-                stmt.finalize();
-            });
-            db.close();
-        });
-    }
-
-    /**
-     * 参加データをN行選択します
-     * @param {string} token 
-     * @returns Promiseオブジェクト、データベースの選択内容
-     */
-    get_t_participate(token) {
-        // Promise処理
-        return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(constants.SQLITE_FILE);
-
-            db.serialize(function () {
-                // run serialize
-                const sql = `${Recruitment.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and datetime(m1.[limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') order by t1.[update_time] `;
-                logger.info(`sql = ${sql}, token = ${token}`);
-                db.all(sql, [token], ((err, rows) => {
-                    if (err) {
-                        logger.error(`select t_participate failed. sql = ${sql}, key = ${token}`);
-                        reject(err);
-                    }
-                    if (rows === undefined) {
-                        logger.error(`data not found on t_participate. sql = ${sql}, key = ${token}`);
-                        reject(`data not found on t_participate. sql = ${sql}, key = ${token}`);
-                    }
-
-                    logger.info(`selected t_participate successed. : key = ${token}`);
-                    logger.trace(rows);
-                    resolve(rows);
-                }));
-            });
-
-            db.close();
-        });
-    }
-
-    /**
-     * チャンネルマスタから情報を取得します
-     * @param {string} server_id 
-     * @returns Promiseオブジェクト、データベースの選択内容
-     */
-    get_m_server_info(server_id) {
-        // Promise処理
-        return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(constants.SQLITE_FILE);
-
-            db.serialize(function () {
-                // run serialize
-                const sql = `${Recruitment.SQL_SELECT_M_SERVER_INFO} WHERE m1.[server_id] = ? `;
-                logger.info(`sql = ${sql}, server_id = ${server_id}`);
-                db.get(sql, [server_id], ((err, row) => {
-                    if (err) {
-                        logger.error(`select m_server_info failed. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
-                        // return blank data
-                        resolve({
-                            server_id: server_id,
-                            channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
-                            recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
-                            follow_time: null,
-                        });
-                    }
-                    if (row === undefined) {
-                        logger.error(`data not found on m_server_info. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
-                        // return blank data
-                        resolve({
-                            server_id: server_id,
-                            channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
-                            recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
-                            follow_time: null,
-                        });
-                    }
-
-                    logger.info(`selected m_server_info successed. : server_id = ${server_id}`);
-                    logger.trace(row);
-                    resolve(row);
-                }));
-            });
-
-            db.close();
-        });
-    }
-
-    /**
-     * チャンネルマスタから情報を取得します
-     * @param {string} server_id 
-     * @param {Date} follow_time
-     * @returns Promiseオブジェクト、データベースの選択内容
-     */
-    update_m_server_info_follow_time(server_id, follow_time) {
-        // Promise処理
-        return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(constants.SQLITE_FILE);
-
-            db.serialize(function () {
-                // run serialize
-                const sql = `UPDATE [m_server_info] SET follow_time = $follow_time WHERE server_id = $server_id`;
-                logger.info(`sql = ${sql}, server_id = ${server_id}, follow_time = ${follow_time.toISOString()}`);
-                db.run(sql, {
-                    $server_id: server_id,
-                    $follow_time: follow_time.toISOString(),
-                }, ((err) => {
-                    if (err) {
-                        logger.error(`update m_server_info failed. err = ${err}`);
-                        reject(err);
-                    }
-
-                    logger.info(`update m_server_info successed. : server_id = ${server_id}, follow_time = ${follow_time.toISOString()}`);
-                    resolve();
                 }));
             });
 
