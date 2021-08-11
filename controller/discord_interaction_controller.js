@@ -9,9 +9,9 @@ const constants = new Constants();
 const DiscordInteraction = require('./../logic/discord_interaction');
 
 // import modules
-const Recruitment = require('./../db/recruitement');
-const Participate = require('../db/participate')
-const ServerInfo = require('../db/server_info');
+const RecruitmentRepository = require('./../db/recruitement');
+const ParticipateRepository = require('../db/participate')
+const ServerInfoRepository = require('../db/server_info');
 
 // create message modules
 const MessageManager = require('./../logic/discord_message_manager');
@@ -22,9 +22,9 @@ module.exports = class DiscordInteractionController {
         logger.trace(interaction);
 
         // create db instances
-        const recruitment = new Recruitment();
-        const participate = new Participate();
-        const server_info = new ServerInfo();
+        const recruitment_repo = new RecruitmentRepository();
+        const participate_repo = new ParticipateRepository();
+        const server_info_repo = new ServerInfoRepository();
 
         // create message manager instance
         const messageManager = new MessageManager();
@@ -39,26 +39,26 @@ module.exports = class DiscordInteractionController {
         switch (analyzer.type) {
             case constants.TYPE_JOIN:
                 // join to target plan
-                participate.insert_t_participate(analyzer)
+                participate_repo.insert_t_participate(analyzer)
                     .catch((err) => {
                         // failed to insert, try to update
-                        return participate.update_t_participate(analyzer);
+                        return participate_repo.update_t_participate(analyzer);
                     })
                     .then(() => {
                         // get target role
-                        return server_info.get_m_server_info(interaction.guildId);
+                        return server_info_repo.get_m_server_info(interaction.guildId);
                     })
                     .then((server_info_data) => {
                         // get target role
                         recruitment_target_role = server_info_data.recruitment_target_role;
 
                         // update OK, send message
-                        return recruitment.get_m_recruitment(analyzer.token);
+                        return recruitment_repo.get_m_recruitment(analyzer.token);
                     })
                     .then((data) => {
                         recruitment_data = data;
                         // get user list
-                        return participate.get_t_participate(recruitment_data.token);
+                        return participate_repo.get_t_participate(recruitment_data.token);
                     })
                     .then((user_list) => {
                         // get user information
@@ -79,22 +79,22 @@ module.exports = class DiscordInteractionController {
                 break;
 
             case constants.TYPE_DECLINE:
-                participate.update_t_participate(analyzer)
+                participate_repo.update_t_participate(analyzer)
                     .then(() => {
                         // get target role
-                        return server_info.get_m_server_info(interaction.guildId);
+                        return server_info_repo.get_m_server_info(interaction.guildId);
                     })
                     .then((server_info_data) => {
                         // get target role
                         recruitment_target_role = server_info_data.recruitment_target_role;
 
                         // success to delete, get master data
-                        return recruitment.get_m_recruitment(analyzer.token);
+                        return recruitment_repo.get_m_recruitment(analyzer.token);
                     })
                     .then((data) => {
                         recruitment_data = data;
                         // get user list
-                        return participate.get_t_participate(recruitment_data.token);
+                        return participate_repo.get_t_participate(recruitment_data.token);
                     })
                     .then((user_list) => {
                         // get user information

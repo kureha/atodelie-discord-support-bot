@@ -7,7 +7,7 @@ const constants = new Constants();
 // UUID有効化
 const uuid = require('uuid');
 
-module.exports = class Recruitment {
+module.exports = class RecruitmentRepository {
 
     /**
      * 募集マスタテーブル作成用SQL
@@ -90,9 +90,9 @@ module.exports = class Recruitment {
         return new Promise((resolve, reject) => {
             db.serialize(function () {
                 // run serialize
-                db.run(Recruitment.SQL_CREATE_M_RECRUITMENT, [], ((err) => {
+                db.run(RecruitmentRepository.SQL_CREATE_M_RECRUITMENT, [], ((err) => {
                     if (err) {
-                        logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_M_RECRUITMENT}`);
+                        logger.error(`sql exception occured when create table. sql = ${RecruitmentRepository.SQL_CREATE_M_RECRUITMENT}`);
                         reject(err);
                     }
 
@@ -132,7 +132,7 @@ module.exports = class Recruitment {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Recruitment.SQL_INSERT_M_RECRUITMENT}`;
+                const sql = `${RecruitmentRepository.SQL_INSERT_M_RECRUITMENT}`;
                 logger.info(`sql = ${sql}, id = ${data.id}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -168,7 +168,7 @@ module.exports = class Recruitment {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Recruitment.SQL_UPDATE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_UPDATE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -205,7 +205,7 @@ module.exports = class Recruitment {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Recruitment.SQL_DELETE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_DELETE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -236,11 +236,11 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT_MAX_ID}`;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT_MAX_ID}`;
                 logger.info(`sql = ${sql}`);
                 db.get(sql, [], ((err, row) => {
                     if (err) {
-                        logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_M_RECRUITMENT}`);
+                        logger.error(`sql exception occured when create table. sql = ${RecruitmentRepository.SQL_CREATE_M_RECRUITMENT}`);
                         reject(err);
                     }
                     logger.info(`selected max m_reqruitement id successed. : result = ${row.id}`);
@@ -266,7 +266,7 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT} WHERE m1.[server_id] = $server_id AND datetime(m1.[limit_time], 'utc') > datetime($from_datetime) AND datetime(m1.[limit_time], 'utc') <= datetime($to_datetime) ORDER BY m1.[limit_time], m1.[id]`;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[server_id] = $server_id AND datetime(m1.[limit_time], 'utc') > datetime($from_datetime) AND datetime(m1.[limit_time], 'utc') <= datetime($to_datetime) ORDER BY m1.[limit_time], m1.[id]`;
                 logger.info(`sql = ${sql}, server_id = ${server_id}, from_time = ${from_datetime}, to_datetime = ${to_datetime}`);
                 db.all(sql, {
                     $server_id: server_id,
@@ -274,7 +274,7 @@ module.exports = class Recruitment {
                     $to_datetime: to_datetime,
                 }, ((err, rows) => {
                     if (err) {
-                        logger.error(`sql exception occured when create table. sql = ${Recruitment.SQL_CREATE_M_RECRUITMENT}`);
+                        logger.error(`sql exception occured when create table. sql = ${RecruitmentRepository.SQL_CREATE_M_RECRUITMENT}`);
                         reject(err);
                     }
                     logger.info(`selected m_reqruitement followup list successed.`);
@@ -298,17 +298,17 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // get sample token
-                let token = Recruitment.create_uuid_token();
+                let token = RecruitmentRepository.create_uuid_token();
                 logger.debug(`token : ${token}`);
 
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT} `;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT} `;
                 logger.info(`sql = ${sql}`);
                 db.get(sql, {
                     $token: token
                 }, ((err, row) => {
                     if (err) {
-                        logger.error(`sql exception occured when select token count. sql = ${Recruitment.SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT}`);
+                        logger.error(`sql exception occured when select token count. sql = ${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT}`);
                         reject(err);
                     }
 
@@ -338,7 +338,7 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT} WHERE m1.[token] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[token] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 db.get(sql, [token], ((err, row) => {
                     if (err) {
@@ -373,7 +373,7 @@ module.exports = class Recruitment {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Recruitment.SQL_SELECT_M_RECRUITMENT} WHERE [server_id] = ? AND datetime(m1.[limit_time], 'localtime') > datetime('now', 'localtime') ORDER BY m1.[limit_time], m1.[id] LIMIT ${count}`;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE [server_id] = ? AND datetime(m1.[limit_time], 'localtime') > datetime('now', 'localtime') ORDER BY m1.[limit_time], m1.[id] LIMIT ${count}`;
                 logger.info(`sql = ${sql}, token = ${server_id}`);
                 db.all(sql, [server_id], ((err, rows) => {
                     if (err) {

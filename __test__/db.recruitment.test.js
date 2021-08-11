@@ -1,38 +1,38 @@
 const logger = require('../common/logger');
-const Recruitment = require('../db/recruitement');
-const Participate = require('../db/participate')
-const ServerInfo = require('../db/server_info');
+const RecruitmentRepository = require('../db/recruitement');
+const ParticipateRepository = require('../db/participate')
+const ServerInfoRepository = require('../db/server_info');
 
 test("test for database initialize", () => {
-    let recruitment = new Recruitment();
-    expect(recruitment).not.toBe(undefined);
-    let participate = new Participate();
-    expect(participate).not.toBe(undefined);
-    let server_info = new ServerInfo();
-    expect(server_info).not.toBe(undefined);
+    let recruitment_repo = new RecruitmentRepository();
+    expect(recruitment_repo).not.toBe(undefined);
+    let participate_repo = new ParticipateRepository();
+    expect(participate_repo).not.toBe(undefined);
+    let server_info_repo = new ServerInfoRepository();
+    expect(server_info_repo).not.toBe(undefined);
 });
 
 test("test for m_recruitment c/r/u/d", () => {
     return new Promise((resolve, reject) => {
-        let recruitment = new Recruitment();
-        let participate = new Participate();
-        let server_info = new ServerInfo();
+        let recruitment_repo = new RecruitmentRepository();
+        let participate_repo = new ParticipateRepository();
+        let server_info_repo = new ServerInfoRepository();
 
         let test_token = 'token_';
         let test_id = undefined;
 
         // get id test
-        recruitment.get_m_recruitment_id()
+        recruitment_repo.get_m_recruitment_id()
             .then((id) => {
                 // get id
                 test_id = id;
-                return recruitment.get_m_recruitment_token();
+                return recruitment_repo.get_m_recruitment_token();
             }).then((token) => {
                 // get token
                 test_token = token;
                 console.log(`test_id = ${test_id}, test_token = ${test_token}`);
 
-                return recruitment.insert_m_recruitment({
+                return recruitment_repo.insert_m_recruitment({
                     id: test_id,
                     server_id: "testingid",
                     token: test_token,
@@ -45,7 +45,7 @@ test("test for m_recruitment c/r/u/d", () => {
             })
             .then(() => {
                 // select test
-                return recruitment.get_m_recruitment(test_token);
+                return recruitment_repo.get_m_recruitment(test_token);
             })
             .then((data) => {
                 // expect
@@ -63,11 +63,11 @@ test("test for m_recruitment c/r/u/d", () => {
                 data.description = "updated";
 
                 // update test
-                return recruitment.update_m_recruitment(data);
+                return recruitment_repo.update_m_recruitment(data);
             })
             .then(() => {
                 // select test
-                return recruitment.get_m_recruitment(test_token);
+                return recruitment_repo.get_m_recruitment(test_token);
             }).then((data) => {
                 // expect
                 expect(data.id).toEqual(test_id);
@@ -80,7 +80,7 @@ test("test for m_recruitment c/r/u/d", () => {
                 expect(data.delete).toEqual(0);
 
                 // delete test
-                return recruitment.delete_m_recruitment(test_token);
+                return recruitment_repo.delete_m_recruitment(test_token);
             }).then(() => {
                 // ok all test
                 resolve();
@@ -95,9 +95,9 @@ test("test for m_recruitment c/r/u/d", () => {
 
 test('test for t_participate c/r/u/d', () => {
     return new Promise((resolve, reject) => {
-        let recruitment = new Recruitment();
-        let participate = new Participate();
-        let server_info = new ServerInfo();
+        let recruitment_repo = new RecruitmentRepository();
+        let participate_repo = new ParticipateRepository();
+        let server_info_repo = new ServerInfoRepository();
         let test_token = 'token_';
         let test_id = undefined;
 
@@ -118,14 +118,14 @@ test('test for t_participate c/r/u/d', () => {
         };
 
         // get id test
-        recruitment.get_m_recruitment_id()
+        recruitment_repo.get_m_recruitment_id()
             .then((id) => {
                 // insert test
                 test_id = id;
                 test_token = `test_token_${id}`;
                 console.log(`test_id = ${test_id}, test_token = ${test_token}`);
 
-                return recruitment.insert_m_recruitment({
+                return recruitment_repo.insert_m_recruitment({
                     id: id,
                     server_id: "testingid",
                     token: test_token,
@@ -140,13 +140,13 @@ test('test for t_participate c/r/u/d', () => {
                 p01.token = test_token;
 
                 // insert participate
-                return participate.insert_t_participate(p01);
+                return participate_repo.insert_t_participate(p01);
             })
             .then(() => {
                 p02.token = test_token;
 
                 // insert participate
-                return participate.insert_t_participate(p02);
+                return participate_repo.insert_t_participate(p02);
             })
             .then(() => {
                 p01.status = 5;
@@ -154,11 +154,11 @@ test('test for t_participate c/r/u/d', () => {
                 p01.delete = false;
 
                 // update
-                return participate.update_t_participate(p01);
+                return participate_repo.update_t_participate(p01);
             })
             .then(() => {
                 // get
-                return participate.get_t_participate(test_token);
+                return participate_repo.get_t_participate(test_token);
             })
             .then((datas) => {
                 expect(datas.length).toBe(2);
@@ -180,11 +180,11 @@ test('test for t_participate c/r/u/d', () => {
                 });
 
                 // delete test
-                return participate.delete_t_participate(test_token);
+                return participate_repo.delete_t_participate(test_token);
             })
             .then(() => {
                 // delete master
-                return recruitment.delete_m_recruitment(test_token);
+                return recruitment_repo.delete_m_recruitment(test_token);
             })
             .then(() => {
                 // all ok

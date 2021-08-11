@@ -6,9 +6,9 @@ const Constants = require('./../common/constants');
 const constants = new Constants();
 
 // import modules
-const Recruitment = require('./../db/recruitement');
-const Participate = require('../db/participate')
-const ServerInfo = require('../db/server_info');
+const RecruitmentRepository = require('./../db/recruitement');
+const ParticipateRepository = require('../db/participate')
+const ServerInfoRepository = require('../db/server_info');
 
 // create message modules
 const MessageManager = require('./../logic/discord_message_manager');
@@ -21,9 +21,9 @@ module.exports = class CronController {
         logger.info(`follow recruitment cron start. : to_datetime = ${to_datetime.toISOString()}`);
 
         // create db instances
-        const recruitment = new Recruitment();
-        const participate = new Participate();
-        const server_info = new ServerInfo();
+        const recruitment_repo = new RecruitmentRepository();
+        const participate_repo = new ParticipateRepository();
+        const server_info_repo = new ServerInfoRepository();
 
         // create message manager instance
         const messageManager = new MessageManager();
@@ -33,7 +33,7 @@ module.exports = class CronController {
             let server_info_data = undefined;
 
             // get server info (send target channel, get latest follow_time)
-            server_info.get_m_server_info(guild.id)
+            server_info_repo.get_m_server_info(guild.id)
                 .then((temp_server_info_data) => {
                     server_info_data = temp_server_info_data;
                     logger.info(`cron message sended guild info : server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, from_time = ${server_info_data.follow_time}, to_time = ${to_datetime.toLocaleString()}`)
@@ -45,7 +45,7 @@ module.exports = class CronController {
                     }
 
                     // get follow lists
-                    return recruitment.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time, to_datetime.toISOString());
+                    return recruitment_repo.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time, to_datetime.toISOString());
                 })
                 .then((recruitment_data_list) => {
                     logger.info(`select follow data list completed.`)
@@ -54,7 +54,7 @@ module.exports = class CronController {
                     // get join data and send message
                     recruitment_data_list.forEach((recruitment_data) => {
                         logger.info(`follow target : name = ${recruitment_data.name}`)
-                        participate.get_t_participate(recruitment_data.token)
+                        participate_repo.get_t_participate(recruitment_data.token)
                             .then((user_list) => {
                                 logger.info(`follow target select user list completed. : name = ${recruitment_data.name}, user_list_length = ${user_list.length}`)
                                 // get user list
@@ -72,7 +72,7 @@ module.exports = class CronController {
                 })
                 .then(() => {
                     // update master
-                    server_info.update_m_server_info_follow_time(server_info_data.server_id, to_datetime);
+                    server_info_repo.update_m_server_info_follow_time(server_info_data.server_id, to_datetime);
                     logger.info(`follow recruitment cron completed.`);
                 })
                 .catch((err) => {

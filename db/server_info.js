@@ -7,7 +7,7 @@ const constants = new Constants();
 // UUID有効化
 const uuid = require('uuid');
 
-module.exports = class ServerInfo {
+module.exports = class ServerInfoRepository {
 
     /**
      * チャンネル情報マスタテーブル作成用SQL
@@ -80,9 +80,9 @@ module.exports = class ServerInfo {
         return new Promise((resolve, reject) => {
             db.serialize(function () {
                 // run serialize
-                db.run(ServerInfo.SQL_CREATE_M_SERVER_INFO, [], ((err) => {
+                db.run(ServerInfoRepository.SQL_CREATE_M_SERVER_INFO, [], ((err) => {
                     if (err) {
-                        logger.error(`sql exception occured when create table. sql = ${ServerInfo.SQL_CREATE_T_PARTICIPATE}`);
+                        logger.error(`sql exception occured when create table. sql = ${ServerInfoRepository.SQL_CREATE_T_PARTICIPATE}`);
                         reject(err);
                     }
 
@@ -107,7 +107,7 @@ module.exports = class ServerInfo {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${ServerInfo.SQL_SELECT_M_SERVER_INFO} WHERE m1.[server_id] = ? `;
+                const sql = `${ServerInfoRepository.SQL_SELECT_M_SERVER_INFO} WHERE m1.[server_id] = ? `;
                 logger.info(`sql = ${sql}, server_id = ${server_id}`);
                 db.get(sql, [server_id], ((err, row) => {
                     if (err) {
@@ -153,7 +153,7 @@ module.exports = class ServerInfo {
 
             db.serialize(function () {
                 // run serialize
-                const sql = ServerInfo.SQL_INSERT_M_SERVER_INFO;
+                const sql = ServerInfoRepository.SQL_INSERT_M_SERVER_INFO;
                 logger.info(`sql = ${sql}, server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, recruitment_target_role = ${server_info_data.recruitment_target_role}`);
                 db.run(sql, {
                     $server_id: server_info_data.server_id,
@@ -187,7 +187,7 @@ module.exports = class ServerInfo {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${ServerInfo.SQL_UPDATE_M_SERVER_INFO_FOLLOW_TIME} WHERE server_id = $server_id`;
+                const sql = `${ServerInfoRepository.SQL_UPDATE_M_SERVER_INFO_FOLLOW_TIME} WHERE server_id = $server_id`;
                 logger.info(`sql = ${sql}, server_id = ${server_id}, follow_time = ${follow_time.toISOString()}`);
                 db.run(sql, {
                     $server_id: server_id,
@@ -219,7 +219,7 @@ module.exports = class ServerInfo {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${ServerInfo.SQL_DELETE_M_SERVER_INFO} WHERE [server_id] = $server_id`;
+                const sql = `${ServerInfoRepository.SQL_DELETE_M_SERVER_INFO} WHERE [server_id] = $server_id`;
                 logger.info(`sql = ${sql}, server_id = ${server_id}`);
                 db.run(sql, {
                     $server_id: server_id,

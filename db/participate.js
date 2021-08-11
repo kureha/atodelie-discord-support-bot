@@ -7,7 +7,7 @@ const constants = new Constants();
 // UUID有効化
 const uuid = require('uuid');
 
-module.exports = class Participate {
+module.exports = class ParticipateRepository {
 
     /**
      * 募集データテーブル作成用SQL
@@ -80,9 +80,9 @@ module.exports = class Participate {
         return new Promise((resolve, reject) => {
             db.serialize(function () {
                 // run serialize
-                db.run(Participate.SQL_CREATE_T_PARTICIPATE, [], ((err) => {
+                db.run(ParticipateRepository.SQL_CREATE_T_PARTICIPATE, [], ((err) => {
                     if (err) {
-                        logger.error(`sql exception occured when create table. sql = ${Participate.SQL_CREATE_T_PARTICIPATE}`);
+                        logger.error(`sql exception occured when create table. sql = ${ParticipateRepository.SQL_CREATE_T_PARTICIPATE}`);
                         reject(err);
                     }
 
@@ -105,7 +105,7 @@ module.exports = class Participate {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Participate.SQL_INSERT_T_PARTICIPATE}`;
+                const sql = `${ParticipateRepository.SQL_INSERT_T_PARTICIPATE}`;
                 logger.info(`sql = ${sql}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -137,7 +137,7 @@ module.exports = class Participate {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Participate.SQL_UPDATE_T_PARTICIPATE} where [id] = (select [id] from [m_recruitment] where [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\')) AND [user_id] = $user_id `;
+                const sql = `${ParticipateRepository.SQL_UPDATE_T_PARTICIPATE} where [id] = (select [id] from [m_recruitment] where [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\')) AND [user_id] = $user_id `;
                 logger.info(`sql = ${sql}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -171,7 +171,7 @@ module.exports = class Participate {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${Participate.SQL_DELETE_T_PARTICIPATE} WHERE [id] = (SELECT [id] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\')) `;
+                const sql = `${ParticipateRepository.SQL_DELETE_T_PARTICIPATE} WHERE [id] = (SELECT [id] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\')) `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -202,7 +202,7 @@ module.exports = class Participate {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${Participate.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and datetime(m1.[limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') order by t1.[update_time] `;
+                const sql = `${ParticipateRepository.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and datetime(m1.[limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') order by t1.[update_time] `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 db.all(sql, [token], ((err, rows) => {
                     if (err) {

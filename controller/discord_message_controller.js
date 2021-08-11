@@ -12,9 +12,9 @@ const constants = new Constants();
 const DiscordAnalyzer = require('./../logic/discord_analyzer');
 
 // import modules
-const Recruitment = require('./../db/recruitement');
-const Participate = require('../db/participate')
-const ServerInfo = require('../db/server_info');
+const RecruitmentRepository = require('./../db/recruitement');
+const ParticipateRepository = require('../db/participate')
+const ServerInfoRepository = require('../db/server_info');
 
 // create message modules
 const MessageManager = require('./../logic/discord_message_manager');
@@ -26,9 +26,9 @@ module.exports = class DiscordMessageController {
             logger.trace(message);
 
             // create db instances
-            const recruitment = new Recruitment();
-            const participate = new Participate();
-            const server_info = new ServerInfo();
+            const recruitment_repo = new RecruitmentRepository();
+            const participate_repo = new ParticipateRepository();
+            const server_info_repo = new ServerInfoRepository();
 
             // create message manager instance
             const messageManager = new MessageManager();
@@ -41,26 +41,26 @@ module.exports = class DiscordMessageController {
             switch (analyzer.type) {
                 case constants.TYPE_RECRUITEMENT:
                     // get token function for retry
-                    const token_function = recruitment.get_m_recruitment_token();
+                    const token_function = recruitment_repo.get_m_recruitment_token();
                     // get token first with retry
                     token_function
                         .then((token) => {
                             analyzer.token = token;
                             // get registration id
-                            return recruitment.get_m_recruitment_id();
+                            return recruitment_repo.get_m_recruitment_id();
                         })
                         .then((id) => {
                             // set id and master registration
                             analyzer.id = id;
-                            return recruitment.insert_m_recruitment(analyzer);
+                            return recruitment_repo.insert_m_recruitment(analyzer);
                         })
                         .then(() => {
                             // participate registration.
-                            return participate.insert_t_participate(analyzer);
+                            return participate_repo.insert_t_participate(analyzer);
                         })
                         .then(() => {
                             // get target role
-                            return server_info.get_m_server_info(message.guild.id);
+                            return server_info_repo.get_m_server_info(message.guild.id);
                         })
                         .then((server_info) => {
                             // get target role
