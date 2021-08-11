@@ -54,15 +54,6 @@ module.exports = class RecruitmentRepository {
     constructor() {
         const db = this.get_db_instance(constants.SQLITE_FILE);
         logger.info(`database open successed. db = ${db}`);
-
-        this.create_all_database(db)
-            .then(() => {
-                logger.info(`database initialize succeeded.`);
-            })
-            .catch((err) => {
-                logger.error(err);
-                throw err;
-            });
     }
 
     /**

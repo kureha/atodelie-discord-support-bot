@@ -47,10 +47,23 @@ module.exports = class DiscordMessageManager {
         // create user list string
         let join_users = '';
         recruitment.user_list.forEach((v) => {
-            join_users = `${join_users}<@!${v.user_id}> `;
+            if (v.status === constants.STATUS_ENABLED) {
+                join_users = `${join_users}<@!${v.user_id}> `;
+            }
         });
         if (join_users.length === 0) {
             join_users = constants.DISCORD_MESSAGE_EMBED_NO_MEMBER;
+        }
+
+        // create view user list string
+        let view_users = '';
+        recruitment.user_list.forEach((v) => {
+            if (v.status === constants.STATUS_VIEW) {
+                view_users = `${view_users}<@!${v.user_id}> `;
+            }
+        });
+        if (view_users.length === 0) {
+            view_users = constants.DISCORD_MESSAGE_EMBED_NO_MEMBER;
         }
 
         return new Discord.MessageEmbed({
@@ -67,8 +80,12 @@ module.exports = class DiscordMessageManager {
                     value: `${this.get_date_string(recruitment.limit_time)}`
                 },
                 {
-                    name: constants.DISCORD_MESSAGE_EMBED_MEMBERS,
+                    name: constants.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS,
                     value: `${join_users}`
+                },
+                {
+                    name: constants.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS,
+                    value: `${view_users}`
                 }
             ],
         });

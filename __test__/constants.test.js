@@ -32,7 +32,8 @@ test("Test for constants", () => {
     expect(v.DISCORD_MESSAGE_EMBED_TITLE).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_EMBED_OWNER).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_EMBED_START_TIME).not.toBe(undefined);
-    expect(v.DISCORD_MESSAGE_EMBED_MEMBERS).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS).not.toBe(undefined);
 
     expect(v.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX).not.toBe(undefined);
     expect(v.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX).not.toBe(undefined);
