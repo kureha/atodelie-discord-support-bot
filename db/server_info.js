@@ -4,6 +4,9 @@ const logger = require('../common/logger');
 const Constants = require('../common/constants');
 const constants = new Constants();
 
+// エンティティ有効化
+const ServerInfo = require('./../entity/server_info');
+
 // UUID有効化
 const uuid = require('uuid');
 
@@ -143,7 +146,7 @@ module.exports = class ServerInfoRepository {
 
     /**
      * チャンネルマスタに情報を新規登録します
-     * @param {Object} server_info_data 
+     * @param {ServerInfo} server_info_data 
      * @returns Promiseオブジェクト、データベースの選択内容
      */
      insert_m_server_info(server_info_data) {

@@ -4,6 +4,9 @@ const logger = require('./../common/logger');
 const Constants = require('../common/constants');
 const constants = new Constants();
 
+// エンティティ有効化
+const Recruitment = require('./../entity/recruitment');
+
 // UUID有効化
 const uuid = require('uuid');
 
@@ -124,7 +127,7 @@ module.exports = class RecruitmentRepository {
 
     /**
      * 募集マスタを1行追加します
-     * @param {Object} data 
+     * @param {Recruitment} data 
      */
     insert_m_recruitment(data) {
         // Promise処理
@@ -160,7 +163,7 @@ module.exports = class RecruitmentRepository {
 
     /**
      * 募集マスタを更新します
-     * @param {Object} data 
+     * @param {Recruitment} data 
      */
     update_m_recruitment(data) {
         // Promise処理
@@ -197,7 +200,7 @@ module.exports = class RecruitmentRepository {
 
     /**
      * 募集マスタを削除します
-     * @param {Object} data 
+     * @param {string} token 
      */
     delete_m_recruitment(token) {
         // Promise処理

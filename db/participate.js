@@ -4,6 +4,9 @@ const logger = require('../common/logger');
 const Constants = require('../common/constants');
 const constants = new Constants();
 
+// エンティティ有効化
+const Participate = require('./../entity/participate');
+
 // UUID有効化
 const uuid = require('uuid');
 
@@ -97,7 +100,7 @@ module.exports = class ParticipateRepository {
 
     /**
      * 参加データを1行追加します
-     * @param {Object} data 
+     * @param {Participate} data 
      */
     insert_t_participate(data) {
         // Promise処理
@@ -129,7 +132,7 @@ module.exports = class ParticipateRepository {
 
     /**
      * 参加データを1行更新します
-     * @param {Object} data キーは「data.token」「data.user_id」の二つ
+     * @param {Participate} data キーは「data.token」「data.user_id」の二つ
      */
     update_t_participate(data) {
         // Promise処理
@@ -163,7 +166,7 @@ module.exports = class ParticipateRepository {
 
     /**
      * 参加データを削除します
-     * @param {Object} data 
+     * @param {Participate} data 
      */
     delete_t_participate(token) {
         // Promise処理
