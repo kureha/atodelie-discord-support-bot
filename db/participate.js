@@ -199,7 +199,7 @@ module.exports = class ParticipateRepository {
     /**
      * 参加データをN行選択します
      * @param {string} token 
-     * @returns {Participate[]} Promiseオブジェクト、データベースの選択内容
+     * @returns {Promise<Participate[]>} Promiseオブジェクト、データベースの選択内容
      */
     get_t_participate(token) {
         // Promise処理

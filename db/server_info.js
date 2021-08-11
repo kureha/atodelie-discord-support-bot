@@ -101,7 +101,7 @@ module.exports = class ServerInfoRepository {
     /**
      * チャンネルマスタから情報を取得します
      * @param {string} server_id 
-     * @returns {ServerInfo} Promiseオブジェクト、データベースの選択内容
+     * @returns {Promise<ServerInfo>} Promiseオブジェクト、データベースの選択内容
      */
     get_m_server_info(server_id) {
         // Promise処理

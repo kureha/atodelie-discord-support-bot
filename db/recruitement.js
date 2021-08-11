@@ -263,7 +263,7 @@ module.exports = class RecruitmentRepository {
      * @param {string} server_id 
      * @param {string} from_datetime 
      * @param {string} to_datetime 
-     * @returns {Recruitment[]} 対象の募集マスタデータ
+     * @returns {Promise<Recruitment[]>} 対象の募集マスタデータ
      */
     get_m_recruitment_for_follow(server_id, from_datetime, to_datetime) {
         // Promise処理
@@ -336,7 +336,7 @@ module.exports = class RecruitmentRepository {
     /**
      * 募集マスタを1行選択します
      * @param {string} token 
-     * @returns {Recruitment} Promiseオブジェクト、データベースの選択内容
+     * @returns {Promise<Recruitment>} Promiseオブジェクト、データベースの選択内容
      */
     get_m_recruitment(token) {
         // Promise処理
@@ -371,7 +371,7 @@ module.exports = class RecruitmentRepository {
     /**
      * 募集マスタを指定行選択します
      * @param {string} server_id 
-     * @returns {Recruitment[]} Promiseオブジェクト、データベースの選択内容
+     * @returns {Promise<Recruitment[]>} Promiseオブジェクト、データベースの選択内容
      */
     get_m_recruitment_latests(server_id, count) {
         // Promise処理

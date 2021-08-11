@@ -13,7 +13,7 @@ module.exports = class DiscordInteraction {
     static DESCRIPTION_FOR_JOIN_FROM_BUTTON = `ボタンからの参加`;
 
     /**
-     * コンストラクタ
+     * インタラクションを解析し、解析結果を返却する
      * @param {string} custom_id 
      * @param {string} user_id 
      * @returns {DiscordInteraction}
