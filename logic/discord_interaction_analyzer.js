@@ -1,8 +1,8 @@
 // create logger
-const logger = require('./../common/logger');
+const logger = require('../common/logger');
 
 // import constants
-const Constants = require('./../common/constants');
+const Constants = require('../common/constants');
 const constants = new Constants();
 
 // エンティティ有効化

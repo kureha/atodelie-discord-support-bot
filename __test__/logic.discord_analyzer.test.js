@@ -1,4 +1,4 @@
-const DiscordAnalyzer = require('../logic/discord_analyzer');
+const DiscordAnalyzer = require('../logic/discord_message_analyzer');
 const Constants = require('./../common/constants');
 const constants = new Constants();
 

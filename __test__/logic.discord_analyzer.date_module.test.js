@@ -1,4 +1,4 @@
-const DiscordAnalyzer = require('../logic/discord_analyzer');
+const DiscordAnalyzer = require('../logic/discord_message_analyzer');
 
 test('test for times analyze', () => {
     let result = DiscordAnalyzer.get_recruitment_date(0, 0);

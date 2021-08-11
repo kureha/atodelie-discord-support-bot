@@ -1,15 +1,15 @@
 // create logger
-const logger = require('./../common/logger');
+const logger = require('../common/logger');
 
 // import constants
-const Constants = require('./../common/constants');
+const Constants = require('../common/constants');
 const constants = new Constants();
 
 // エンティティ有効化
-const Recruitment = require('./../entity/recruitment');
+const Recruitment = require('../entity/recruitment');
 const Participate = require('../entity/participate');
 
-module.exports = class DiscordAnalyzer {
+module.exports = class DiscordMessageAnalyzer {
 
     static HOURS_DEFAULT = constants.RECRUITMENT_DEFAULT_LIMIT_HOURS;
     static MAX_NUMBERS_DEFAULT = constants.RECRUITMENT_DEFAULT_MAX_NUMBERS;
@@ -19,7 +19,7 @@ module.exports = class DiscordAnalyzer {
      * @param {string} mes メッセージ本体
      * @param {string} message_user_id メッセージを送信したユーザID
      * @param {string} user_id botのDiscordユーザID
-     * @returns {DiscordAnalyzer} 解析結果オブジェクト
+     * @returns {DiscordMessageAnalyzer} 解析結果オブジェクト
      */
     constructor(mes, server_id, message_user_id, user_id) {
         if (typeof (mes) == "string") {
@@ -55,13 +55,13 @@ module.exports = class DiscordAnalyzer {
         let error_messages_list = [];
         // 現在時刻
         let default_date = new Date();
-        default_date.setHours(default_date.getHours() + DiscordAnalyzer.HOURS_DEFAULT);
+        default_date.setHours(default_date.getHours() + DiscordMessageAnalyzer.HOURS_DEFAULT);
 
         // 募集検知
-        if (DiscordAnalyzer.check_recruitment(this.message) == true) {
+        if (DiscordMessageAnalyzer.check_recruitment(this.message) == true) {
             logger.info(`target message is new recruitment. : mes = ${this.message}`);
             this.type = constants.TYPE_RECRUITEMENT;
-            this.name = DiscordAnalyzer.get_recruitment_text(this.message);
+            this.name = DiscordMessageAnalyzer.get_recruitment_text(this.message);
             this.owner_id = message_user_id;
             logger.debug(`recruitment's name, owner_id : name = ${this.name}, owner_id = ${message_user_id}`);
 
@@ -69,7 +69,7 @@ module.exports = class DiscordAnalyzer {
             this.token = '';
 
             // 以下は可能なら切り出す…　時間指定と人数指定
-            this.limit_time = DiscordAnalyzer.get_recruitment_time(this.message);
+            this.limit_time = DiscordMessageAnalyzer.get_recruitment_time(this.message);
             if (this.limit_time === undefined) {
                 // 取得できない場合はデフォルト適用
                 logger.debug(`target time is not found on message, apply default time. : ${default_date}`);
@@ -77,11 +77,11 @@ module.exports = class DiscordAnalyzer {
             }
             logger.debug(`recruitment's target time : ${this.limit_time}`);
 
-            this.max_number = DiscordAnalyzer.get_recruitment_numbers(this.message);
+            this.max_number = DiscordMessageAnalyzer.get_recruitment_numbers(this.message);
             if (this.max_number === undefined) {
                 // 取得できない場合はデフォルト適用
-                logger.debug(`max members number is not found on message, apply default number. : ${DiscordAnalyzer.MAX_NUMBERS_DEFAULT}`);
-                this.max_number = DiscordAnalyzer.MAX_NUMBERS_DEFAULT;
+                logger.debug(`max members number is not found on message, apply default number. : ${DiscordMessageAnalyzer.MAX_NUMBERS_DEFAULT}`);
+                this.max_number = DiscordMessageAnalyzer.MAX_NUMBERS_DEFAULT;
             }
             logger.debug(`recruitment's target number : ${this.max_number}`);
 
@@ -93,7 +93,7 @@ module.exports = class DiscordAnalyzer {
             // ユーザリストにオーナーの情報を追加
             this.user_list.push(this.get_owner_participate());
         }
-        else if (DiscordAnalyzer.check_type_list(this.message) == true) {
+        else if (DiscordMessageAnalyzer.check_type_list(this.message) == true) {
             // 一覧表示
             logger.info(`target message is listing. : mes = ${this.message}`);
             this.type = constants.TYPE_LIST;
@@ -245,7 +245,7 @@ module.exports = class DiscordAnalyzer {
         if (hour === undefined || minute === undefined) {
             return undefined;
         } else {
-            return DiscordAnalyzer.get_recruitment_date(hour, minute).toISOString();
+            return DiscordMessageAnalyzer.get_recruitment_date(hour, minute).toISOString();
         }
     }
 

@@ -6,7 +6,7 @@ const Constants = require('./../common/constants');
 const constants = new Constants();
 
 // import modules
-const DiscordInteraction = require('./../logic/discord_interaction');
+const DiscordInteraction = require('../logic/discord_interaction_analyzer');
 
 // import modules
 const RecruitmentRepository = require('./../db/recruitement');

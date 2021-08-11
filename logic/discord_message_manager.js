@@ -6,7 +6,7 @@ const Discord = require('discord.js');
 
 // import constants
 const Constants = require('../common/constants');
-const DiscordAnalyzer = require('./discord_analyzer');
+const DiscordAnalyzer = require('./discord_message_analyzer');
 const constants = new Constants();
 
 module.exports = class DiscordMessageManager {
