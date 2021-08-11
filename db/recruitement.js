@@ -110,7 +110,7 @@ module.exports = class RecruitmentRepository {
 
     /**
      * UUIDのTokenを取得します
-     * @returns UUIDベースのToken
+     * @returns {string} UUIDベースのToken
      */
     static create_uuid_token() {
         return uuid.v4();
@@ -118,8 +118,8 @@ module.exports = class RecruitmentRepository {
 
     /**
      * 指定桁数のDigitを取得します
-     * @param length 桁数
-     * @returns 指定された桁数のDigits
+     * @param {int} length 桁数
+     * @returns {string} 指定された桁数のDigits
      */
     static create_digits_token(length) {
         return ('0'.repeat(length) + String(Math.floor(Math.random() * '9'.repeat(length)) + 1)).slice(-1 * length);
@@ -128,6 +128,7 @@ module.exports = class RecruitmentRepository {
     /**
      * 募集マスタを1行追加します
      * @param {Recruitment} data 
+     * @returns {Promise}
      */
     insert_m_recruitment(data) {
         // Promise処理
@@ -164,6 +165,7 @@ module.exports = class RecruitmentRepository {
     /**
      * 募集マスタを更新します
      * @param {Recruitment} data 
+     * @returns {Promise}
      */
     update_m_recruitment(data) {
         // Promise処理
@@ -201,6 +203,7 @@ module.exports = class RecruitmentRepository {
     /**
      * 募集マスタを削除します
      * @param {string} token 
+     * @returns {Promise}
      */
     delete_m_recruitment(token) {
         // Promise処理
@@ -230,7 +233,7 @@ module.exports = class RecruitmentRepository {
     /**
      * 募集マスタ用のIDを選択します
      * @param {string} token 
-     * @returns Promiseオブジェクト、データベースの選択内容
+     * @returns {int} Promiseオブジェクト、データベースの選択内容
      */
     get_m_recruitment_id() {
         // Promise処理
@@ -260,7 +263,7 @@ module.exports = class RecruitmentRepository {
      * @param {string} server_id 
      * @param {string} from_datetime 
      * @param {string} to_datetime 
-     * @returns 対象の募集マスタデータ
+     * @returns {Recruitment[]} 対象の募集マスタデータ
      */
     get_m_recruitment_for_follow(server_id, from_datetime, to_datetime) {
         // Promise処理
@@ -293,6 +296,7 @@ module.exports = class RecruitmentRepository {
     /**
      * 募集マスタ用のTOKENを生成します。
      * 生成値がかぶっていた場合にRejectするため、呼び出し時にRetry処理が必要です
+     * @returns {string} TOKEN
      */
     get_m_recruitment_token() {
         // Promise処理
@@ -332,7 +336,7 @@ module.exports = class RecruitmentRepository {
     /**
      * 募集マスタを1行選択します
      * @param {string} token 
-     * @returns Promiseオブジェクト、データベースの選択内容
+     * @returns {Recruitment} Promiseオブジェクト、データベースの選択内容
      */
     get_m_recruitment(token) {
         // Promise処理
@@ -367,7 +371,7 @@ module.exports = class RecruitmentRepository {
     /**
      * 募集マスタを指定行選択します
      * @param {string} server_id 
-     * @returns Promiseオブジェクト、データベースの選択内容
+     * @returns {Recruitment[]} Promiseオブジェクト、データベースの選択内容
      */
     get_m_recruitment_latests(server_id, count) {
         // Promise処理

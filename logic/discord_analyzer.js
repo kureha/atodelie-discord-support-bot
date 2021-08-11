@@ -19,7 +19,7 @@ module.exports = class DiscordAnalyzer {
      * @param {string} mes メッセージ本体
      * @param {string} message_user_id メッセージを送信したユーザID
      * @param {string} user_id botのDiscordユーザID
-     * @returns 解析結果オブジェクト
+     * @returns {DiscordAnalyzer} 解析結果オブジェクト
      */
     constructor(mes, server_id, message_user_id, user_id) {
         if (typeof (mes) == "string") {
@@ -136,7 +136,7 @@ module.exports = class DiscordAnalyzer {
     /**
      * Analyzerの結果を募集オブジェクトとして返却します。
      * 募集が有効でない場合はundefinedが帰ります。
-     * @returns 募集オブジェクト
+     * @returns {Recruitment} 募集オブジェクト
      */
     get_recruitment() {
         const recruitment = new Recruitment();
@@ -163,7 +163,7 @@ module.exports = class DiscordAnalyzer {
 
     /**
      * 募集主の参加情報を返却します。
-     * @returns 参加オブジェクト
+     * @returns {Participate} 参加オブジェクト
      */
     get_owner_participate() {
         const participate = new Participate();
@@ -212,7 +212,7 @@ module.exports = class DiscordAnalyzer {
     /**
      * 時刻を認識し、日時オブジェクトを返却します
      * @param {string} mes 
-     * @returns 
+     * @returns {Date}
      */
     static get_recruitment_time(mes) {
         // needed variables
@@ -254,6 +254,7 @@ module.exports = class DiscordAnalyzer {
      * 募集時間が過ぎていたら翌日の募集とする。
      * @param {int} hour 
      * @param {int} minute 
+     * @returns {Date}
      */
     static get_recruitment_date(hour, minute) {
         if (hour < 0 || hour > 23) {
@@ -291,7 +292,7 @@ module.exports = class DiscordAnalyzer {
     /**
      * 参加人数を返却します
      * @param {string}} mes 
-     * @returns 
+     * @returns {int}
      */
     static get_recruitment_numbers(mes) {
         // check1
@@ -307,7 +308,7 @@ module.exports = class DiscordAnalyzer {
     /**
      * メッセージが募集文であるかを確認します
      * @param {string} mes 
-     * @returns 
+     * @returns {boolean}
      */
     static check_recruitment(mes) {
         if (this.extract_by_regexp(mes, '^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]') === undefined) {
@@ -320,7 +321,7 @@ module.exports = class DiscordAnalyzer {
     /**
      * 募集文を取得します
      * @param {string}} mes 
-     * @returns 
+     * @returns {string}
      */
     static get_recruitment_text(mes) {
         return mes.replace(/^^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]/, "");
@@ -329,6 +330,7 @@ module.exports = class DiscordAnalyzer {
     /**
      * メッセージがリストであるかを確認します
      * @param {string} mes 
+     * @returns {boolean}
      */
     static check_type_list(mes) {
         if (this.extract_by_regexp(mes, '^[ 　]*(リスト|一覧)') === undefined) {

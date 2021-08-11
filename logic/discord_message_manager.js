@@ -14,7 +14,7 @@ module.exports = class DiscordMessageManager {
     /**
      * 文字列のエスケープされた改行を有効にします
      * @param {string} str 
-     * @returns \\mが\nに置換された文字列
+     * @returns {string} \\mが\nに置換された文字列
      */
     enable_lf(str) {
         return str.replace('\\n', '\n');
@@ -23,6 +23,7 @@ module.exports = class DiscordMessageManager {
     /**
      * 日付のISO表現を読みやすい形に変形し返却します
      * @param {string} iso_date_str 
+     * @returns {string}
      */
     get_date_string(iso_date_str) {
         let parsed_date = new Date(iso_date_str);
@@ -35,7 +36,7 @@ module.exports = class DiscordMessageManager {
      * @param {string} recruitment_target_role 
      * @param {string} title 
      * @param {string} desription 
-     * @returns Discord.MessageEmbed形式のメッセージ
+     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
     get_recruitment_embed_message(recruitment, recruitment_target_role, title, desription) {
         // create description
@@ -76,7 +77,7 @@ module.exports = class DiscordMessageManager {
     /**
      * 新規募集時のメッセージを返却します
      * @param {Recruitment} recruitment 
-     * @returns 募集文字列
+     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
     get_new_recruitment_message(recruitment, recruitment_target_role) {
         // call interanal function
@@ -90,7 +91,7 @@ module.exports = class DiscordMessageManager {
     /**
      * 募集参加時のメッセージを返却します
      * @param {Recruitment} recruitment 
-     * @returns Discord.MessageEmbed形式のメッセージ
+     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
     get_join_recruitment(recruitment, recruitment_target_role) {
         // call interanal function
@@ -104,7 +105,7 @@ module.exports = class DiscordMessageManager {
     /**
      * 参加取りやめのメッセージを返します
      * @param {Recruitment} recruitment 
-     * @returns Discord.MessageEmbed形式のメッセージ
+     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
     get_decline_recruitment(recruitment, recruitment_target_role) {
         // call interanal function
@@ -118,7 +119,7 @@ module.exports = class DiscordMessageManager {
     /**
      * 募集フォロー時の組み込みメッセージを返します
      * @param {Recruitment} recruitment 
-     * @returns 
+     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
     get_join_recruitment_follow_message(recruitment, recruitment_target_role) {
         // call interanal function
@@ -131,7 +132,7 @@ module.exports = class DiscordMessageManager {
 
     /**
      * 募集が見つからないことを示すメッセージを返します
-     * @returns 
+     * @returns {string}
      */
     get_no_recruitment() {
         let result = constants.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT;

@@ -101,7 +101,7 @@ module.exports = class ServerInfoRepository {
     /**
      * チャンネルマスタから情報を取得します
      * @param {string} server_id 
-     * @returns Promiseオブジェクト、データベースの選択内容
+     * @returns {ServerInfo} Promiseオブジェクト、データベースの選択内容
      */
     get_m_server_info(server_id) {
         // Promise処理
@@ -147,7 +147,7 @@ module.exports = class ServerInfoRepository {
     /**
      * チャンネルマスタに情報を新規登録します
      * @param {ServerInfo} server_info_data 
-     * @returns Promiseオブジェクト、データベースの選択内容
+     * @returns {Promise} Promiseオブジェクト、データベースの選択内容
      */
      insert_m_server_info(server_info_data) {
         // Promise処理
@@ -181,7 +181,7 @@ module.exports = class ServerInfoRepository {
      * チャンネルマスタのフォロー時間を更新します
      * @param {string} server_id 
      * @param {Date} follow_time
-     * @returns Promiseオブジェクト、データベースの選択内容
+     * @returns {Promise} Promiseオブジェクト、データベースの選択内容
      */
     update_m_server_info_follow_time(server_id, follow_time) {
         // Promise処理
@@ -213,7 +213,7 @@ module.exports = class ServerInfoRepository {
     /**
      * チャンネルマスタから情報を削除します
      * @param {string} server_id 
-     * @returns Promiseオブジェクト、データベースの選択内容
+     * @returns {Promise} Promiseオブジェクト、データベースの選択内容
      */
      delete_m_server_info(server_id) {
         // Promise処理

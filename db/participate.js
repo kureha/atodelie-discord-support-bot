@@ -101,6 +101,7 @@ module.exports = class ParticipateRepository {
     /**
      * 参加データを1行追加します
      * @param {Participate} data 
+     * @returns {Promise}
      */
     insert_t_participate(data) {
         // Promise処理
@@ -133,6 +134,7 @@ module.exports = class ParticipateRepository {
     /**
      * 参加データを1行更新します
      * @param {Participate} data キーは「data.token」「data.user_id」の二つ
+     * @returns {Promise}
      */
     update_t_participate(data) {
         // Promise処理
@@ -167,6 +169,7 @@ module.exports = class ParticipateRepository {
     /**
      * 参加データを削除します
      * @param {Participate} data 
+     * @returns {Promise}
      */
     delete_t_participate(token) {
         // Promise処理
@@ -196,7 +199,7 @@ module.exports = class ParticipateRepository {
     /**
      * 参加データをN行選択します
      * @param {string} token 
-     * @returns Promiseオブジェクト、データベースの選択内容
+     * @returns {Participate[]} Promiseオブジェクト、データベースの選択内容
      */
     get_t_participate(token) {
         // Promise処理

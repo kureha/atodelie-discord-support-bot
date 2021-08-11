@@ -12,7 +12,13 @@ module.exports = class DiscordInteraction {
 
     static DESCRIPTION_FOR_JOIN_FROM_BUTTON = `ボタンからの参加`;
 
-    constructor(customId, user_id) {
+    /**
+     * コンストラクタ
+     * @param {string} custom_id 
+     * @param {string} user_id 
+     * @returns {DiscordInteraction}
+     */
+    constructor(custom_id, user_id) {
         // properties
         this.id = ``;
         this.valid = false;
@@ -20,24 +26,24 @@ module.exports = class DiscordInteraction {
         this.error_messages = [];
 
         // check custom id for recruitment join
-        if (customId.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}`))) {
+        if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}`))) {
             logger.debug(`interaction is valid. type = ${constants.TYPE_JOIN}`);
             this.type = constants.TYPE_JOIN;
             this.delete = false;
 
             // get token from custom id
-            this.token = customId.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}(.+)$`))[1];
-        } else if (customId.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}`))) {
+            this.token = custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}(.+)$`))[1];
+        } else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}`))) {
             logger.debug(`interaction is valid.. type = ${constants.TYPE_DECLINE}`);
             this.type = constants.TYPE_DECLINE;
             this.delete = true;
 
             // get token from custom id
-            this.token = customId.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}(.+)$`))[1];
+            this.token = custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}(.+)$`))[1];
         } else {
             // error
-            logger.warn(`this interaction dosen't match join recruitment. : customId = ${customId}`);
-            this.error_messages.push(`this interaction dosen't match join recruitment. : customId = ${customId}`);
+            logger.warn(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
+            this.error_messages.push(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
             return;
         }
 
@@ -69,7 +75,7 @@ module.exports = class DiscordInteraction {
 
     /**
      * 参加情報を返却します
-     * @returns 参加オブジェクト
+     * @returns {Participate} 参加オブジェクト
      */
     get_join_participate() {
         const participate = new Participate();
