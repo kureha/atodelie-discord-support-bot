@@ -75,13 +75,13 @@ module.exports = class DiscordMessageManager {
 
     /**
      * 新規募集時のメッセージを返却します
-     * @param {DiscordAnalyzer} analyzer 
+     * @param {Recruitment} recruitment 
      * @returns 募集文字列
      */
-    get_new_recruitment_message(analyzer, recruitment_target_role) {
+    get_new_recruitment_message(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(
-            analyzer,
+            recruitment,
             recruitment_target_role,
             constants.DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT,
             constants.DISCORD_MESSAGE_NEW_RECRUITMENT);
@@ -89,13 +89,13 @@ module.exports = class DiscordMessageManager {
 
     /**
      * 募集参加時のメッセージを返却します
-     * @param {DiscordAnalyzer}} analyzer 
+     * @param {Recruitment} recruitment 
      * @returns Discord.MessageEmbed形式のメッセージ
      */
-    get_join_recruitment(analyzer, recruitment_target_role) {
+    get_join_recruitment(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(
-            analyzer,
+            recruitment,
             recruitment_target_role,
             constants.DISCORD_MESSAGE_TITLE_SUCCESS_JOIN,
             constants.DISCORD_MESSAGE_SUCCESS_JOIN);
@@ -103,13 +103,13 @@ module.exports = class DiscordMessageManager {
 
     /**
      * 参加取りやめのメッセージを返します
-     * @param {DiscordAnalyzer} analyzer 
+     * @param {Recruitment} recruitment 
      * @returns Discord.MessageEmbed形式のメッセージ
      */
-    get_decline_recruitment(analyzer, recruitment_target_role) {
+    get_decline_recruitment(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(
-            analyzer,
+            recruitment,
             recruitment_target_role,
             constants.DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE,
             constants.DISCORD_MESSAGE_SUCCESS_DECLINE);
@@ -117,13 +117,13 @@ module.exports = class DiscordMessageManager {
 
     /**
      * 募集フォロー時の組み込みメッセージを返します
-     * @param {DiscordAnalyzer} analyzer 
+     * @param {Recruitment} recruitment 
      * @returns 
      */
-    get_join_recruitment_follow_message(analyzer, recruitment_target_role) {
+    get_join_recruitment_follow_message(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(
-            analyzer,
+            recruitment,
             recruitment_target_role,
             constants.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT,
             constants.DISCORD_MESSAGE_FOLLOW_RECRUITMENT);
