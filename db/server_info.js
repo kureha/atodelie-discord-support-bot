@@ -15,9 +15,24 @@ module.exports = class ServerInfo {
     static SQL_CREATE_M_SERVER_INFO = 'CREATE TABLE IF NOT EXISTS [m_server_info] ( [server_id] TEXT NOT NULL UNIQUE, [channel_id] TEXT NOT NULL, [recruitment_target_role] TEXT NOT NULL, [follow_time] DATETIME, PRIMARY KEY([server_id]) )';
 
     /**
+     * チャンネル情報マスタテーブル挿入用SQL
+     */
+    static SQL_INSERT_M_SERVER_INFO = 'INSERT INTO [m_server_info] ([server_id] , [channel_id], [recruitment_target_role], [follow_time]) VALUES ($server_id, $channel_id, $recruitment_target_role, null) ';
+
+    /**
+     * チャンネル情報マスタテーブルフォロー時間更新用SQL
+     */
+    static SQL_UPDATE_M_SERVER_INFO_FOLLOW_TIME = 'UPDATE [m_server_info] SET follow_time = $follow_time ';
+
+    /**
      * チャンネル情報マスタテーブル選択用SQL
      */
     static SQL_SELECT_M_SERVER_INFO = 'SELECT m1.[server_id] , m1.[channel_id], m1.[recruitment_target_role], m1.[follow_time] FROM [m_server_info] m1 ';
+
+    /**
+     * チャンネル情報マスタテーブル削除用SQL
+     */
+     static SQL_DELETE_M_SERVER_INFO = 'DELETE FROM [m_server_info] ';
 
     /**
      * インスタンス化を行い、同時に、テーブルがない場合は作成する
@@ -127,7 +142,40 @@ module.exports = class ServerInfo {
     }
 
     /**
-     * チャンネルマスタから情報を取得します
+     * チャンネルマスタに情報を新規登録します
+     * @param {Object} server_info_data 
+     * @returns Promiseオブジェクト、データベースの選択内容
+     */
+     insert_m_server_info(server_info_data) {
+        // Promise処理
+        return new Promise((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = ServerInfo.SQL_INSERT_M_SERVER_INFO;
+                logger.info(`sql = ${sql}, server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, recruitment_target_role = ${server_info_data.recruitment_target_role}`);
+                db.run(sql, {
+                    $server_id: server_info_data.server_id,
+                    $channel_id: server_info_data.channel_id,
+                    $recruitment_target_role: server_info_data.recruitment_target_role,
+                }, ((err) => {
+                    if (err) {
+                        logger.error(`insert m_server_info failed. err = ${err}`);
+                        reject(err);
+                    }
+
+                    logger.info(`insert m_server_info successed. : server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, recruitment_target_role = ${server_info_data.recruitment_target_role}`);
+                    resolve();
+                }));
+            });
+
+            db.close();
+        });
+    }
+
+    /**
+     * チャンネルマスタのフォロー時間を更新します
      * @param {string} server_id 
      * @param {Date} follow_time
      * @returns Promiseオブジェクト、データベースの選択内容
@@ -139,7 +187,7 @@ module.exports = class ServerInfo {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `UPDATE [m_server_info] SET follow_time = $follow_time WHERE server_id = $server_id`;
+                const sql = `${ServerInfo.SQL_UPDATE_M_SERVER_INFO_FOLLOW_TIME} WHERE server_id = $server_id`;
                 logger.info(`sql = ${sql}, server_id = ${server_id}, follow_time = ${follow_time.toISOString()}`);
                 db.run(sql, {
                     $server_id: server_id,
@@ -151,6 +199,37 @@ module.exports = class ServerInfo {
                     }
 
                     logger.info(`update m_server_info successed. : server_id = ${server_id}, follow_time = ${follow_time.toISOString()}`);
+                    resolve();
+                }));
+            });
+
+            db.close();
+        });
+    }
+
+    /**
+     * チャンネルマスタから情報を削除します
+     * @param {string} server_id 
+     * @returns Promiseオブジェクト、データベースの選択内容
+     */
+     delete_m_server_info(server_id) {
+        // Promise処理
+        return new Promise((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = `${ServerInfo.SQL_DELETE_M_SERVER_INFO} WHERE [server_id] = $server_id`;
+                logger.info(`sql = ${sql}, server_id = ${server_id}`);
+                db.run(sql, {
+                    $server_id: server_id,
+                }, ((err) => {
+                    if (err) {
+                        logger.error(`delete m_server_info failed. err = ${err}`);
+                        reject(err);
+                    }
+
+                    logger.info(`delete m_server_info successed. : server_id = ${server_id}`);
                     resolve();
                 }));
             });
