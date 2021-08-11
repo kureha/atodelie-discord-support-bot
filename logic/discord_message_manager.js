@@ -77,6 +77,7 @@ module.exports = class DiscordMessageManager {
     /**
      * 新規募集時のメッセージを返却します
      * @param {Recruitment} recruitment 
+     * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
     get_new_recruitment_message(recruitment, recruitment_target_role) {
@@ -91,6 +92,7 @@ module.exports = class DiscordMessageManager {
     /**
      * 募集参加時のメッセージを返却します
      * @param {Recruitment} recruitment 
+     * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
     get_join_recruitment(recruitment, recruitment_target_role) {
@@ -105,6 +107,7 @@ module.exports = class DiscordMessageManager {
     /**
      * 参加取りやめのメッセージを返します
      * @param {Recruitment} recruitment 
+     * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
     get_decline_recruitment(recruitment, recruitment_target_role) {
@@ -117,8 +120,24 @@ module.exports = class DiscordMessageManager {
     }
 
     /**
+     * 観戦のメッセージを返します
+     * @param {Recruitment} recruitment 
+     * @param {string} recruitment_target_role 
+     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     */
+    get_view_recruitment(recruitment, recruitment_target_role) {
+        // call interanal function
+        return this.get_recruitment_embed_message(
+            recruitment,
+            recruitment_target_role,
+            constants.DISCORD_MESSAGE_TITLE_SUCCESS_VIEW,
+            constants.DISCORD_MESSAGE_SUCCESS_VIEW);
+    }
+
+    /**
      * 募集フォロー時の組み込みメッセージを返します
      * @param {Recruitment} recruitment 
+     * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
     get_join_recruitment_follow_message(recruitment, recruitment_target_role) {

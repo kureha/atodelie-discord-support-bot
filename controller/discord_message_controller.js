@@ -93,7 +93,7 @@ module.exports = class DiscordMessageController {
                                     messageManager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                 ],
                                 components: [
-                                    new Discord.MessageActionRow().addComponents(join_button, decline_button),
+                                    new Discord.MessageActionRow().addComponents(join_button, view_button, decline_button),
                                 ],
                             });
                         })

@@ -31,12 +31,28 @@ module.exports = class DiscordInteraction {
             this.type = constants.TYPE_JOIN;
             this.delete = false;
 
+            // status
+            this.status = constants.STATUS_ENABLED;
+
             // get token from custom id
             this.token = custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}(.+)$`))[1];
+        } else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}`))) {
+            logger.debug(`interaction is valid.. type = ${constants.TYPE_VIEW}`);
+            this.type = constants.TYPE_VIEW;
+            this.delete = false;
+
+            // change status
+            this.status = constants.STATUS_VIEW;
+
+            // get token from custom id
+            this.token = custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}(.+)$`))[1];
         } else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}`))) {
             logger.debug(`interaction is valid.. type = ${constants.TYPE_DECLINE}`);
             this.type = constants.TYPE_DECLINE;
             this.delete = true;
+
+            // status
+            this.status = constants.STATUS_DISABLED;
 
             // get token from custom id
             this.token = custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}(.+)$`))[1];
@@ -52,7 +68,6 @@ module.exports = class DiscordInteraction {
         logger.info(`this is valid interaction. token = ${this.token}`);
 
         // set valiables
-        this.status = constants.STATUS_ENABLED
         this.user_id = user_id;
         this.description = DiscordInteraction.DESCRIPTION_FOR_JOIN_FROM_BUTTON;
     }
