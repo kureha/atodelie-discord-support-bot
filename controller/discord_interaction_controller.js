@@ -6,7 +6,7 @@ const Constants = require('./../common/constants');
 const constants = new Constants();
 
 // import modules
-const DiscordInteraction = require('../logic/discord_interaction_analyzer');
+const DiscordInteractionAnalyzer = require('../logic/discord_interaction_analyzer');
 
 // import modules
 const RecruitmentRepository = require('./../db/recruitement');
@@ -31,7 +31,7 @@ module.exports = class DiscordInteractionController {
         const messageManager = new MessageManager();
 
         // analyze message
-        let analyzer = new DiscordInteraction(interaction.customId, interaction.user.id);
+        let analyzer = new DiscordInteractionAnalyzer(interaction.customId, interaction.user.id);
         logger.trace(analyzer);
 
         let recruitment_data = new Recruitment();

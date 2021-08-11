@@ -9,7 +9,7 @@ const Constants = require('./../common/constants');
 const constants = new Constants();
 
 // import modules
-const DiscordAnalyzer = require('../logic/discord_message_analyzer');
+const DiscordMessageAnalyzer = require('../logic/discord_message_analyzer');
 
 // import modules
 const RecruitmentRepository = require('./../db/recruitement');
@@ -34,7 +34,7 @@ module.exports = class DiscordMessageController {
             const messageManager = new MessageManager();
 
             // メッセージを解析する
-            let analyzer = new DiscordAnalyzer(message.content, message.guild.id, message.author.id, client.user.id);
+            let analyzer = new DiscordMessageAnalyzer(message.content, message.guild.id, message.author.id, client.user.id);
             logger.trace(analyzer);
             let recruitment_target_role = '';
 
