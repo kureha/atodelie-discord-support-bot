@@ -13,6 +13,6 @@ module.exports = class ServerInfo {
         this.server_id = '';
         this.channel_id = '';
         this.recruitment_target_role = '';
-        this.follow_time = new Date('2000-01-01T00:00:00.000Z');
+        this.follow_time = Constants.get_default_date();
     }
 }
