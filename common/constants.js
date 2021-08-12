@@ -1,4 +1,8 @@
 module.exports = class Constants {
+    /**
+     * コンストラクタ
+     * @constructor
+     */
     constructor () {
         // readed from env file
         require('dotenv').config();
@@ -80,7 +84,7 @@ module.exports = class Constants {
 
     /**
      * デフォルトとする日時を返却します
-     * @returns 2000-01-01 00:00:00の日時
+     * @returns {Date} 2000-01-01 00:00:00の日時
      */
      static get_default_date() {
         const temp_date = new Date();
