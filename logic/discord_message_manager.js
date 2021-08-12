@@ -6,7 +6,6 @@ const Discord = require('discord.js');
 
 // import constants
 const Constants = require('../common/constants');
-const DiscordAnalyzer = require('./discord_message_analyzer');
 const constants = new Constants();
 
 module.exports = class DiscordMessageManager {
@@ -14,7 +13,7 @@ module.exports = class DiscordMessageManager {
     /**
      * 文字列のエスケープされた改行を有効にします
      * @param {string} str 
-     * @returns {string} \\mが\nに置換された文字列
+     * @returns {string} \\nが\nに置換された文字列
      */
     enable_lf(str) {
         return str.replace('\\n', '\n');

@@ -19,7 +19,7 @@ module.exports = class DiscordMessageAnalyzer {
      * @param {string} mes メッセージ本体
      * @param {string} message_user_id メッセージを送信したユーザID
      * @param {string} user_id botのDiscordユーザID
-     * @returns {DiscordMessageAnalyzer} 解析結果オブジェクト
+     * @constructor
      */
     constructor(mes, server_id, message_user_id, user_id) {
         if (typeof (mes) == "string") {

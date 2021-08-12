@@ -7,9 +7,6 @@ const constants = new Constants();
 // エンティティ有効化
 const ServerInfo = require('./../entity/server_info');
 
-// UUID有効化
-const uuid = require('uuid');
-
 module.exports = class ServerInfoRepository {
 
     /**

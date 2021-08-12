@@ -16,7 +16,7 @@ module.exports = class DiscordInteraction {
      * インタラクションを解析し、解析結果を返却する
      * @param {string} custom_id 
      * @param {string} user_id 
-     * @returns {DiscordInteraction}
+     * @constructor
      */
     constructor(custom_id, user_id) {
         // properties

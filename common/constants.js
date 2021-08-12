@@ -55,6 +55,8 @@ module.exports = class Constants {
         this.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS = process.env.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS;
 
         // static values
+        this.ID_INVALID = -1;
+
         this.TYPE_INIT = 0;
         this.TYPE_RECRUITEMENT = 1;
         this.TYPE_JOIN = 2;

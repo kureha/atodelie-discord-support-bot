@@ -7,9 +7,6 @@ const constants = new Constants();
 // エンティティ有効化
 const Participate = require('./../entity/participate');
 
-// UUID有効化
-const uuid = require('uuid');
-
 module.exports = class ParticipateRepository {
 
     /**

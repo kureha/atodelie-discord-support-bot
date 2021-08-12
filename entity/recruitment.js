@@ -10,7 +10,7 @@ module.exports = class Recruitment {
      * @constructor
      */
     constructor() {
-        this.id = -1;
+        this.id = constants.ID_INVALID;
         this.server_id = '';
         this.token = '';
         this.status = constants.STATUS_DISABLED;
