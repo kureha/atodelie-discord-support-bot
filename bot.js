@@ -9,6 +9,10 @@ const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Disc
 const Constants = require('./common/constants');
 const constants = new Constants();
 
+// check db and init
+const InitializeRepository = require('./db/initialize');
+InitializeRepository.initialize_database_if_not_exists();
+
 // ready event
 client.on('ready', () => {
   client.user.setPresence(

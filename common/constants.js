@@ -23,6 +23,7 @@ module.exports = class Constants {
 
         // sqlite section
         this.SQLITE_FILE = process.env.SQLITE_FILE;
+        this.SQLITE_TEMPLATE_FILE = process.env.SQLITE_TEMPLATE_FILE;
 
         // message section
         this.DISCORD_ACTIVITY_NAME = process.env.DISCORD_ACTIVITY_NAME;

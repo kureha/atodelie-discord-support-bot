@@ -10,7 +10,7 @@ module.exports = class Participate {
      * @constructor
      */
     constructor() {
-        this.id = -1;
+        this.id = constants.ID_INVALID;
         this.token = '';
         this.status = constants.STATUS_DISABLED;
         this.user_id = '';
