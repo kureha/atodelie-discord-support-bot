@@ -21,13 +21,8 @@ module.exports = {
         default: {
             // appendersで設定した名称を指定する
             // levelは出力対象とするものを設定ここではALL（すべて）
-            appenders: ["console"],
+            appenders: ["console", "error"],
             level: "ALL"
-        },
-        // ADD
-        system: {
-            appenders: ["error"],
-            level: "ERROR"
         }
     }
 }
