@@ -1,6 +1,9 @@
 // create logger
 const logger = require('./../common/logger');
 
+// import discord modules
+const Discord = require('discord.js');
+
 // import constants
 const Constants = require('./../common/constants');
 const constants = new Constants();
@@ -37,139 +40,62 @@ module.exports = class DiscordInteractionController {
         let recruitment_data = new Recruitment();
         let recruitment_target_role = '';
 
-        switch (analyzer.type) {
-            case constants.TYPE_JOIN:
-                // join to target plan
-                participate_repo.insert_t_participate(analyzer.get_join_participate())
-                    .catch((err) => {
-                        // failed to insert, try to update
-                        return participate_repo.update_t_participate(analyzer.get_join_participate());
-                    })
-                    .then(() => {
-                        // get target role
-                        return server_info_repo.get_m_server_info(interaction.guildId);
-                    })
-                    .then((server_info_data) => {
-                        // get target role
-                        recruitment_target_role = server_info_data.recruitment_target_role;
+        // join/view/decline to target plan
+        participate_repo.insert_t_participate(analyzer.get_join_participate())
+            .catch((err) => {
+                // failed to insert, try to update
+                return participate_repo.update_t_participate(analyzer.get_join_participate());
+            })
+            .then(() => {
+                // get target role
+                return server_info_repo.get_m_server_info(interaction.guildId);
+            })
+            .then((server_info_data) => {
+                // get target role
+                recruitment_target_role = server_info_data.recruitment_target_role;
 
-                        // update OK, send message
-                        return recruitment_repo.get_m_recruitment(analyzer.token);
-                    })
-                    .then((data) => {
-                        recruitment_data = data;
-                        // set id to analyzer
-                        analyzer.set_id(recruitment_data.id);
-                        // get user list
-                        return participate_repo.get_t_participate(recruitment_data.token);
-                    })
-                    .then((user_list) => {
-                        // get user information
-                        recruitment_data.user_list = user_list;
+                // update OK, send message
+                return recruitment_repo.get_m_recruitment(analyzer.token);
+            })
+            .then((data) => {
+                recruitment_data = data;
+                // set id to analyzer
+                analyzer.set_id(recruitment_data.id);
+                // get user list
+                return participate_repo.get_t_participate(recruitment_data.token);
+            })
+            .then((user_list) => {
+                // get user information
+                recruitment_data.user_list = user_list;
 
-                        // send message
-                        interaction.reply({
-                            embeds: [
-                                messageManager.get_join_recruitment(recruitment_data, recruitment_target_role)
-                            ],
-                        });
-                    })
-                    .catch((err) => {
-                        // send error message
-                        interaction.reply(`${messageManager.get_no_recruitment()}`);
-                        logger.error(err);
-                    });
-                break;
+                // create message
+                let message_by_interaction = new Discord.MessageEmbed();
+                switch (analyzer.type) {
+                    case constants.TYPE_JOIN:
+                        message_by_interaction = messageManager.get_join_recruitment(recruitment_data, recruitment_target_role);
+                        break;
+                    case constants.TYPE_VIEW:
+                        message_by_interaction = messageManager.get_view_recruitment(recruitment_data, recruitment_target_role);
+                        break;
+                    case constants.TYPE_DECLINE:
+                        message_by_interaction = messageManager.get_decline_recruitment(recruitment_data, recruitment_target_role);
+                        break;
+                    default:
+                        logger.error(`this is not valid type. : ${analyzer.type}`);
+                        break;
+                }
 
-                case constants.TYPE_VIEW:
-                    // view to target plan
-                    participate_repo.insert_t_participate(analyzer.get_join_participate())
-                        .catch((err) => {
-                            // failed to insert, try to update
-                            return participate_repo.update_t_participate(analyzer.get_join_participate());
-                        })
-                        .then(() => {
-                            // get target role
-                            return server_info_repo.get_m_server_info(interaction.guildId);
-                        })
-                        .then((server_info_data) => {
-                            // get target role
-                            recruitment_target_role = server_info_data.recruitment_target_role;
-    
-                            // update OK, send message
-                            return recruitment_repo.get_m_recruitment(analyzer.token);
-                        })
-                        .then((data) => {
-                            recruitment_data = data;
-                            // set id to analyzer
-                            analyzer.set_id(recruitment_data.id);
-                            // get user list
-                            return participate_repo.get_t_participate(recruitment_data.token);
-                        })
-                        .then((user_list) => {
-                            // get user information
-                            recruitment_data.user_list = user_list;
-    
-                            // send message
-                            interaction.reply({
-                                embeds: [
-                                    messageManager.get_view_recruitment(recruitment_data, recruitment_target_role)
-                                ],
-                            });
-                        })
-                        .catch((err) => {
-                            // send error message
-                            interaction.reply(`${messageManager.get_no_recruitment()}`);
-                            logger.error(err);
-                        });
-                    break;
-
-            case constants.TYPE_DECLINE:
-                // decline to target plan
-                participate_repo.insert_t_participate(analyzer.get_join_participate())
-                    .catch((err) => {
-                        // failed to insert, try to update
-                        return participate_repo.update_t_participate(analyzer.get_join_participate());
-                    })
-                    .then(() => {
-                        // get target role
-                        return server_info_repo.get_m_server_info(interaction.guildId);
-                    })
-                    .then((server_info_data) => {
-                        // get target role
-                        recruitment_target_role = server_info_data.recruitment_target_role;
-
-                        // success to delete, get master data
-                        return recruitment_repo.get_m_recruitment(analyzer.token);
-                    })
-                    .then((data) => {
-                        recruitment_data = data;
-                        // set id to analyzer
-                        analyzer.set_id(recruitment_data.id);
-                        // get user list
-                        return participate_repo.get_t_participate(recruitment_data.token);
-                    })
-                    .then((user_list) => {
-                        // get user information
-                        recruitment_data.user_list = user_list;
-
-                        // send message
-                        interaction.reply({
-                            embeds: [
-                                messageManager.get_decline_recruitment(recruitment_data, recruitment_target_role)
-                            ],
-                        });
-                    })
-                    .catch((err) => {
-                        // send error message
-                        interaction.reply(`${messageManager.get_no_recruitment()}`);
-                        logger.error(err);
-                    });
-                break;
-            default:
+                // send message
+                interaction.reply({
+                    embeds: [
+                        message_by_interaction
+                    ],
+                });
+            })
+            .catch((err) => {
                 // send error message
-                interaction.reply(`${constants.DISCORD_MESSAGE_TYPE_INVALID} (Error : ${analyzer.error_messages.join(',')})`);
-                break;
-        }
+                interaction.reply(`${messageManager.get_no_recruitment()}`);
+                logger.error(err);
+            });
     }
 }
