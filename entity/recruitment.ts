@@ -17,11 +17,7 @@ export class Recruitment {
     owner_id : string;
     description : string;
     delete : boolean;
-
-    /**
-     * 注意：本変数は日時をISO形式で保持するため、外部からはアクセサを使用する
-     */
-    private limit_time : string;
+    limit_time : Date;
 
     user_list : Participate[];
 
@@ -34,7 +30,7 @@ export class Recruitment {
         this.server_id = '';
         this.token = '';
         this.status = constants.STATUS_DISABLED;
-        this.limit_time = Constants.get_default_date().toISOString();
+        this.limit_time = Constants.get_default_date();
         this.name = '';
         this.owner_id = '';
         this.description = '';
@@ -42,22 +38,6 @@ export class Recruitment {
 
         // insert participate array
         this.user_list = [];
-    }
-
-    /**
-     * 募集の期限日時を設定する
-     * @param {Date} v 対象日時
-     */
-    set_limit_time(v : Date) {
-        this.limit_time = v.toISOString();
-    }
-
-    /**
-     * 募集の期限日時を取得する
-     * @returns {Date} 期限日時
-     */
-    get_limit_time() {
-        return new Date(this.limit_time);
     }
 
     /**
@@ -71,7 +51,7 @@ export class Recruitment {
         v.server_id = row.server_id;
         v.token = row.token;
         v.status = row.status;
-        v.set_limit_time(new Date(row.limit_time));
+        v.limit_time = new Date(row.limit_time);
         v.name = row.name;
         v.owner_id = row.owner_id;
         v.description = row.description;

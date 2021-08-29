@@ -16,20 +16,6 @@ class ServerInfo {
         this.follow_time = constants_1.Constants.get_default_date();
     }
     /**
-     * フォロー済み日時を設定する
-     * @param {Date} v 対象日時
-     */
-    set_follow_time(v) {
-        this.follow_time = v;
-    }
-    /**
-     * フォロー済み日時を取得する
-     * @returns {Date} フォロー済み日時
-     */
-    get_follow_time() {
-        return new Date(this.follow_time);
-    }
-    /**
      * データベースの行情報をオブジェクトに変換する
      * @param row ServerInfoテーブルのデータ列
      * @returns {ServerInfo} オブジェクト
@@ -41,10 +27,10 @@ class ServerInfo {
         v.recruitment_target_role = row.recruitment_target_role;
         // follow_timeはnullableとなる
         try {
-            v.set_follow_time(new Date(row.follow_time));
+            v.follow_time = new Date(row.follow_time);
         }
         catch (e) {
-            v.set_follow_time(constants_1.Constants.get_default_date());
+            v.follow_time = constants_1.Constants.get_default_date();
         }
         return v;
     }

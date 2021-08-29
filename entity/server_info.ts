@@ -9,11 +9,7 @@ export class ServerInfo {
     server_id : string;
     channel_id : string;
     recruitment_target_role : string;
-
-    /**
-     * 注意：本変数は日時をISO形式で保持するため、外部からはアクセサを使用する
-     */
-    private follow_time : Date;
+    follow_time : Date;
 
     /**
      * コンストラクタ
@@ -24,22 +20,6 @@ export class ServerInfo {
         this.channel_id = '';
         this.recruitment_target_role = '';
         this.follow_time = Constants.get_default_date();
-    }
-
-    /**
-     * フォロー済み日時を設定する
-     * @param {Date} v 対象日時
-     */
-    set_follow_time(v: Date) {
-        this.follow_time = v;
-    }
-
-    /**
-     * フォロー済み日時を取得する
-     * @returns {Date} フォロー済み日時
-     */
-    get_follow_time() {
-        return new Date(this.follow_time);
     }
 
     /**
@@ -54,9 +34,9 @@ export class ServerInfo {
         v.recruitment_target_role = row.recruitment_target_role;
         // follow_timeはnullableとなる
         try {
-            v.set_follow_time(new Date(row.follow_time));
+            v.follow_time = new Date(row.follow_time);
         } catch (e) {
-            v.set_follow_time(Constants.get_default_date());
+            v.follow_time = Constants.get_default_date();
         }
 
         return v;

@@ -108,7 +108,7 @@ export class ServerInfoRepository {
                     error_server_info.server_id = server_id;
                     error_server_info.channel_id = constants.RECRUITMENT_INVALID_CHANNEL_ID;
                     error_server_info.recruitment_target_role = constants.RECRUITMENT_INVALID_ROLE;
-                    error_server_info.set_follow_time(Constants.get_default_date());
+                    error_server_info.follow_time = Constants.get_default_date();
 
                     if (err) {
                         logger.error(`select m_server_info failed. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
