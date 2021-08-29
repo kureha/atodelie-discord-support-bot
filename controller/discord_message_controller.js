@@ -7,9 +7,9 @@ var logger_1 = require("../common/logger");
 var constants_1 = require("../common/constants");
 var constants = new constants_1.Constants();
 // import modules
-var RecruitmentRepository = require('./../db/recruitement');
-var ParticipateRepository = require('../db/participate');
-var ServerInfoRepository = require('../db/server_info');
+var recruitement_1 = require("./../db/recruitement");
+var participate_1 = require("../db/participate");
+var server_info_1 = require("../db/server_info");
 // create message modules
 var discord_message_analyzer_1 = require("./../logic/discord_message_analyzer");
 var discord_message_manager_1 = require("./../logic/discord_message_manager");
@@ -28,9 +28,9 @@ var DiscordMessageController = /** @class */ (function () {
             logger_1.logger.info("recieved message : " + message.content);
             logger_1.logger.trace(message);
             // create db instances
-            var recruitment_repo_1 = new RecruitmentRepository();
-            var participate_repo_1 = new ParticipateRepository();
-            var server_info_repo_1 = new ServerInfoRepository();
+            var recruitment_repo_1 = new recruitement_1.RecruitmentRepository();
+            var participate_repo_1 = new participate_1.ParticipateRepository();
+            var server_info_repo_1 = new server_info_1.ServerInfoRepository();
             // create message manager instance
             var messageManager_1 = new discord_message_manager_1.DiscordMessageManager();
             // メッセージを解析する

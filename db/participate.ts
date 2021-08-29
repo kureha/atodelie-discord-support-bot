@@ -69,7 +69,7 @@ export class ParticipateRepository {
      * @param {Database} db sqlite3データベース用インスタンス
      */
     create_all_database(db : any) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             db.serialize(function () {
                 // run serialize
                 db.run(ParticipateRepository.SQL_CREATE_T_PARTICIPATE, [], ((err : any) => {
@@ -79,7 +79,7 @@ export class ParticipateRepository {
                     }
 
                     // 全SQL処理後に完了とする
-                    resolve(true);
+                    resolve();
                 }));
             });
 
@@ -94,7 +94,7 @@ export class ParticipateRepository {
      */
     insert_t_participate(data : Participate) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
@@ -112,7 +112,7 @@ export class ParticipateRepository {
                         reject(err);
                     }
                     // resolve ended this sql
-                    resolve(true);
+                    resolve();
                 });
                 stmt.finalize();
             });
@@ -127,7 +127,7 @@ export class ParticipateRepository {
      */
     update_t_participate(data : Participate) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
@@ -146,7 +146,7 @@ export class ParticipateRepository {
                         reject(err);
                     }
                     // resolve ended this sql
-                    resolve(true);
+                    resolve();
                 });
                 stmt.finalize();
             });
@@ -162,7 +162,7 @@ export class ParticipateRepository {
      */
     delete_t_participate(token : string) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
@@ -177,7 +177,7 @@ export class ParticipateRepository {
                         reject(err);
                     }
                     // resolve ended this sql
-                    resolve(true);
+                    resolve();
                 });
                 stmt.finalize();
             });
@@ -192,7 +192,7 @@ export class ParticipateRepository {
      */
     get_t_participate(token : string) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<Participate[]>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {

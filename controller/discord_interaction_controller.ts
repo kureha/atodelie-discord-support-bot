@@ -6,9 +6,9 @@ import {Constants} from '../common/constants';
 const constants = new Constants();
 
 // import modules
-const RecruitmentRepository = require('./../db/recruitement');
-const ParticipateRepository = require('../db/participate')
-const ServerInfoRepository = require('../db/server_info');
+import {RecruitmentRepository} from './../db/recruitement';
+import {ParticipateRepository} from '../db/participate';
+import {ServerInfoRepository} from '../db/server_info';
 
 // create message modules
 import {DiscordInteraction} from './../logic/discord_interaction_analyzer';

@@ -7,12 +7,12 @@ var logger_1 = require("../common/logger");
 var constants_1 = require("../common/constants");
 var constants = new constants_1.Constants();
 // import modules
-var RecruitmentRepository = require('./../db/recruitement');
-var ParticipateRepository = require('../db/participate');
-var ServerInfoRepository = require('../db/server_info');
+var recruitement_1 = require("./../db/recruitement");
+var participate_1 = require("../db/participate");
+var server_info_1 = require("../db/server_info");
 // create message modules
 var discord_message_manager_1 = require("./../logic/discord_message_manager");
-var server_info_1 = require("../entity/server_info");
+var server_info_2 = require("../entity/server_info");
 var CronController = /** @class */ (function () {
     function CronController() {
     }
@@ -26,14 +26,14 @@ var CronController = /** @class */ (function () {
         to_datetime.setMinutes(to_datetime.getMinutes() + constants.DISCORD_FOLLOW_MINUTE);
         logger_1.logger.info("follow recruitment cron start. : to_datetime = " + to_datetime.toISOString());
         // create db instances
-        var recruitment_repo = new RecruitmentRepository();
-        var participate_repo = new ParticipateRepository();
-        var server_info_repo = new ServerInfoRepository();
+        var recruitment_repo = new recruitement_1.RecruitmentRepository();
+        var participate_repo = new participate_1.ParticipateRepository();
+        var server_info_repo = new server_info_1.ServerInfoRepository();
         // create message manager instance
         var messageManager = new discord_message_manager_1.DiscordMessageManager();
         // loop for guild id
         client.guilds.cache.forEach(function (guild) {
-            var server_info_data = new server_info_1.ServerInfo();
+            var server_info_data = new server_info_2.ServerInfo();
             // get server info (send target channel, get latest follow_time)
             server_info_repo.get_m_server_info(guild.id)
                 .then(function (temp_server_info_data) {
@@ -45,7 +45,7 @@ var CronController = /** @class */ (function () {
                     logger_1.logger.warn("server follow_time is null, apply default. : date = " + server_info_data.follow_time);
                 }
                 // get follow lists
-                return recruitment_repo.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time, to_datetime.toISOString());
+                return recruitment_repo.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time.toISOString(), to_datetime.toISOString());
             })
                 .then(function (recruitment_data_list) {
                 logger_1.logger.info("select follow data list completed.");

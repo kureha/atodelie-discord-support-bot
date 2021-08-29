@@ -69,7 +69,7 @@ export class ServerInfoRepository {
      * @param {Database} db sqlite3データベース用インスタンス
      */
     create_all_database(db : any) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             db.serialize(function () {
                 // run serialize
                 db.run(ServerInfoRepository.SQL_CREATE_M_SERVER_INFO, [], ((err : any) => {
@@ -79,7 +79,7 @@ export class ServerInfoRepository {
                     }
 
                     // 全SQL処理後に完了とする
-                    resolve(true);
+                    resolve();
                 }));
             });
 
@@ -94,7 +94,7 @@ export class ServerInfoRepository {
      */
     get_m_server_info(server_id : string) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<ServerInfo>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
@@ -109,7 +109,7 @@ export class ServerInfoRepository {
                             server_id: server_id,
                             channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
                             recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
-                            follow_time: null,
+                            follow_time: Constants.get_default_date(),
                         });
                     }
                     if (row === undefined) {
@@ -119,7 +119,7 @@ export class ServerInfoRepository {
                             server_id: server_id,
                             channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
                             recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
-                            follow_time: null,
+                            follow_time: Constants.get_default_date(),
                         });
                     }
 
@@ -140,7 +140,7 @@ export class ServerInfoRepository {
      */
      insert_m_server_info(server_info_data : ServerInfo) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
@@ -158,7 +158,7 @@ export class ServerInfoRepository {
                     }
 
                     logger.info(`insert m_server_info successed. : server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, recruitment_target_role = ${server_info_data.recruitment_target_role}`);
-                    resolve(true);
+                    resolve();
                 }));
             });
 
@@ -174,7 +174,7 @@ export class ServerInfoRepository {
      */
     update_m_server_info_follow_time(server_id : string, follow_time : Date) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
@@ -191,7 +191,7 @@ export class ServerInfoRepository {
                     }
 
                     logger.info(`update m_server_info successed. : server_id = ${server_id}, follow_time = ${follow_time.toISOString()}`);
-                    resolve(true);
+                    resolve();
                 }));
             });
 
@@ -206,7 +206,7 @@ export class ServerInfoRepository {
      */
      delete_m_server_info(server_id : string) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
@@ -222,7 +222,7 @@ export class ServerInfoRepository {
                     }
 
                     logger.info(`delete m_server_info successed. : server_id = ${server_id}`);
-                    resolve(true);
+                    resolve();
                 }));
             });
 

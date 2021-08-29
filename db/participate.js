@@ -48,7 +48,7 @@ var ParticipateRepository = /** @class */ (function () {
                         reject(err);
                     }
                     // 全SQL処理後に完了とする
-                    resolve(true);
+                    resolve();
                 }));
             });
             db.close();
@@ -80,7 +80,7 @@ var ParticipateRepository = /** @class */ (function () {
                         reject(err);
                     }
                     // resolve ended this sql
-                    resolve(true);
+                    resolve();
                 });
                 stmt.finalize();
             });
@@ -114,7 +114,7 @@ var ParticipateRepository = /** @class */ (function () {
                         reject(err);
                     }
                     // resolve ended this sql
-                    resolve(true);
+                    resolve();
                 });
                 stmt.finalize();
             });
@@ -144,7 +144,7 @@ var ParticipateRepository = /** @class */ (function () {
                         reject(err);
                     }
                     // resolve ended this sql
-                    resolve(true);
+                    resolve();
                 });
                 stmt.finalize();
             });

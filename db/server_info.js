@@ -48,7 +48,7 @@ var ServerInfoRepository = /** @class */ (function () {
                         reject(err);
                     }
                     // 全SQL処理後に完了とする
-                    resolve(true);
+                    resolve();
                 }));
             });
             db.close();
@@ -76,7 +76,7 @@ var ServerInfoRepository = /** @class */ (function () {
                             server_id: server_id,
                             channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
                             recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
-                            follow_time: null
+                            follow_time: constants_1.Constants.get_default_date()
                         });
                     }
                     if (row === undefined) {
@@ -86,7 +86,7 @@ var ServerInfoRepository = /** @class */ (function () {
                             server_id: server_id,
                             channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
                             recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
-                            follow_time: null
+                            follow_time: constants_1.Constants.get_default_date()
                         });
                     }
                     logger_1.logger.info("selected m_server_info successed. : server_id = " + server_id);
@@ -121,7 +121,7 @@ var ServerInfoRepository = /** @class */ (function () {
                         reject(err);
                     }
                     logger_1.logger.info("insert m_server_info successed. : server_id = " + server_info_data.server_id + ", channel_id = " + server_info_data.channel_id + ", recruitment_target_role = " + server_info_data.recruitment_target_role);
-                    resolve(true);
+                    resolve();
                 }));
             });
             db.close();
@@ -151,7 +151,7 @@ var ServerInfoRepository = /** @class */ (function () {
                         reject(err);
                     }
                     logger_1.logger.info("update m_server_info successed. : server_id = " + server_id + ", follow_time = " + follow_time.toISOString());
-                    resolve(true);
+                    resolve();
                 }));
             });
             db.close();
@@ -179,7 +179,7 @@ var ServerInfoRepository = /** @class */ (function () {
                         reject(err);
                     }
                     logger_1.logger.info("delete m_server_info successed. : server_id = " + server_id);
-                    resolve(true);
+                    resolve();
                 }));
             });
             db.close();

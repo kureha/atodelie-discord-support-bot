@@ -6,9 +6,9 @@ import {Constants} from '../common/constants';
 const constants = new Constants();
 
 // import modules
-const RecruitmentRepository = require('./../db/recruitement');
-const ParticipateRepository = require('../db/participate')
-const ServerInfoRepository = require('../db/server_info');
+import {RecruitmentRepository} from './../db/recruitement';
+import {ParticipateRepository} from '../db/participate';
+import {ServerInfoRepository} from '../db/server_info';
 
 // create message modules
 import {DiscordMessageManager} from './../logic/discord_message_manager';
@@ -54,7 +54,7 @@ export class CronController {
                     }
 
                     // get follow lists
-                    return recruitment_repo.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time, to_datetime.toISOString());
+                    return recruitment_repo.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time.toISOString(), to_datetime.toISOString());
                 })
                 .then((recruitment_data_list : Recruitment[]) => {
                     logger.info(`select follow data list completed.`)

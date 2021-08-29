@@ -82,7 +82,7 @@ export class RecruitmentRepository {
      * @param {Database} db sqlite3データベース用インスタンス
      */
     create_all_database(db : any) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             db.serialize(function () {
                 // run serialize
                 db.run(RecruitmentRepository.SQL_CREATE_M_RECRUITMENT, [], ((err : any) => {
@@ -92,7 +92,7 @@ export class RecruitmentRepository {
                     }
 
                     // 全SQL処理後に完了とする
-                    resolve(true);
+                    resolve();
                 }));
             });
 
@@ -115,7 +115,7 @@ export class RecruitmentRepository {
      */
     insert_m_recruitment(data : Recruitment) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
@@ -137,7 +137,7 @@ export class RecruitmentRepository {
                         reject(err);
                     }
                     // resolve ended this sql
-                    resolve(true);
+                    resolve();
                 });
                 stmt.finalize();
             });
@@ -152,7 +152,7 @@ export class RecruitmentRepository {
      */
     update_m_recruitment(data : Recruitment) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
@@ -174,7 +174,7 @@ export class RecruitmentRepository {
                         reject(err);
                     }
                     // resolve ended this sql
-                    resolve(true);
+                    resolve();
                 });
                 stmt.finalize();
             });
@@ -190,7 +190,7 @@ export class RecruitmentRepository {
      */
     delete_m_recruitment(token : string) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
@@ -205,7 +205,7 @@ export class RecruitmentRepository {
                         reject(err);
                     }
                     // resolve ended this sql
-                    resolve(true);
+                    resolve();
                 });
                 stmt.finalize();
             });
@@ -219,7 +219,7 @@ export class RecruitmentRepository {
      */
     get_m_recruitment_id() {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<number>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
@@ -249,7 +249,7 @@ export class RecruitmentRepository {
      */
     get_m_recruitment_for_follow(server_id : string, from_datetime : string, to_datetime : string) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<Recruitment[]>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
@@ -282,7 +282,7 @@ export class RecruitmentRepository {
      */
     get_m_recruitment_token() {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<string>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
@@ -322,7 +322,7 @@ export class RecruitmentRepository {
      */
     get_m_recruitment(token : string) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<Recruitment>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {
@@ -357,7 +357,7 @@ export class RecruitmentRepository {
      */
     get_m_recruitment_latests(server_id : string, count : number) {
         // Promise処理
-        return new Promise((resolve, reject) => {
+        return new Promise<Recruitment[]>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
 
             db.serialize(function () {

@@ -7,9 +7,9 @@ var logger_1 = require("../common/logger");
 var constants_1 = require("../common/constants");
 var constants = new constants_1.Constants();
 // import modules
-var RecruitmentRepository = require('./../db/recruitement');
-var ParticipateRepository = require('../db/participate');
-var ServerInfoRepository = require('../db/server_info');
+var recruitement_1 = require("./../db/recruitement");
+var participate_1 = require("../db/participate");
+var server_info_1 = require("../db/server_info");
 // create message modules
 var discord_interaction_analyzer_1 = require("./../logic/discord_interaction_analyzer");
 var discord_message_manager_1 = require("./../logic/discord_message_manager");
@@ -29,9 +29,9 @@ var DiscordInteractionController = /** @class */ (function () {
         logger_1.logger.info("recirved interaction. customId = " + interaction.customId);
         logger_1.logger.trace(interaction);
         // create db instances
-        var recruitment_repo = new RecruitmentRepository();
-        var participate_repo = new ParticipateRepository();
-        var server_info_repo = new ServerInfoRepository();
+        var recruitment_repo = new recruitement_1.RecruitmentRepository();
+        var participate_repo = new participate_1.ParticipateRepository();
+        var server_info_repo = new server_info_1.ServerInfoRepository();
         // create message manager instance
         var messageManager = new discord_message_manager_1.DiscordMessageManager();
         // analyze message
