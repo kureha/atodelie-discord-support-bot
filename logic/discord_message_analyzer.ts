@@ -155,24 +155,20 @@ export class DiscordMessageAnalyzer {
     get_recruitment() {
         const recruitment = new Recruitment();
         
-        if (this.valid === false) {
-            return undefined;
-        } else {
-            recruitment.id = this.id;
-            recruitment.server_id = this.server_id;
-            recruitment.token = this.token;
-            recruitment.status = this.status;
-            recruitment.limit_time = this.limit_time;
-            recruitment.name = this.name;
-            recruitment.owner_id = this.owner_id;
-            recruitment.description = this.description;
-            recruitment.delete = this.delete;
+        recruitment.id = this.id;
+        recruitment.server_id = this.server_id;
+        recruitment.token = this.token;
+        recruitment.status = this.status;
+        recruitment.limit_time = this.limit_time;
+        recruitment.name = this.name;
+        recruitment.owner_id = this.owner_id;
+        recruitment.description = this.description;
+        recruitment.delete = this.delete;
 
-            // insert user list
-            recruitment.user_list = this.user_list;
+        // insert user list
+        recruitment.user_list = this.user_list;
 
-            return recruitment;
-        }
+        return recruitment;
     }
 
     /**

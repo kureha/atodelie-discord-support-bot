@@ -25,7 +25,7 @@ const Discord = require('discord.js');
 module.exports = class DiscordInteractionController {
     /**
      * インタラクションメッセージを作成し投稿します
-     * @param {Discord.Client} client  Discordクライアント
+     * @param {Discord.Client} client Discordクライアント
      * @param {Discord.Interaction} interaction インタラクション情報
      */
     static recirve_controller(client : any, interaction : any) {
