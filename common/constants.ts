@@ -66,6 +66,8 @@ export class Constants {
     DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT : string;
     DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT : string;
 
+    ERROR_RECRUITMENT_TOKEN : string;
+
     REQUIRE_NAME_SQLITE3 : string;
 
     static STRING_EMPTY = '';
@@ -152,6 +154,8 @@ export class Constants {
         this.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT = 'PRIMARY';
         this.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT = 'DANGER';
         this.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT = 'SUCCESS';
+
+        this.ERROR_RECRUITMENT_TOKEN = 'ERROR_TOKEN';
 
         this.REQUIRE_NAME_SQLITE3 = 'sqlite3';
     }
