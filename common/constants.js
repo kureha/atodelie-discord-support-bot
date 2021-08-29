@@ -1,94 +1,97 @@
-var _a;
-module.exports = (_a = /** @class */ (function () {
-        /**
-         * コンストラクタ
-         * @constructor
-         */
-        function Constants() {
-            // readed from env file
-            require('dotenv').config();
-            // common section
-            this.DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN || Constants.STRING_EMPTY;
-            this.DISCORD_LATEST_LIST_LENGTH = parseInt(process.env.DISCORD_LATEST_LIST_LENGTH || Constants.STRING_EMPTY);
-            if (isNaN(this.DISCORD_LATEST_LIST_LENGTH)) {
-                // set default
-                this.DISCORD_LATEST_LIST_LENGTH = 3;
-            }
-            this.DISCORD_FOLLOW_MINUTE = parseInt(process.env.DISCORD_FOLLOW_MINUTE || Constants.STRING_EMPTY);
-            if (isNaN(this.DISCORD_FOLLOW_MINUTE)) {
-                // set default
-                this.DISCORD_FOLLOW_MINUTE = 30;
-            }
-            this.DISCORD_FOLLOW_CRON = process.env.DISCORD_FOLLOW_CRON || Constants.STRING_EMPTY;
-            // sqlite section
-            this.SQLITE_FILE = process.env.SQLITE_FILE || Constants.STRING_EMPTY;
-            this.SQLITE_TEMPLATE_FILE = process.env.SQLITE_TEMPLATE_FILE || Constants.STRING_EMPTY;
-            // message section
-            this.DISCORD_ACTIVITY_NAME = process.env.DISCORD_ACTIVITY_NAME || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_IS_INVALID = process.env.DISCORD_MESSAGE_IS_INVALID || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_TYPE_INVALID = process.env.DISCORD_MESSAGE_TYPE_INVALID || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT = process.env.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_EXCEPTION = process.env.DISCORD_MESSAGE_EXCEPTION || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED = process.env.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT = process.env.DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_NEW_RECRUITMENT = process.env.DISCORD_MESSAGE_NEW_RECRUITMENT || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_TITLE_SUCCESS_JOIN = process.env.DISCORD_MESSAGE_TITLE_SUCCESS_JOIN || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_SUCCESS_JOIN = process.env.DISCORD_MESSAGE_SUCCESS_JOIN || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_TITLE_SUCCESS_VIEW = process.env.DISCORD_MESSAGE_TITLE_SUCCESS_VIEW || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_SUCCESS_VIEW = process.env.DISCORD_MESSAGE_SUCCESS_VIEW || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE = process.env.DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_SUCCESS_DECLINE = process.env.DISCORD_MESSAGE_SUCCESS_DECLINE || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT = process.env.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_FOLLOW_RECRUITMENT = process.env.DISCORD_MESSAGE_FOLLOW_RECRUITMENT || Constants.STRING_EMPTY;
-            this.DISCORD_BUTTUN_JOIN = process.env.DISCORD_BUTTUN_JOIN || Constants.STRING_EMPTY;
-            this.DISCORD_BUTTON_DECLINE = process.env.DISCORD_BUTTON_DECLINE || Constants.STRING_EMPTY;
-            this.DISCORD_BUTTON_VIEW = process.env.DISCORD_BUTTON_VIEW || Constants.STRING_EMPTY;
-            // message static values section
-            this.DISCORD_MESSAGE_EMBED_NO_MEMBER = process.env.DISCORD_MESSAGE_EMBED_NO_MEMBER || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_EMBED_TITLE = process.env.DISCORD_MESSAGE_EMBED_TITLE || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_EMBED_OWNER = process.env.DISCORD_MESSAGE_EMBED_OWNER || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_EMBED_START_TIME = process.env.DISCORD_MESSAGE_EMBED_START_TIME || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS = process.env.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS || Constants.STRING_EMPTY;
-            this.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS = process.env.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS || Constants.STRING_EMPTY;
-            // static values
-            this.ID_INVALID = -1;
-            this.TYPE_INIT = 0;
-            this.TYPE_RECRUITEMENT = 1;
-            this.TYPE_JOIN = 2;
-            this.TYPE_DECLINE = 3;
-            this.TYPE_LIST = 4;
-            this.TYPE_VIEW = 5;
-            this.STATUS_DISABLED = 0;
-            this.STATUS_ENABLED = 1;
-            this.STATUS_VIEW = 2;
-            this.RECRUITMENT_DEFAULT_LIMIT_HOURS = 8;
-            this.RECRUITMENT_DEFAULT_MAX_NUMBERS = 6;
-            this.RECRUITMENT_INVALID_CHANNEL_ID = 'TARGET_CHANNEL_ID_IS_NOT_FOUND';
-            this.RECRUITMENT_INVALID_ROLE = 'TARGET_ROLE_IS_NOT_FOUND';
-            this.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX = 'join-recruite-token=';
-            this.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX = 'decline-recruite-token=';
-            this.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX = 'view-recruite-token=';
-            this.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT = 'PRIMARY';
-            this.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT = 'DANGER';
-            this.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT = 'SUCCESS';
-            this.REQUIRE_NAME_SQLITE3 = 'sqlite3';
+"use strict";
+exports.__esModule = true;
+exports.Constants = void 0;
+var Constants = /** @class */ (function () {
+    /**
+     * コンストラクタ
+     * @constructor
+     */
+    function Constants() {
+        // readed from env file
+        require('dotenv').config();
+        // common section
+        this.DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN || Constants.STRING_EMPTY;
+        this.DISCORD_LATEST_LIST_LENGTH = parseInt(process.env.DISCORD_LATEST_LIST_LENGTH || Constants.STRING_EMPTY);
+        if (isNaN(this.DISCORD_LATEST_LIST_LENGTH)) {
+            // set default
+            this.DISCORD_LATEST_LIST_LENGTH = 3;
         }
-        /**
-         * デフォルトとする日時を返却します
-         * @returns {Date} 2000-01-01 00:00:00の日時
-         */
-        Constants.get_default_date = function () {
-            var temp_date = new Date();
-            temp_date.setFullYear(2000);
-            temp_date.setMonth(0);
-            temp_date.setDate(1);
-            temp_date.setHours(0);
-            temp_date.setMinutes(0);
-            temp_date.setSeconds(0);
-            temp_date.setMilliseconds(0);
-            return temp_date;
-        };
-        return Constants;
-    }()),
-    _a.STRING_EMPTY = '',
-    _a);
+        this.DISCORD_FOLLOW_MINUTE = parseInt(process.env.DISCORD_FOLLOW_MINUTE || Constants.STRING_EMPTY);
+        if (isNaN(this.DISCORD_FOLLOW_MINUTE)) {
+            // set default
+            this.DISCORD_FOLLOW_MINUTE = 30;
+        }
+        this.DISCORD_FOLLOW_CRON = process.env.DISCORD_FOLLOW_CRON || Constants.STRING_EMPTY;
+        // sqlite section
+        this.SQLITE_FILE = process.env.SQLITE_FILE || Constants.STRING_EMPTY;
+        this.SQLITE_TEMPLATE_FILE = process.env.SQLITE_TEMPLATE_FILE || Constants.STRING_EMPTY;
+        // message section
+        this.DISCORD_ACTIVITY_NAME = process.env.DISCORD_ACTIVITY_NAME || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_IS_INVALID = process.env.DISCORD_MESSAGE_IS_INVALID || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_TYPE_INVALID = process.env.DISCORD_MESSAGE_TYPE_INVALID || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT = process.env.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_EXCEPTION = process.env.DISCORD_MESSAGE_EXCEPTION || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED = process.env.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT = process.env.DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_NEW_RECRUITMENT = process.env.DISCORD_MESSAGE_NEW_RECRUITMENT || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_TITLE_SUCCESS_JOIN = process.env.DISCORD_MESSAGE_TITLE_SUCCESS_JOIN || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_SUCCESS_JOIN = process.env.DISCORD_MESSAGE_SUCCESS_JOIN || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_TITLE_SUCCESS_VIEW = process.env.DISCORD_MESSAGE_TITLE_SUCCESS_VIEW || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_SUCCESS_VIEW = process.env.DISCORD_MESSAGE_SUCCESS_VIEW || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE = process.env.DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_SUCCESS_DECLINE = process.env.DISCORD_MESSAGE_SUCCESS_DECLINE || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT = process.env.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_FOLLOW_RECRUITMENT = process.env.DISCORD_MESSAGE_FOLLOW_RECRUITMENT || Constants.STRING_EMPTY;
+        this.DISCORD_BUTTUN_JOIN = process.env.DISCORD_BUTTUN_JOIN || Constants.STRING_EMPTY;
+        this.DISCORD_BUTTON_DECLINE = process.env.DISCORD_BUTTON_DECLINE || Constants.STRING_EMPTY;
+        this.DISCORD_BUTTON_VIEW = process.env.DISCORD_BUTTON_VIEW || Constants.STRING_EMPTY;
+        // message static values section
+        this.DISCORD_MESSAGE_EMBED_NO_MEMBER = process.env.DISCORD_MESSAGE_EMBED_NO_MEMBER || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_EMBED_TITLE = process.env.DISCORD_MESSAGE_EMBED_TITLE || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_EMBED_OWNER = process.env.DISCORD_MESSAGE_EMBED_OWNER || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_EMBED_START_TIME = process.env.DISCORD_MESSAGE_EMBED_START_TIME || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS = process.env.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS = process.env.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS || Constants.STRING_EMPTY;
+        // static values
+        this.ID_INVALID = -1;
+        this.TYPE_INIT = 0;
+        this.TYPE_RECRUITEMENT = 1;
+        this.TYPE_JOIN = 2;
+        this.TYPE_DECLINE = 3;
+        this.TYPE_LIST = 4;
+        this.TYPE_VIEW = 5;
+        this.STATUS_DISABLED = 0;
+        this.STATUS_ENABLED = 1;
+        this.STATUS_VIEW = 2;
+        this.RECRUITMENT_DEFAULT_LIMIT_HOURS = 8;
+        this.RECRUITMENT_DEFAULT_MAX_NUMBERS = 6;
+        this.RECRUITMENT_INVALID_CHANNEL_ID = 'TARGET_CHANNEL_ID_IS_NOT_FOUND';
+        this.RECRUITMENT_INVALID_ROLE = 'TARGET_ROLE_IS_NOT_FOUND';
+        this.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX = 'join-recruite-token=';
+        this.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX = 'decline-recruite-token=';
+        this.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX = 'view-recruite-token=';
+        this.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT = 'PRIMARY';
+        this.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT = 'DANGER';
+        this.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT = 'SUCCESS';
+        this.REQUIRE_NAME_SQLITE3 = 'sqlite3';
+    }
+    /**
+     * デフォルトとする日時を返却します
+     * @returns {Date} 2000-01-01 00:00:00の日時
+     */
+    Constants.get_default_date = function () {
+        var temp_date = new Date();
+        temp_date.setFullYear(2000);
+        temp_date.setMonth(0);
+        temp_date.setDate(1);
+        temp_date.setHours(0);
+        temp_date.setMinutes(0);
+        temp_date.setSeconds(0);
+        temp_date.setMilliseconds(0);
+        return temp_date;
+    };
+    Constants.STRING_EMPTY = '';
+    return Constants;
+}());
+exports.Constants = Constants;
+;

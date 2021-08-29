@@ -1,4 +1,4 @@
-module.exports = class Constants {
+export class Constants {
     // common section
     DISCORD_BOT_TOKEN : string;
     DISCORD_LATEST_LIST_LENGTH : number;

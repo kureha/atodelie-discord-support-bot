@@ -1,26 +1,27 @@
-const logger = require('../common/logger');
-
+"use strict";
+exports.__esModule = true;
+exports.Recruitment = void 0;
 // 定数定義を読み込む
-const Constants = require('../common/constants');
-const constants = new Constants();
-
-module.exports = class Recruitment {
+var constants_1 = require("../common/constants");
+var constants = new constants_1.Constants();
+var Recruitment = /** @class */ (function () {
     /**
      * コンストラクタ
      * @constructor
      */
-    constructor() {
+    function Recruitment() {
         this.id = constants.ID_INVALID;
         this.server_id = '';
         this.token = '';
         this.status = constants.STATUS_DISABLED;
-        this.limit_time = Constants.get_default_date();
+        this.limit_time = constants_1.Constants.get_default_date();
         this.name = '';
         this.owner_id = '';
         this.description = '';
-        this.delete = false;
-
+        this["delete"] = false;
         // insert participate array
         this.user_list = [];
     }
-}
+    return Recruitment;
+}());
+exports.Recruitment = Recruitment;
