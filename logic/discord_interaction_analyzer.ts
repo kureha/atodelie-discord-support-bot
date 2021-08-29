@@ -8,7 +8,7 @@ const constants = new Constants();
 // エンティティ有効化
 import {Participate} from '../entity/participate';
 
-module.exports = class DiscordInteraction {
+export class DiscordInteraction {
 
     /**
      * ボタンから参加した場合の募集説明文字列
