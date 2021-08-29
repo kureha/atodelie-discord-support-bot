@@ -1,4 +1,5 @@
-const Constants = require('./../common/constants');
+const constants_1 = require('./../common/constants');
+const Constants = constants_1.Constants;
 
 test("Test for constants", () => {
     var v = new Constants();

@@ -1,4 +1,5 @@
-const logger = require('./../common/logger');
+const logger_1 = require('./../common/logger');
+let logger = logger_1.logger;
 
 test("test for loggers", () => {
     logger.trace("trace test");

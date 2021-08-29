@@ -1,5 +1,8 @@
-const logger = require('../common/logger');
-const Recruitment = require('../db/recruitement');
+const logger_1 = require('./../common/logger');
+let logger = logger_1.logger;
+
+const Recruitment_1 = require('../db/recruitement');
+const Recruitment = Recruitment_1.RecruitmentRepository;
 
 test("test for get token", () => {
     return new Promise((resolve, reject) => {

@@ -82,15 +82,17 @@ class ServerInfoRepository {
                         // return blank data
                         resolve(error_server_info);
                     }
-                    if (row === undefined) {
+                    else if (row === undefined || row === null || row.length === 0) {
                         logger_1.logger.error(`data not found on m_server_info. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
                         // return blank data
                         resolve(error_server_info);
                     }
-                    // return correct data
-                    logger_1.logger.info(`selected m_server_info successed. : server_id = ${server_id}`);
-                    logger_1.logger.trace(row);
-                    resolve(server_info_1.ServerInfo.parse_from_db(row));
+                    else {
+                        // return correct data
+                        logger_1.logger.info(`selected m_server_info successed. : server_id = ${server_id}`);
+                        logger_1.logger.trace(row);
+                        resolve(server_info_1.ServerInfo.parse_from_db(row));
+                    }
                 }));
             });
             db.close();

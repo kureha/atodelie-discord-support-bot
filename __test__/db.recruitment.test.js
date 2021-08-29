@@ -1,7 +1,14 @@
-const logger = require('../common/logger');
-const RecruitmentRepository = require('../db/recruitement');
-const ParticipateRepository = require('../db/participate')
-const ServerInfoRepository = require('../db/server_info');
+const logger_1 = require('./../common/logger');
+let logger = logger_1.logger;
+
+const RecruitmentRepository_1 = require('../db/recruitement');
+const RecruitmentRepository = RecruitmentRepository_1.RecruitmentRepository;
+
+const ParticipateRepository_1 = require('../db/participate')
+const ParticipateRepository = ParticipateRepository_1.ParticipateRepository;
+
+const ServerInfoRepository_1 = require('../db/server_info');
+const ServerInfoRepository = ServerInfoRepository_1.ServerInfoRepository;
 
 test("test for database initialize", () => {
     let recruitment_repo = new RecruitmentRepository();
@@ -37,7 +44,7 @@ test("test for m_recruitment c/r/u/d", () => {
                     server_id: "testingid",
                     token: test_token,
                     status: 2,
-                    limit_time: "2099-12-31 11:59:59",
+                    limit_time: new Date("2099-12-31T11:59:59.000Z"),
                     name: "myname",
                     owner_id: "owenr_id",
                     description: "description",
@@ -130,7 +137,7 @@ test('test for t_participate c/r/u/d', () => {
                     server_id: "testingid",
                     token: test_token,
                     status: 2,
-                    limit_time: "2099-12-31 11:59:59",
+                    limit_time: new Date("2099-12-31T11:59:59.000Z"),
                     name: "myname",
                     owner_id: "owenr_id",
                     description: "description",

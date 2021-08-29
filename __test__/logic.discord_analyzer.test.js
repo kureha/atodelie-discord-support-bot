@@ -1,5 +1,8 @@
-const DiscordAnalyzer = require('../logic/discord_message_analyzer');
-const Constants = require('./../common/constants');
+const DiscordAnalyzer_1 = require('../logic/discord_message_analyzer');
+const DiscordAnalyzer = DiscordAnalyzer_1.DiscordMessageAnalyzer;
+
+const constants_1 = require('../common/constants');
+const Constants = constants_1.Constants;
 const constants = new Constants();
 
 test("Test for CheckReqcruitement", () => {

@@ -115,16 +115,16 @@ export class ServerInfoRepository {
                         // return blank data
                         resolve(error_server_info);
                     }
-                    if (row === undefined) {
+                    else if (row === undefined || row === null || row.length === 0) {
                         logger.error(`data not found on m_server_info. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
                         // return blank data
                         resolve(error_server_info);
+                    } else {
+                        // return correct data
+                        logger.info(`selected m_server_info successed. : server_id = ${server_id}`);
+                        logger.trace(row);
+                        resolve(ServerInfo.parse_from_db(row));
                     }
-
-                    // return correct data
-                    logger.info(`selected m_server_info successed. : server_id = ${server_id}`);
-                    logger.trace(row);
-                    resolve(ServerInfo.parse_from_db(row));
                 }));
             });
 

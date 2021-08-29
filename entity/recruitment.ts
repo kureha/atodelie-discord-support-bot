@@ -51,7 +51,11 @@ export class Recruitment {
         v.server_id = row.server_id;
         v.token = row.token;
         v.status = row.status;
-        v.limit_time = new Date(row.limit_time);
+        try {
+            v.limit_time = new Date(row.limit_time);
+        } catch (e) {
+            v.limit_time = Constants.get_default_date();
+        }
         v.name = row.name;
         v.owner_id = row.owner_id;
         v.description = row.description;

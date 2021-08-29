@@ -1,9 +1,17 @@
-const logger = require('../common/logger');
-const RecruitmentRepository = require('../db/recruitement');
-const ParticipateRepository = require('../db/participate')
-const ServerInfoRepository = require('../db/server_info');
+const logger_1 = require('./../common/logger');
+let logger = logger_1.logger;
 
-const Constants = require('../common/constants');
+const RecruitmentRepository_1 = require('../db/recruitement');
+const RecruitmentRepository = RecruitmentRepository_1.RecruitmentRepository;
+
+const ParticipateRepository_1 = require('../db/participate')
+const ParticipateRepository = ParticipateRepository_1.ParticipateRepository;
+
+const ServerInfoRepository_1 = require('../db/server_info');
+const ServerInfoRepository = ServerInfoRepository_1.ServerInfoRepository;
+
+const constants_1 = require('../common/constants');
+const Constants = constants_1.Constants;
 const constants = new Constants();
 
 test("test for database initialize", () => {
@@ -22,7 +30,14 @@ test("test for m_server_info c/r/u/d", () => {
             server_id: id,
             channel_id: `channel_id`,
             recruitment_target_role: `recruitment_target_role`,
-            follow_time: null,
+            follow_time: new Date('1970-01-01T00:00:00.000Z'),
+        }
+
+        let server_info_data_for_test = {
+            server_id: id,
+            channel_id: `channel_id`,
+            recruitment_target_role: `recruitment_target_role`,
+            follow_time: new Date('1970-01-01T00:00:00.000Z'),
         }
 
         let follow_target_time = new Date('2021-08-11T17:30:00.000Z');
@@ -38,7 +53,7 @@ test("test for m_server_info c/r/u/d", () => {
             expect(data.server_id).toEqual(id);
             expect(data.channel_id).toEqual(constants.RECRUITMENT_INVALID_CHANNEL_ID);
             expect(data.recruitment_target_role).toEqual(constants.RECRUITMENT_INVALID_ROLE);
-            expect(data.follow_time).toEqual(null);
+            expect(data.follow_time).toEqual(Constants.get_default_date());
 
             // insert check
             return server_info_repo.insert_m_server_info(server_info_data);
@@ -49,7 +64,7 @@ test("test for m_server_info c/r/u/d", () => {
         })
         .then((data) => {
             // expect data
-            expect(data).toEqual(server_info_data);
+            expect(data).toEqual(server_info_data_for_test);
             
             // update time
             return server_info_repo.update_m_server_info_follow_time(server_info_data.server_id, follow_target_time);
@@ -59,7 +74,7 @@ test("test for m_server_info c/r/u/d", () => {
         })
         .then((data) => {
             // expect data
-            expect(data.follow_time).toEqual(follow_target_time.toISOString());
+            expect(data.follow_time).toEqual(follow_target_time);
 
             // delete test data
             return server_info_repo.delete_m_server_info(id);
