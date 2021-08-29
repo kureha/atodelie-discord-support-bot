@@ -54,7 +54,7 @@ export class CronController {
                     }
 
                     // get follow lists
-                    return recruitment_repo.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time.toISOString(), to_datetime.toISOString());
+                    return recruitment_repo.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time.toString(), to_datetime.toISOString());
                 })
                 .then((recruitment_data_list : Recruitment[]) => {
                     logger.info(`select follow data list completed.`)

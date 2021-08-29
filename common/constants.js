@@ -1,12 +1,12 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Constants = void 0;
-var Constants = /** @class */ (function () {
+class Constants {
     /**
      * コンストラクタ
      * @constructor
      */
-    function Constants() {
+    constructor() {
         // readed from env file
         require('dotenv').config();
         // common section
@@ -80,8 +80,8 @@ var Constants = /** @class */ (function () {
      * デフォルトとする日時を返却します
      * @returns {Date} 2000-01-01 00:00:00の日時
      */
-    Constants.get_default_date = function () {
-        var temp_date = new Date();
+    static get_default_date() {
+        const temp_date = new Date();
         temp_date.setFullYear(2000);
         temp_date.setMonth(0);
         temp_date.setDate(1);
@@ -90,9 +90,9 @@ var Constants = /** @class */ (function () {
         temp_date.setSeconds(0);
         temp_date.setMilliseconds(0);
         return temp_date;
-    };
-    Constants.STRING_EMPTY = '';
-    return Constants;
-}());
+    }
+}
 exports.Constants = Constants;
+Constants.STRING_EMPTY = '';
 ;
+//# sourceMappingURL=constants.js.map

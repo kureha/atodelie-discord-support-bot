@@ -113,7 +113,8 @@ export class DiscordInteraction {
      * @returns {string} トークン文字列
      */
     get_token(custom_id : string, token_prefix : string) {
-        const match_result = custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}(.+)$`));
+        const token_regexp = new RegExp(`^${token_prefix}(.+)$`);
+        let match_result = custom_id.match(token_regexp);
 
         if (match_result === null || match_result.length < 2) {
             return constants.ERROR_RECRUITMENT_TOKEN;

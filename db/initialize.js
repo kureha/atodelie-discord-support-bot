@@ -1,25 +1,42 @@
 "use strict";
-exports.__esModule = true;
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.InitializeRepository = void 0;
 // ロガーを定義
-var logger_1 = require("../common/logger");
+const logger_1 = require("../common/logger");
 // 定数定義を読み込む
-var constants_1 = require("../common/constants");
-var constants = new constants_1.Constants();
+const constants_1 = require("../common/constants");
+const constants = new constants_1.Constants();
 // import file module
-var fs = require("fs");
-var InitializeRepository = /** @class */ (function () {
-    function InitializeRepository() {
-    }
-    InitializeRepository.initialize_database_if_not_exists = function () {
+const fs = __importStar(require("fs"));
+class InitializeRepository {
+    static initialize_database_if_not_exists() {
         if (fs.existsSync(constants.SQLITE_FILE)) {
-            logger_1.logger.info("database file exists ok.");
+            logger_1.logger.info(`database file exists ok.`);
         }
         else {
-            logger_1.logger.info("database file is not exists, copy file. : from = " + constants.SQLITE_TEMPLATE_FILE + ", to = " + constants.SQLITE_FILE);
+            logger_1.logger.info(`database file is not exists, copy file. : from = ${constants.SQLITE_TEMPLATE_FILE}, to = ${constants.SQLITE_FILE}`);
             fs.copyFileSync(constants.SQLITE_TEMPLATE_FILE, constants.SQLITE_FILE);
         }
-    };
-    return InitializeRepository;
-}());
+    }
+}
 exports.InitializeRepository = InitializeRepository;
+//# sourceMappingURL=initialize.js.map

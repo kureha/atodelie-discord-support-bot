@@ -1,20 +1,20 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServerInfo = void 0;
 // 定数定義を読み込む
-var constants_1 = require("../common/constants");
-var constants = new constants_1.Constants();
-var ServerInfo = /** @class */ (function () {
+const constants_1 = require("../common/constants");
+const constants = new constants_1.Constants();
+class ServerInfo {
     /**
      * コンストラクタ
      * @constructor
      */
-    function ServerInfo() {
+    constructor() {
         this.server_id = '';
         this.channel_id = '';
         this.recruitment_target_role = '';
         this.follow_time = constants_1.Constants.get_default_date();
     }
-    return ServerInfo;
-}());
+}
 exports.ServerInfo = ServerInfo;
+//# sourceMappingURL=server_info.js.map

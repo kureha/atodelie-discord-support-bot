@@ -1,15 +1,15 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Recruitment = void 0;
 // 定数定義を読み込む
-var constants_1 = require("../common/constants");
-var constants = new constants_1.Constants();
-var Recruitment = /** @class */ (function () {
+const constants_1 = require("../common/constants");
+const constants = new constants_1.Constants();
+class Recruitment {
     /**
      * コンストラクタ
      * @constructor
      */
-    function Recruitment() {
+    constructor() {
         this.id = constants.ID_INVALID;
         this.server_id = '';
         this.token = '';
@@ -18,10 +18,10 @@ var Recruitment = /** @class */ (function () {
         this.name = '';
         this.owner_id = '';
         this.description = '';
-        this["delete"] = false;
+        this.delete = false;
         // insert participate array
         this.user_list = [];
     }
-    return Recruitment;
-}());
+}
 exports.Recruitment = Recruitment;
+//# sourceMappingURL=recruitment.js.map

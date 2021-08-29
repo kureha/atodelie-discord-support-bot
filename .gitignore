@@ -122,3 +122,6 @@ dist
 
 # my reference directory
 references/*
+
+# typescript map file
+*.map
