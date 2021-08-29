@@ -127,7 +127,7 @@ export class RecruitmentRepository {
                     $server_id: data.server_id,
                     $token: data.token,
                     $status: data.status,
-                    $limit_time: data.limit_time.toISOString(),
+                    $limit_time: data.get_limit_time().toISOString(),
                     $name: data.name,
                     $owner_id: data.owner_id,
                     $description: data.description,
@@ -163,7 +163,7 @@ export class RecruitmentRepository {
                     $server_id: data.server_id,
                     $token: data.token,
                     $status: data.status,
-                    $limit_time: data.limit_time.toISOString(),
+                    $limit_time: data.get_limit_time().toISOString(),
                     $name: data.name,
                     $owner_id: data.owner_id,
                     $description: data.description,
@@ -260,14 +260,21 @@ export class RecruitmentRepository {
                     $server_id: server_id,
                     $from_datetime: from_datetime,
                     $to_datetime: to_datetime,
-                }, ((err : any, rows : Recruitment[]) => {
+                }, ((err : any, rows : any[]) => {
                     if (err) {
                         logger.error(`sql exception occured when create table. sql = ${RecruitmentRepository.SQL_CREATE_M_RECRUITMENT}`);
                         reject(err);
                     }
+
+                    // return valie list
+                    const recruitment_list : Recruitment[] = [];
+                    rows.forEach(v => {
+                        recruitment_list.push(Recruitment.parse_from_db(v));
+                    });
+
                     logger.info(`selected m_reqruitement followup list successed.`);
                     logger.trace(rows);
-                    resolve(rows);
+                    resolve(recruitment_list);
                 }));
             });
 
@@ -329,7 +336,7 @@ export class RecruitmentRepository {
                 // run serialize
                 const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[token] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${token}`);
-                db.get(sql, [token], ((err : any, row : Recruitment) => {
+                db.get(sql, [token], ((err : any, row : any) => {
                     if (err) {
                         logger.error(`select m_recruitment failed. sql = ${sql}, key = ${token}`);
                         reject(err);
@@ -341,7 +348,7 @@ export class RecruitmentRepository {
                     else {
                         logger.info(`selected single m_reqruitement successed. : key = ${token}`);
                         logger.trace(row);
-                        resolve(row);
+                        resolve(Recruitment.parse_from_db(row));
                     }
                 }));
             });
@@ -364,7 +371,7 @@ export class RecruitmentRepository {
                 // run serialize
                 const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE [server_id] = ? AND datetime(m1.[limit_time], 'localtime') > datetime('now', 'localtime') ORDER BY m1.[limit_time], m1.[id] LIMIT ${count}`;
                 logger.info(`sql = ${sql}, token = ${server_id}`);
-                db.all(sql, [server_id], ((err : any, rows : Recruitment[]) => {
+                db.all(sql, [server_id], ((err : any, rows : any[]) => {
                     if (err) {
                         logger.error(`select m_recruitment failed. sql = ${sql}, key = ${server_id}`);
                         reject(err);
@@ -374,9 +381,15 @@ export class RecruitmentRepository {
                         reject(`data not found on m_recruitment. sql = ${sql}, key = ${server_id}`);
                     }
                     else {
-                        logger.info(`selected single m_reqruitement successed. : key = ${server_id}`);
+                        // return valie list
+                        const recruitment_list : Recruitment[] = [];
+                        rows.forEach(v => {
+                            recruitment_list.push(Recruitment.parse_from_db(v));
+                        });
+
+                        logger.info(`selected latests m_reqruitement successed. : key = ${server_id}`);
                         logger.trace(rows);
-                        resolve(rows);
+                        resolve(recruitment_list);
                     }
                 }));
             });

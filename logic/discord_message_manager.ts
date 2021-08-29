@@ -79,7 +79,7 @@ export class DiscordMessageManager {
                 },
                 {
                     name: constants.DISCORD_MESSAGE_EMBED_START_TIME,
-                    value: `${this.get_date_string(recruitment.limit_time)}`
+                    value: `${this.get_date_string(recruitment.get_limit_time())}`
                 },
                 {
                     name: constants.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS,

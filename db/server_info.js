@@ -6,6 +6,8 @@ const logger_1 = require("../common/logger");
 // 定数定義を読み込む
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
+// エンティティ有効化
+const server_info_1 = require("../entity/server_info");
 class ServerInfoRepository {
     /**
      * インスタンス化を行い、同時に、テーブルがない場合は作成する
@@ -68,29 +70,27 @@ class ServerInfoRepository {
                 const sql = `${ServerInfoRepository.SQL_SELECT_M_SERVER_INFO} WHERE m1.[server_id] = ? `;
                 logger_1.logger.info(`sql = ${sql}, server_id = ${server_id}`);
                 db.get(sql, [server_id], ((err, row) => {
+                    // create error server_info data
+                    const error_server_info = new server_info_1.ServerInfo();
+                    // return blank data
+                    error_server_info.server_id = server_id;
+                    error_server_info.channel_id = constants.RECRUITMENT_INVALID_CHANNEL_ID;
+                    error_server_info.recruitment_target_role = constants.RECRUITMENT_INVALID_ROLE;
+                    error_server_info.set_follow_time(constants_1.Constants.get_default_date());
                     if (err) {
                         logger_1.logger.error(`select m_server_info failed. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
                         // return blank data
-                        resolve({
-                            server_id: server_id,
-                            channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
-                            recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
-                            follow_time: constants_1.Constants.get_default_date(),
-                        });
+                        resolve(error_server_info);
                     }
                     if (row === undefined) {
                         logger_1.logger.error(`data not found on m_server_info. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
                         // return blank data
-                        resolve({
-                            server_id: server_id,
-                            channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
-                            recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
-                            follow_time: constants_1.Constants.get_default_date(),
-                        });
+                        resolve(error_server_info);
                     }
+                    // return correct data
                     logger_1.logger.info(`selected m_server_info successed. : server_id = ${server_id}`);
                     logger_1.logger.trace(row);
-                    resolve(row);
+                    resolve(server_info_1.ServerInfo.parse_from_db(row));
                 }));
             });
             db.close();

@@ -25,6 +25,8 @@ const logger_1 = require("../common/logger");
 // 定数定義を読み込む
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
+// エンティティ有効化
+const recruitment_1 = require("../entity/recruitment");
 // UUID有効化
 const uuid = __importStar(require("uuid"));
 class RecruitmentRepository {
@@ -101,7 +103,7 @@ class RecruitmentRepository {
                     $server_id: data.server_id,
                     $token: data.token,
                     $status: data.status,
-                    $limit_time: data.limit_time.toISOString(),
+                    $limit_time: data.get_limit_time().toISOString(),
                     $name: data.name,
                     $owner_id: data.owner_id,
                     $description: data.description,
@@ -136,7 +138,7 @@ class RecruitmentRepository {
                     $server_id: data.server_id,
                     $token: data.token,
                     $status: data.status,
-                    $limit_time: data.limit_time.toISOString(),
+                    $limit_time: data.get_limit_time().toISOString(),
                     $name: data.name,
                     $owner_id: data.owner_id,
                     $description: data.description,
@@ -231,9 +233,14 @@ class RecruitmentRepository {
                         logger_1.logger.error(`sql exception occured when create table. sql = ${RecruitmentRepository.SQL_CREATE_M_RECRUITMENT}`);
                         reject(err);
                     }
+                    // return valie list
+                    const recruitment_list = [];
+                    rows.forEach(v => {
+                        recruitment_list.push(recruitment_1.Recruitment.parse_from_db(v));
+                    });
                     logger_1.logger.info(`selected m_reqruitement followup list successed.`);
                     logger_1.logger.trace(rows);
-                    resolve(rows);
+                    resolve(recruitment_list);
                 }));
             });
             db.close();
@@ -300,7 +307,7 @@ class RecruitmentRepository {
                     else {
                         logger_1.logger.info(`selected single m_reqruitement successed. : key = ${token}`);
                         logger_1.logger.trace(row);
-                        resolve(row);
+                        resolve(recruitment_1.Recruitment.parse_from_db(row));
                     }
                 }));
             });
@@ -330,9 +337,14 @@ class RecruitmentRepository {
                         reject(`data not found on m_recruitment. sql = ${sql}, key = ${server_id}`);
                     }
                     else {
-                        logger_1.logger.info(`selected single m_reqruitement successed. : key = ${server_id}`);
+                        // return valie list
+                        const recruitment_list = [];
+                        rows.forEach(v => {
+                            recruitment_list.push(recruitment_1.Recruitment.parse_from_db(v));
+                        });
+                        logger_1.logger.info(`selected latests m_reqruitement successed. : key = ${server_id}`);
                         logger_1.logger.trace(rows);
-                        resolve(rows);
+                        resolve(recruitment_list);
                     }
                 }));
             });

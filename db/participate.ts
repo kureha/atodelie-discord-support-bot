@@ -199,7 +199,8 @@ export class ParticipateRepository {
                 // run serialize
                 const sql = `${ParticipateRepository.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and datetime(m1.[limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') order by t1.[update_time] `;
                 logger.info(`sql = ${sql}, token = ${token}`);
-                db.all(sql, [token], ((err : any, rows : Participate[]) => {
+
+                db.all(sql, [token], ((err : any, rows : any[]) => {
                     if (err) {
                         logger.error(`select t_participate failed. sql = ${sql}, key = ${token}`);
                         reject(err);
@@ -209,9 +210,15 @@ export class ParticipateRepository {
                         reject(`data not found on t_participate. sql = ${sql}, key = ${token}`);
                     }
 
+                    // return value list
+                    const participate_list : Participate[] = [];
+                    rows.forEach(v => {
+                        participate_list.push(Participate.parse_from_db(v));
+                    });
+
                     logger.info(`selected t_participate successed. : key = ${token}`);
                     logger.trace(rows);
-                    resolve(rows);
+                    resolve(participate_list);
                 }));
             });
 

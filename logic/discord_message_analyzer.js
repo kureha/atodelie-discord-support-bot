@@ -112,7 +112,7 @@ class DiscordMessageAnalyzer {
         recruitment.server_id = this.server_id;
         recruitment.token = this.token;
         recruitment.status = this.status;
-        recruitment.limit_time = this.limit_time;
+        recruitment.set_limit_time(this.limit_time);
         recruitment.name = this.name;
         recruitment.owner_id = this.owner_id;
         recruitment.description = this.description;

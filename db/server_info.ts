@@ -102,30 +102,29 @@ export class ServerInfoRepository {
                 const sql = `${ServerInfoRepository.SQL_SELECT_M_SERVER_INFO} WHERE m1.[server_id] = ? `;
                 logger.info(`sql = ${sql}, server_id = ${server_id}`);
                 db.get(sql, [server_id], ((err : any, row : any) => {
+                    // create error server_info data
+                    const error_server_info = new ServerInfo();
+                    // return blank data
+                    error_server_info.server_id = server_id;
+                    error_server_info.channel_id = constants.RECRUITMENT_INVALID_CHANNEL_ID;
+                    error_server_info.recruitment_target_role = constants.RECRUITMENT_INVALID_ROLE;
+                    error_server_info.set_follow_time(Constants.get_default_date());
+
                     if (err) {
                         logger.error(`select m_server_info failed. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
                         // return blank data
-                        resolve({
-                            server_id: server_id,
-                            channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
-                            recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
-                            follow_time: Constants.get_default_date(),
-                        });
+                        resolve(error_server_info);
                     }
                     if (row === undefined) {
                         logger.error(`data not found on m_server_info. please setting m_server_info. sql = ${sql}, key = ${server_id}`);
                         // return blank data
-                        resolve({
-                            server_id: server_id,
-                            channel_id: constants.RECRUITMENT_INVALID_CHANNEL_ID,
-                            recruitment_target_role: constants.RECRUITMENT_INVALID_ROLE,
-                            follow_time: Constants.get_default_date(),
-                        });
+                        resolve(error_server_info);
                     }
 
+                    // return correct data
                     logger.info(`selected m_server_info successed. : server_id = ${server_id}`);
                     logger.trace(row);
-                    resolve(row);
+                    resolve(ServerInfo.parse_from_db(row));
                 }));
             });
 

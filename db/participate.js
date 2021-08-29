@@ -6,6 +6,8 @@ const logger_1 = require("../common/logger");
 // 定数定義を読み込む
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
+// エンティティ有効化
+const participate_1 = require("../entity/participate");
 class ParticipateRepository {
     /**
      * インスタンス化を行い、同時に、テーブルがない場合は作成する
@@ -170,9 +172,14 @@ class ParticipateRepository {
                         logger_1.logger.error(`data not found on t_participate. sql = ${sql}, key = ${token}`);
                         reject(`data not found on t_participate. sql = ${sql}, key = ${token}`);
                     }
+                    // return value list
+                    const participate_list = [];
+                    rows.forEach(v => {
+                        participate_list.push(participate_1.Participate.parse_from_db(v));
+                    });
                     logger_1.logger.info(`selected t_participate successed. : key = ${token}`);
                     logger_1.logger.trace(rows);
-                    resolve(rows);
+                    resolve(participate_list);
                 }));
             });
             db.close();
