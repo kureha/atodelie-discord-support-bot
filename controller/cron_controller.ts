@@ -18,7 +18,7 @@ import {Recruitment} from '../entity/recruitment';
 import {Participate} from '../entity/participate';
 import {ServerInfo} from '../entity/server_info';
 
-module.exports = class CronController {
+export class CronController {
     /**
      * フォローメッセージを作成し投稿します
      * @param {Discord.Client} client Discordクライアント

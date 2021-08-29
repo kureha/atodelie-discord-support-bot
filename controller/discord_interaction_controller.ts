@@ -22,7 +22,7 @@ import {ServerInfo} from '../entity/server_info';
 // import discord modules
 const Discord = require('discord.js');
 
-module.exports = class DiscordInteractionController {
+export class DiscordInteractionController {
     /**
      * インタラクションメッセージを作成し投稿します
      * @param {Discord.Client} client Discordクライアント

@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.DiscordInteractionController = void 0;
 // ロガーを定義
 var logger_1 = require("../common/logger");
 // 定数定義を読み込む
@@ -16,12 +17,12 @@ var discord_message_manager_1 = require("./../logic/discord_message_manager");
 var recruitment_1 = require("../entity/recruitment");
 // import discord modules
 var Discord = require('discord.js');
-module.exports = /** @class */ (function () {
+var DiscordInteractionController = /** @class */ (function () {
     function DiscordInteractionController() {
     }
     /**
      * インタラクションメッセージを作成し投稿します
-     * @param {Discord.Client} client  Discordクライアント
+     * @param {Discord.Client} client Discordクライアント
      * @param {Discord.Interaction} interaction インタラクション情報
      */
     DiscordInteractionController.recirve_controller = function (client, interaction) {
@@ -93,3 +94,4 @@ module.exports = /** @class */ (function () {
     };
     return DiscordInteractionController;
 }());
+exports.DiscordInteractionController = DiscordInteractionController;

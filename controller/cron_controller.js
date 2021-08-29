@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.CronController = void 0;
 // ロガーを定義
 var logger_1 = require("../common/logger");
 // 定数定義を読み込む
@@ -12,7 +13,7 @@ var ServerInfoRepository = require('../db/server_info');
 // create message modules
 var discord_message_manager_1 = require("./../logic/discord_message_manager");
 var server_info_1 = require("../entity/server_info");
-module.exports = /** @class */ (function () {
+var CronController = /** @class */ (function () {
     function CronController() {
     }
     /**
@@ -81,3 +82,5 @@ module.exports = /** @class */ (function () {
     };
     return CronController;
 }());
+exports.CronController = CronController;
+;

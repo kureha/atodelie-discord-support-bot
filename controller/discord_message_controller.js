@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.DiscordMessageController = void 0;
 // ロガーを定義
 var logger_1 = require("../common/logger");
 // 定数定義を読み込む
@@ -14,7 +15,7 @@ var discord_message_analyzer_1 = require("./../logic/discord_message_analyzer");
 var discord_message_manager_1 = require("./../logic/discord_message_manager");
 // import discord modules
 var Discord = require('discord.js');
-module.exports = /** @class */ (function () {
+var DiscordMessageController = /** @class */ (function () {
     function DiscordMessageController() {
     }
     /**
@@ -104,3 +105,4 @@ module.exports = /** @class */ (function () {
     };
     return DiscordMessageController;
 }());
+exports.DiscordMessageController = DiscordMessageController;
