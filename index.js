@@ -1,5 +1,5 @@
 // create logger
-const logger = require('./common/logger');
+var logger = require('./common/logger');
 
 // read .env file
 require('dotenv').config();

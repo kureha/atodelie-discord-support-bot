@@ -1,8 +1,8 @@
-const logger = require('./../common/logger');
+var logger = require('./../common/logger');
 
-// 定数定義を読み込む
-const Constants = require('../common/constants');
-const constants = new Constants();
+// import constants
+var constants_1 = require("../common/constants");
+var constants = new constants_1.Constants();
 
 // エンティティ有効化
 const Recruitment = require('./../entity/recruitment');
@@ -10,7 +10,7 @@ const Recruitment = require('./../entity/recruitment');
 // UUID有効化
 const uuid = require('uuid');
 
-module.exports = class RecruitmentRepository {
+export class RecruitmentRepository {
 
     /**
      * 募集マスタテーブル作成用SQL

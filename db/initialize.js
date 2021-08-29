@@ -1,9 +1,9 @@
 // create logger
-const logger = require('./../common/logger');
+var logger = require('./../common/logger');
 
 // import constants
-const Constants = require('./../common/constants');
-const constants = new Constants();
+var constants_1 = require("../common/constants");
+var constants = new constants_1.Constants();
 
 // import file module
 const fs = require('fs');

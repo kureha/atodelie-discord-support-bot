@@ -1,12 +1,12 @@
 // create logger
-const logger = require('./../common/logger');
+var logger = require('./../common/logger');
 
 // import discord modules
 const Discord = require('discord.js');
 
 // import constants
-const Constants = require('./../common/constants');
-const constants = new Constants();
+var constants_1 = require("../common/constants");
+var constants = new constants_1.Constants();
 
 // import modules
 const DiscordMessageAnalyzer = require('../logic/discord_message_analyzer');

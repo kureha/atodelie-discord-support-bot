@@ -5,7 +5,7 @@ import {logger} from '../common/logger';
 import {Constants} from '../common/constants';
 const constants = new Constants();
 
-module.exports = class ServerInfo {
+export class ServerInfo {
     server_id : string;
     channel_id : string;
     recruitment_target_role : string;

@@ -1,11 +1,12 @@
 "use strict";
 exports.__esModule = true;
+exports.DiscordMessageManager = void 0;
 // 定数定義を読み込む
 var constants_1 = require("../common/constants");
 var constants = new constants_1.Constants();
 // import discord modules
 var Discord = require("discord.js");
-module.exports = /** @class */ (function () {
+var DiscordMessageManager = /** @class */ (function () {
     function DiscordMessageManager() {
     }
     /**
@@ -141,3 +142,5 @@ module.exports = /** @class */ (function () {
     };
     return DiscordMessageManager;
 }());
+exports.DiscordMessageManager = DiscordMessageManager;
+;

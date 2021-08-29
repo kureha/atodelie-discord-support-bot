@@ -1,13 +1,13 @@
-const logger = require('../common/logger');
+var logger = require('../common/logger');
 
-// 定数定義を読み込む
-const Constants = require('../common/constants');
-const constants = new Constants();
+// import constants
+var constants_1 = require("../common/constants");
+var constants = new constants_1.Constants();
 
 // エンティティ有効化
 const ServerInfo = require('./../entity/server_info');
 
-module.exports = class ServerInfoRepository {
+export class ServerInfoRepository {
 
     /**
      * チャンネル情報マスタテーブル作成用SQL

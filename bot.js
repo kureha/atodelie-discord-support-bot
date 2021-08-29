@@ -1,13 +1,13 @@
 // create logger
-const logger = require('./common/logger');
+var logger = require('./common/logger');
 
 // import discord modules
 const Discord = require('discord.js');
 const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES] });
 
 // import constants
-const Constants = require('./common/constants');
-const constants = new Constants();
+var constants_1 = require("./common/constants");
+var constants = new constants_1.Constants();
 
 // check db and init
 const InitializeRepository = require('./db/initialize');

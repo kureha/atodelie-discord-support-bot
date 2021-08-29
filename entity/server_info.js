@@ -1,9 +1,10 @@
 "use strict";
 exports.__esModule = true;
+exports.ServerInfo = void 0;
 // 定数定義を読み込む
 var constants_1 = require("../common/constants");
 var constants = new constants_1.Constants();
-module.exports = /** @class */ (function () {
+var ServerInfo = /** @class */ (function () {
     /**
      * コンストラクタ
      * @constructor
@@ -16,3 +17,4 @@ module.exports = /** @class */ (function () {
     }
     return ServerInfo;
 }());
+exports.ServerInfo = ServerInfo;
