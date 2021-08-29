@@ -11,7 +11,7 @@ import {ParticipateRepository} from '../db/participate';
 import {ServerInfoRepository} from '../db/server_info';
 
 // create message modules
-import {DiscordInteraction} from './../logic/discord_interaction_analyzer';
+import {DiscordInteractionAnalyzer} from './../logic/discord_interaction_analyzer';
 import {DiscordMessageManager} from './../logic/discord_message_manager';
 
 // エンティティ有効化
@@ -41,7 +41,7 @@ export class DiscordInteractionController {
         const messageManager = new DiscordMessageManager();
 
         // analyze message
-        let analyzer = new DiscordInteraction(interaction.customId, interaction.user.id);
+        let analyzer = new DiscordInteractionAnalyzer(interaction.customId, interaction.user.id);
         logger.trace(analyzer);
 
         let recruitment_data = new Recruitment();

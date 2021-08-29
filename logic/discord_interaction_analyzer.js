@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DiscordInteraction = void 0;
+exports.DiscordInteractionAnalyzer = void 0;
 // ロガーを定義
 const logger_1 = require("../common/logger");
 // 定数定義を読み込む
@@ -8,7 +8,7 @@ const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
 // エンティティ有効化
 const participate_1 = require("../entity/participate");
-class DiscordInteraction {
+class DiscordInteractionAnalyzer {
     /**
      * インタラクションを解析し、解析結果を返却する
      * @param {string} custom_id
@@ -65,7 +65,7 @@ class DiscordInteraction {
         logger_1.logger.info(`this is valid interaction. token = ${this.token}`);
         // set valiables
         this.user_id = user_id;
-        this.description = DiscordInteraction.DESCRIPTION_FOR_JOIN_FROM_BUTTON;
+        this.description = DiscordInteractionAnalyzer.DESCRIPTION_FOR_JOIN_FROM_BUTTON;
     }
     /**
      * 新規IDをインスタンスに適用します
@@ -111,9 +111,9 @@ class DiscordInteraction {
         return participate;
     }
 }
-exports.DiscordInteraction = DiscordInteraction;
+exports.DiscordInteractionAnalyzer = DiscordInteractionAnalyzer;
 /**
  * ボタンから参加した場合の募集説明文字列
  */
-DiscordInteraction.DESCRIPTION_FOR_JOIN_FROM_BUTTON = `ボタンからの参加`;
+DiscordInteractionAnalyzer.DESCRIPTION_FOR_JOIN_FROM_BUTTON = `ボタンからの参加`;
 //# sourceMappingURL=discord_interaction_analyzer.js.map

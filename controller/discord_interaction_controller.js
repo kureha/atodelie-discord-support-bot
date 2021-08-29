@@ -33,7 +33,7 @@ class DiscordInteractionController {
         // create message manager instance
         const messageManager = new discord_message_manager_1.DiscordMessageManager();
         // analyze message
-        let analyzer = new discord_interaction_analyzer_1.DiscordInteraction(interaction.customId, interaction.user.id);
+        let analyzer = new discord_interaction_analyzer_1.DiscordInteractionAnalyzer(interaction.customId, interaction.user.id);
         logger_1.logger.trace(analyzer);
         let recruitment_data = new recruitment_1.Recruitment();
         let recruitment_target_role = '';

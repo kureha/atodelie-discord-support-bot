@@ -48,7 +48,7 @@ export class CronController {
                     logger.info(`cron message sended guild info : server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, from_time = ${server_info_data.follow_time.toLocaleString()}, to_time = ${to_datetime.toLocaleString()}`)
 
                     // get follow lists
-                    return recruitment_repo.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time.toISOString(), to_datetime.toISOString());
+                    return recruitment_repo.get_m_recruitment_for_follow(server_info_data.server_id, server_info_data.follow_time, to_datetime);
                 })
                 .then((recruitment_data_list : Recruitment[]) => {
                     logger.info(`select follow data list completed.`)

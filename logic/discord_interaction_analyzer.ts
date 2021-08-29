@@ -8,7 +8,7 @@ const constants = new Constants();
 // エンティティ有効化
 import {Participate} from '../entity/participate';
 
-export class DiscordInteraction {
+export class DiscordInteractionAnalyzer {
 
     /**
      * ボタンから参加した場合の募集説明文字列
@@ -88,7 +88,7 @@ export class DiscordInteraction {
 
         // set valiables
         this.user_id = user_id;
-        this.description = DiscordInteraction.DESCRIPTION_FOR_JOIN_FROM_BUTTON;
+        this.description = DiscordInteractionAnalyzer.DESCRIPTION_FOR_JOIN_FROM_BUTTON;
     }
 
     /**

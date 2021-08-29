@@ -223,11 +223,11 @@ class RecruitmentRepository {
             db.serialize(function () {
                 // run serialize
                 const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[server_id] = $server_id AND datetime(m1.[limit_time], 'utc') > datetime($from_datetime) AND datetime(m1.[limit_time], 'utc') <= datetime($to_datetime) ORDER BY m1.[limit_time], m1.[id]`;
-                logger_1.logger.info(`sql = ${sql}, server_id = ${server_id}, from_time = ${from_datetime}, to_datetime = ${to_datetime}`);
+                logger_1.logger.info(`sql = ${sql}, server_id = ${server_id}, from_time = ${from_datetime.toLocaleString()}, to_datetime = ${to_datetime.toLocaleString()}`);
                 db.all(sql, {
                     $server_id: server_id,
-                    $from_datetime: from_datetime,
-                    $to_datetime: to_datetime,
+                    $from_datetime: from_datetime.toISOString(),
+                    $to_datetime: to_datetime.toISOString(),
                 }, ((err, rows) => {
                     if (err) {
                         logger_1.logger.error(`sql exception occured when create table. sql = ${RecruitmentRepository.SQL_CREATE_M_RECRUITMENT}`);
@@ -331,17 +331,19 @@ class RecruitmentRepository {
                         reject(err);
                     }
                     else if (rows === undefined || rows === null || rows.length === 0) {
-                        logger_1.logger.error(`data not found on m_recruitment. sql = ${sql}, key = ${server_id}`);
-                        reject(`data not found on m_recruitment. sql = ${sql}, key = ${server_id}`);
+                        logger_1.logger.info(`data not found on m_recruitment. sql = ${sql}, key = ${server_id}`);
+                        resolve([]);
                     }
-                    // return valie list
-                    const recruitment_list = [];
-                    rows.forEach(v => {
-                        recruitment_list.push(recruitment_1.Recruitment.parse_from_db(v));
-                    });
-                    logger_1.logger.info(`selected latests m_reqruitement successed. : key = ${server_id}`);
-                    logger_1.logger.trace(rows);
-                    resolve(recruitment_list);
+                    else {
+                        // return valie list
+                        const recruitment_list = [];
+                        rows.forEach(v => {
+                            recruitment_list.push(recruitment_1.Recruitment.parse_from_db(v));
+                        });
+                        logger_1.logger.info(`selected latests m_reqruitement successed. : key = ${server_id}`);
+                        logger_1.logger.trace(rows);
+                        resolve(recruitment_list);
+                    }
                 }));
             });
             db.close();

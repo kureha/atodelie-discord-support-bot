@@ -169,17 +169,19 @@ class ParticipateRepository {
                         reject(err);
                     }
                     else if (rows === undefined || rows === null || rows.length === 0) {
-                        logger_1.logger.error(`data not found on t_participate. sql = ${sql}, key = ${token}`);
-                        reject(`data not found on t_participate. sql = ${sql}, key = ${token}`);
+                        logger_1.logger.info(`data not found on t_participate. sql = ${sql}, key = ${token}`);
+                        resolve([]);
                     }
-                    // return value list
-                    const participate_list = [];
-                    rows.forEach(v => {
-                        participate_list.push(participate_1.Participate.parse_from_db(v));
-                    });
-                    logger_1.logger.info(`selected t_participate successed. : key = ${token}`);
-                    logger_1.logger.trace(rows);
-                    resolve(participate_list);
+                    else {
+                        // return value list
+                        const participate_list = [];
+                        rows.forEach(v => {
+                            participate_list.push(participate_1.Participate.parse_from_db(v));
+                        });
+                        logger_1.logger.info(`selected t_participate successed. : key = ${token}`);
+                        logger_1.logger.trace(rows);
+                        resolve(participate_list);
+                    }
                 }));
             });
             db.close();

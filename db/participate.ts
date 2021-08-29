@@ -206,19 +206,19 @@ export class ParticipateRepository {
                         reject(err);
                     }
                     else if (rows === undefined || rows === null || rows.length === 0) {
-                        logger.error(`data not found on t_participate. sql = ${sql}, key = ${token}`);
-                        reject(`data not found on t_participate. sql = ${sql}, key = ${token}`);
+                        logger.info(`data not found on t_participate. sql = ${sql}, key = ${token}`);
+                        resolve([]);
+                    } else {
+                        // return value list
+                        const participate_list : Participate[] = [];
+                        rows.forEach(v => {
+                            participate_list.push(Participate.parse_from_db(v));
+                        });
+
+                        logger.info(`selected t_participate successed. : key = ${token}`);
+                        logger.trace(rows);
+                        resolve(participate_list);
                     }
-
-                    // return value list
-                    const participate_list : Participate[] = [];
-                    rows.forEach(v => {
-                        participate_list.push(Participate.parse_from_db(v));
-                    });
-
-                    logger.info(`selected t_participate successed. : key = ${token}`);
-                    logger.trace(rows);
-                    resolve(participate_list);
                 }));
             });
 
