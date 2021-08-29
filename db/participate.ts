@@ -205,7 +205,7 @@ export class ParticipateRepository {
                         logger.error(`select t_participate failed. sql = ${sql}, key = ${token}`);
                         reject(err);
                     }
-                    if (rows === undefined) {
+                    else if (rows === undefined || rows === null || rows.length === 0) {
                         logger.error(`data not found on t_participate. sql = ${sql}, key = ${token}`);
                         reject(`data not found on t_participate. sql = ${sql}, key = ${token}`);
                     }

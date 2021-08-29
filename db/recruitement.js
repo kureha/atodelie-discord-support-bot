@@ -304,11 +304,9 @@ class RecruitmentRepository {
                         logger_1.logger.error(`data not found on m_recruitment. sql = ${sql}, key = ${token}`);
                         reject(`data not found on m_recruitment. sql = ${sql}, key = ${token}`);
                     }
-                    else {
-                        logger_1.logger.info(`selected single m_reqruitement successed. : key = ${token}`);
-                        logger_1.logger.trace(row);
-                        resolve(recruitment_1.Recruitment.parse_from_db(row));
-                    }
+                    logger_1.logger.info(`selected single m_reqruitement successed. : key = ${token}`);
+                    logger_1.logger.trace(row);
+                    resolve(recruitment_1.Recruitment.parse_from_db(row));
                 }));
             });
             db.close();
@@ -332,20 +330,18 @@ class RecruitmentRepository {
                         logger_1.logger.error(`select m_recruitment failed. sql = ${sql}, key = ${server_id}`);
                         reject(err);
                     }
-                    else if (rows === undefined) {
+                    else if (rows === undefined || rows === null || rows.length === 0) {
                         logger_1.logger.error(`data not found on m_recruitment. sql = ${sql}, key = ${server_id}`);
                         reject(`data not found on m_recruitment. sql = ${sql}, key = ${server_id}`);
                     }
-                    else {
-                        // return valie list
-                        const recruitment_list = [];
-                        rows.forEach(v => {
-                            recruitment_list.push(recruitment_1.Recruitment.parse_from_db(v));
-                        });
-                        logger_1.logger.info(`selected latests m_reqruitement successed. : key = ${server_id}`);
-                        logger_1.logger.trace(rows);
-                        resolve(recruitment_list);
-                    }
+                    // return valie list
+                    const recruitment_list = [];
+                    rows.forEach(v => {
+                        recruitment_list.push(recruitment_1.Recruitment.parse_from_db(v));
+                    });
+                    logger_1.logger.info(`selected latests m_reqruitement successed. : key = ${server_id}`);
+                    logger_1.logger.trace(rows);
+                    resolve(recruitment_list);
                 }));
             });
             db.close();

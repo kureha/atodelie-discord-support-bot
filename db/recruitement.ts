@@ -345,11 +345,10 @@ export class RecruitmentRepository {
                         logger.error(`data not found on m_recruitment. sql = ${sql}, key = ${token}`);
                         reject(`data not found on m_recruitment. sql = ${sql}, key = ${token}`);
                     }
-                    else {
-                        logger.info(`selected single m_reqruitement successed. : key = ${token}`);
-                        logger.trace(row);
-                        resolve(Recruitment.parse_from_db(row));
-                    }
+
+                    logger.info(`selected single m_reqruitement successed. : key = ${token}`);
+                    logger.trace(row);
+                    resolve(Recruitment.parse_from_db(row));
                 }));
             });
 
@@ -376,21 +375,20 @@ export class RecruitmentRepository {
                         logger.error(`select m_recruitment failed. sql = ${sql}, key = ${server_id}`);
                         reject(err);
                     }
-                    else if (rows === undefined) {
+                    else if (rows === undefined || rows === null || rows.length === 0) {
                         logger.error(`data not found on m_recruitment. sql = ${sql}, key = ${server_id}`);
                         reject(`data not found on m_recruitment. sql = ${sql}, key = ${server_id}`);
                     }
-                    else {
-                        // return valie list
-                        const recruitment_list : Recruitment[] = [];
-                        rows.forEach(v => {
-                            recruitment_list.push(Recruitment.parse_from_db(v));
-                        });
 
-                        logger.info(`selected latests m_reqruitement successed. : key = ${server_id}`);
-                        logger.trace(rows);
-                        resolve(recruitment_list);
-                    }
+                    // return valie list
+                    const recruitment_list : Recruitment[] = [];
+                    rows.forEach(v => {
+                        recruitment_list.push(Recruitment.parse_from_db(v));
+                    });
+
+                    logger.info(`selected latests m_reqruitement successed. : key = ${server_id}`);
+                    logger.trace(rows);
+                    resolve(recruitment_list);
                 }));
             });
 
