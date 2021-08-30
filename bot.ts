@@ -36,7 +36,7 @@ client.on('interactionCreate', async (interaction: any) => {
 });
 
 // cron event
-const cron = require('node-cron');
+import cron from 'node-cron';
 logger.info(`follow cron setting : ${constants.DISCORD_FOLLOW_CRON}`);
 import {CronController} from './controller/cron_controller';
 cron.schedule(constants.DISCORD_FOLLOW_CRON, (() => {

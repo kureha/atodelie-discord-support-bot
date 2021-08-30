@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // ロガーを定義
 const logger_1 = require("./common/logger");
@@ -29,10 +32,10 @@ client.on('interactionCreate', async (interaction) => {
     discord_interaction_controller_1.DiscordInteractionController.recirve_controller(client, interaction);
 });
 // cron event
-const cron = require('node-cron');
+const node_cron_1 = __importDefault(require("node-cron"));
 logger_1.logger.info(`follow cron setting : ${constants.DISCORD_FOLLOW_CRON}`);
 const cron_controller_1 = require("./controller/cron_controller");
-cron.schedule(constants.DISCORD_FOLLOW_CRON, (() => {
+node_cron_1.default.schedule(constants.DISCORD_FOLLOW_CRON, (() => {
     // follow recruitment member
     cron_controller_1.CronController.follow_recruitment_member(client);
 }));
