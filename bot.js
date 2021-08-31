@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// ロガーを定義
+// define logger
 const logger_1 = require("./common/logger");
-// 定数定義を読み込む
+// import constants
 const constants_1 = require("./common/constants");
 const constants = new constants_1.Constants();
 // import discord modules

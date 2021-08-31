@@ -1,7 +1,7 @@
-// ロガーを定義
+// define logger
 import {logger} from '../common/logger';
 
-// 定数定義を読み込む
+// import constants
 import {Constants} from '../common/constants';
 const constants = new Constants();
 
@@ -51,6 +51,7 @@ export class Recruitment {
         v.server_id = row.server_id;
         v.token = row.token;
         v.status = row.status;
+        // limit_time is nullable
         try {
             v.limit_time = new Date(row.limit_time);
         } catch (e) {

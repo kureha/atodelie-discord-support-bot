@@ -1,7 +1,7 @@
-// ロガーを定義
+// define logger
 import {logger} from '../common/logger';
 
-// 定数定義を読み込む
+// import constants
 import {Constants} from '../common/constants';
 const constants = new Constants();
 
@@ -9,6 +9,9 @@ const constants = new Constants();
 import * as fs from 'fs';
 
 export class InitializeRepository {
+    /**
+     * データベースファイルが存在するか確認し、存在しない場合は初期DBをコピーします
+     */
     static initialize_database_if_not_exists() {
         if (fs.existsSync(constants.SQLITE_FILE)) {
             logger.info(`database file exists ok.`);

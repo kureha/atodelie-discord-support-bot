@@ -20,14 +20,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InitializeRepository = void 0;
-// ロガーを定義
+// define logger
 const logger_1 = require("../common/logger");
-// 定数定義を読み込む
+// import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
 // import file module
 const fs = __importStar(require("fs"));
 class InitializeRepository {
+    /**
+     * データベースファイルが存在するか確認し、存在しない場合は初期DBをコピーします
+     */
     static initialize_database_if_not_exists() {
         if (fs.existsSync(constants.SQLITE_FILE)) {
             logger_1.logger.info(`database file exists ok.`);

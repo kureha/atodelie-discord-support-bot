@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscordMessageAnalyzer = void 0;
-// ロガーを定義
+// define logger
 const logger_1 = require("../common/logger");
-// 定数定義を読み込む
+// import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
-// エンティティ有効化
+// import entities
 const recruitment_1 = require("../entity/recruitment");
 const participate_1 = require("../entity/participate");
 class DiscordMessageAnalyzer {
@@ -18,11 +18,11 @@ class DiscordMessageAnalyzer {
      * @constructor
      */
     constructor(mes, server_id, message_user_id, user_id) {
-        // user.idは消去しメッセージを格納
+        // remove user.id from message
         this.message = mes.replace(new RegExp('^[ 　]*<@[!]*' + user_id + '>[ 　]*'), "");
-        // サーバIDを格納
+        // copy server id
         this.server_id = server_id;
-        // 各種変数の初期化
+        // initialize variables
         this.token = '';
         this.status = constants.STATUS_DISABLED;
         this.limit_time = constants_1.Constants.get_default_date();
@@ -31,52 +31,52 @@ class DiscordMessageAnalyzer {
         this.max_number = DiscordMessageAnalyzer.MAX_NUMBERS_DEFAULT;
         this.description = '';
         this.delete = true;
-        // 募集の有効無効を示す
+        // this is "recruitment" is valid
         this.valid = false;
         this.id = 0;
         this.error_messages = [];
         this.type = constants.TYPE_INIT;
-        // 参加者一覧を示す変数
+        // participate members
         this.user_list = [];
-        // エラーメッセージ格納用配列（一時的）
+        // error messages
         let error_messages_list = [];
-        // 現在時刻
+        // default limit date
         let default_date = new Date();
         default_date.setHours(default_date.getHours() + DiscordMessageAnalyzer.HOURS_DEFAULT);
-        // 募集検知
+        // detect recruitment
         if (DiscordMessageAnalyzer.check_recruitment(this.message) == true) {
             logger_1.logger.info(`target message is new recruitment. : mes = ${this.message}`);
             this.type = constants.TYPE_RECRUITEMENT;
             this.name = DiscordMessageAnalyzer.get_recruitment_text(this.message);
             this.owner_id = message_user_id;
             logger_1.logger.debug(`recruitment's name, owner_id : name = ${this.name}, owner_id = ${message_user_id}`);
-            // 有効メッセージと認識
+            // recruitmentis valid
             this.valid = true;
-            // tokenは後で算出するため空文字となる
+            // token is setted after
             this.token = '';
-            // 以下は可能なら切り出す…　時間指定と人数指定
+            // analyze limit_time and max_member
             this.limit_time = DiscordMessageAnalyzer.get_recruitment_time(this.message) || default_date;
             logger_1.logger.debug(`recruitment's target time : ${this.limit_time}`);
             this.max_number = DiscordMessageAnalyzer.get_recruitment_numbers(this.message) || DiscordMessageAnalyzer.MAX_NUMBERS_DEFAULT;
             logger_1.logger.debug(`recruitment's target number : ${this.max_number}`);
-            // その他必要な値を付与
+            // initialize other values
             this.status = constants.STATUS_ENABLED;
             this.description = "";
             this.delete = false;
-            // ユーザリストにオーナーの情報を追加
+            // add owner info to participate members
             this.user_list.push(this.get_owner_participate());
         }
         else if (DiscordMessageAnalyzer.check_type_list(this.message) == true) {
-            // 一覧表示
+            // show command
             logger_1.logger.info(`target message is listing. : mes = ${this.message}`);
             this.type = constants.TYPE_LIST;
         }
         else {
-            // どのメッセージでもない
+            // this is not valid message
             logger_1.logger.info(`target message is not valid. : mes = ${this.message}`);
             error_messages_list.push(constants.DISCORD_MESSAGE_IS_INVALID);
         }
-        // エラーメッセージを必要日応じて格納する
+        // set error messages if not valied
         if (this.valid === false) {
             this.error_messages = error_messages_list;
         }
@@ -138,20 +138,14 @@ class DiscordMessageAnalyzer {
     /**
      * 指定メッセージを切り出して返却する
      * @param {string} mes
-     * @param {string} regexp
+     * @param {string | undefined} regexp
      */
     static extract_by_regexp(mes, regexp) {
-        var result = undefined;
-        if (typeof (mes) == "string") {
-            // ok
-        }
-        else {
-            return undefined;
-        }
-        // 正規表現の解析を使用
+        let result = undefined;
+        // create RegExp from params
         const re = new RegExp(regexp, 'g');
         const re_result = re.exec(mes);
-        // 結果が含まれる場合それを返す
+        // if include message return this
         if (re_result !== null && re_result.length > 0) {
             result = re_result[0];
         }
@@ -160,7 +154,7 @@ class DiscordMessageAnalyzer {
     /**
      * 時刻を認識し、日時オブジェクトを返却します
      * @param {string} mes
-     * @returns {Date}
+     * @returns {Date | undefined}
      */
     static get_recruitment_time(mes) {
         // needed variables
@@ -181,11 +175,11 @@ class DiscordMessageAnalyzer {
                 minute = '0';
             }
         }
-        // hourが24の場合は0として扱う
+        // if hour is 24, this is 0.
         if (hour == '24') {
             hour = '0';
         }
-        // 値をチェックし、有効であれば値を返します
+        // if include hour and minute return value
         if (hour === undefined || minute === undefined) {
             return undefined;
         }
@@ -219,7 +213,7 @@ class DiscordMessageAnalyzer {
         target_date.setMilliseconds(0);
         // compare time to now
         let now_date = new Date();
-        // 既にその時間は通過したので、次の日を対象とする
+        // if target date is past, set tommorow
         if (target_date < now_date) {
             logger_1.logger.debug(`target date is past, add 1 date.`);
             target_date.setDate(target_date.getDate() + 1);

@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParticipateRepository = void 0;
-// ロガーを定義
+// define logger
 const logger_1 = require("../common/logger");
-// 定数定義を読み込む
+// import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
-// エンティティ有効化
+// import entities
 const participate_1 = require("../entity/participate");
 class ParticipateRepository {
     /**
@@ -23,16 +23,16 @@ class ParticipateRepository {
      * @returns {Database} sqlite3データベース用インスタンス
      */
     get_db_instance(file_path) {
-        // SQLite初期化
+        // initialize SQLite instance
         const sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
         var db = new sqlite.Database(file_path);
-        // インスタンス化できているかでエラーを判定する
+        // detect SQLite error from instance
         if (db === undefined || db === null) {
             logger_1.logger.error(`database instance is undefined or null.`);
             throw `database instance is undefined or null.`;
         }
         else {
-            // 正常時はインスタンスを返す
+            // return SQLite instance if status is good
             return db;
         }
     }
@@ -49,7 +49,7 @@ class ParticipateRepository {
                         logger_1.logger.error(`sql exception occured when create table. sql = ${ParticipateRepository.SQL_CREATE_T_PARTICIPATE}`);
                         reject(err);
                     }
-                    // 全SQL処理後に完了とする
+                    // resolve after all sql completed
                     resolve();
                 }));
             });
@@ -62,7 +62,7 @@ class ParticipateRepository {
      * @returns {Promise}
      */
     insert_t_participate(data) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -94,7 +94,7 @@ class ParticipateRepository {
      * @returns {Promise}
      */
     update_t_participate(data) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -127,7 +127,7 @@ class ParticipateRepository {
      * @returns {Promise}
      */
     delete_t_participate(token) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -156,7 +156,7 @@ class ParticipateRepository {
      * @returns {Promise<Participate[]>} Promiseオブジェクト、データベースの選択内容
      */
     get_t_participate(token) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {

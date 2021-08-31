@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServerInfoRepository = void 0;
-// ロガーを定義
+// define logger
 const logger_1 = require("../common/logger");
-// 定数定義を読み込む
+// import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
-// エンティティ有効化
+// import entities
 const server_info_1 = require("../entity/server_info");
 class ServerInfoRepository {
     /**
@@ -23,16 +23,16 @@ class ServerInfoRepository {
      * @returns {Database} sqlite3データベース用インスタンス
      */
     get_db_instance(file_path) {
-        // SQLite初期化
+        // initialize SQLite instance
         const sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
         var db = new sqlite.Database(file_path);
-        // インスタンス化できているかでエラーを判定する
+        // detect SQLite error from instance
         if (db === undefined || db === null) {
             logger_1.logger.error(`database instance is undefined or null.`);
             throw `database instance is undefined or null.`;
         }
         else {
-            // 正常時はインスタンスを返す
+            // return SQLite instance if status is good
             return db;
         }
     }
@@ -49,7 +49,7 @@ class ServerInfoRepository {
                         logger_1.logger.error(`sql exception occured when create table. sql = ${ServerInfoRepository.SQL_CREATE_M_SERVER_INFO}`);
                         reject(err);
                     }
-                    // 全SQL処理後に完了とする
+                    // resolve after all sql completed
                     resolve();
                 }));
             });
@@ -62,7 +62,7 @@ class ServerInfoRepository {
      * @returns {Promise<ServerInfo>} Promiseオブジェクト、データベースの選択内容
      */
     get_m_server_info(server_id) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -104,7 +104,7 @@ class ServerInfoRepository {
      * @returns {Promise} Promiseオブジェクト、データベースの選択内容
      */
     insert_m_server_info(server_info_data) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -134,7 +134,7 @@ class ServerInfoRepository {
      * @returns {Promise} Promiseオブジェクト、データベースの選択内容
      */
     update_m_server_info_follow_time(server_id, follow_time) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -162,7 +162,7 @@ class ServerInfoRepository {
      * @returns {Promise} Promiseオブジェクト、データベースの選択内容
      */
     delete_m_server_info(server_id) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {

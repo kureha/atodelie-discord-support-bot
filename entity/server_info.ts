@@ -1,7 +1,7 @@
-// ロガーを定義
+// define logger
 import {logger} from '../common/logger';
 
-// 定数定義を読み込む
+// import constants
 import {Constants} from '../common/constants';
 const constants = new Constants();
 
@@ -32,7 +32,7 @@ export class ServerInfo {
         v.server_id = row.server_id;
         v.channel_id = row.channel_id;
         v.recruitment_target_role = row.recruitment_target_role;
-        // follow_timeはnullableとなる
+        // follow_time is nullable
         try {
             v.follow_time = new Date(row.follow_time);
         } catch (e) {

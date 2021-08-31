@@ -1,11 +1,11 @@
-// ロガーを定義
+// define logger
 import {logger} from '../common/logger';
 
-// 定数定義を読み込む
+// import constants
 import {Constants} from '../common/constants';
 const constants = new Constants();
 
-// エンティティ有効化
+// import entities
 import {Participate} from '../entity/participate';
 
 export class DiscordInteractionAnalyzer {

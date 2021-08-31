@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscordMessageController = void 0;
-// ロガーを定義
+// define logger
 const logger_1 = require("../common/logger");
-// 定数定義を読み込む
+// import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
 // import modules
@@ -31,7 +31,7 @@ class DiscordMessageController {
             const server_info_repo = new server_info_1.ServerInfoRepository();
             // create message manager instance
             const messageManager = new discord_message_manager_1.DiscordMessageManager();
-            // メッセージを解析する
+            // analyze message
             let analyzer = new discord_message_analyzer_1.DiscordMessageAnalyzer(message.content, message.guild.id, message.author.id, client.user.id);
             logger_1.logger.trace(analyzer);
             let recruitment_target_role = '';

@@ -1,7 +1,7 @@
-// ロガーを定義
+// define logger
 import {logger} from '../common/logger';
 
-// 定数定義を読み込む
+// import constants
 import {Constants} from '../common/constants';
 const constants = new Constants();
 
@@ -13,7 +13,7 @@ import {ServerInfoRepository} from '../db/server_info';
 // create message modules
 import {DiscordMessageManager} from './../logic/discord_message_manager';
 
-// エンティティ有効化
+// import entities
 import {Recruitment} from '../entity/recruitment';
 import {Participate} from '../entity/participate';
 import {ServerInfo} from '../entity/server_info';

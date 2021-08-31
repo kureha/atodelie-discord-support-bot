@@ -20,12 +20,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecruitmentRepository = void 0;
-// ロガーを定義
+// define logger
 const logger_1 = require("../common/logger");
-// 定数定義を読み込む
+// import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
-// エンティティ有効化
+// import entities
 const recruitment_1 = require("../entity/recruitment");
 // UUID有効化
 const uuid = __importStar(require("uuid"));
@@ -44,16 +44,16 @@ class RecruitmentRepository {
      * @returns {Database} sqlite3データベース用インスタンス
      */
     get_db_instance(file_path) {
-        // SQLite初期化
+        // initialize SQLite instance
         const sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
         var db = new sqlite.Database(file_path);
-        // インスタンス化できているかでエラーを判定する
+        // detect SQLite error from instance
         if (db === undefined || db === null) {
             logger_1.logger.error(`database instance is undefined or null.`);
             throw `database instance is undefined or null.`;
         }
         else {
-            // 正常時はインスタンスを返す
+            // return SQLite instance if status is good
             return db;
         }
     }
@@ -70,7 +70,7 @@ class RecruitmentRepository {
                         logger_1.logger.error(`sql exception occured when create table. sql = ${RecruitmentRepository.SQL_CREATE_M_RECRUITMENT}`);
                         reject(err);
                     }
-                    // 全SQL処理後に完了とする
+                    // resolve after all sql completed
                     resolve();
                 }));
             });
@@ -90,7 +90,7 @@ class RecruitmentRepository {
      * @returns {Promise}
      */
     insert_m_recruitment(data) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -126,7 +126,7 @@ class RecruitmentRepository {
      * @returns {Promise}
      */
     update_m_recruitment(data) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -162,7 +162,7 @@ class RecruitmentRepository {
      * @returns {Promise}
      */
     delete_m_recruitment(token) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -190,7 +190,7 @@ class RecruitmentRepository {
      * @returns {int} Promiseオブジェクト、データベースの選択内容
      */
     get_m_recruitment_id() {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -217,7 +217,7 @@ class RecruitmentRepository {
      * @returns {Promise<Recruitment[]>} 対象の募集マスタデータ
      */
     get_m_recruitment_for_follow(server_id, from_datetime, to_datetime) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -252,7 +252,7 @@ class RecruitmentRepository {
      * @returns {string} TOKEN
      */
     get_m_recruitment_token() {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -288,7 +288,7 @@ class RecruitmentRepository {
      * @returns {Promise<Recruitment>} Promiseオブジェクト、データベースの選択内容
      */
     get_m_recruitment(token) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
@@ -318,7 +318,7 @@ class RecruitmentRepository {
      * @returns {Promise<Recruitment[]>} Promiseオブジェクト、データベースの選択内容
      */
     get_m_recruitment_latests(server_id, count) {
-        // Promise処理
+        // return promise
         return new Promise((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {

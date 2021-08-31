@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscordInteractionController = void 0;
-// ロガーを定義
+// define logger
 const logger_1 = require("../common/logger");
-// 定数定義を読み込む
+// import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
 // import modules
@@ -13,7 +13,7 @@ const server_info_1 = require("../db/server_info");
 // create message modules
 const discord_interaction_analyzer_1 = require("./../logic/discord_interaction_analyzer");
 const discord_message_manager_1 = require("./../logic/discord_message_manager");
-// エンティティ有効化
+// import entities
 const recruitment_1 = require("../entity/recruitment");
 // import discord modules
 const Discord = require('discord.js');

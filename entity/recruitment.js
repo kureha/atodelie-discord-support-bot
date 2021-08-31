@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Recruitment = void 0;
-// 定数定義を読み込む
+// import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
 class Recruitment {
@@ -33,6 +33,7 @@ class Recruitment {
         v.server_id = row.server_id;
         v.token = row.token;
         v.status = row.status;
+        // limit_time is nullable
         try {
             v.limit_time = new Date(row.limit_time);
         }
