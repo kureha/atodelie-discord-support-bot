@@ -96,7 +96,7 @@ export class DiscordMessageController {
                                 .setLabel(constants.DISCORD_BUTTON_VIEW);
 
                             // send success message
-                            message.channel.send({
+                            return message.channel.send({
                                 embeds: [
                                     messageManager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                 ],
@@ -104,6 +104,14 @@ export class DiscordMessageController {
                                     new Discord.MessageActionRow().addComponents(join_button, view_button, decline_button),
                                 ],
                             });
+                        })
+                        .then((sended_message : any) => {
+                            // recirve message id
+                            logger.info(`send message completed. update message id to recruitment. : message_id = ${sended_message.id}`);
+                            analyzer.set_message_id(sended_message.id);
+
+                            // update recruitment
+                            return recruitment_repo.update_m_recruitment(analyzer.get_recruitment());
                         })
                         .catch((err : any) => {
                             // send error message

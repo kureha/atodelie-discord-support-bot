@@ -11,6 +11,7 @@ import {Participate} from './participate';
 export class Recruitment {
     id : number;
     server_id : string;
+    message_id : string;
     token : string;
     status : number;
     name : string;
@@ -28,6 +29,7 @@ export class Recruitment {
     constructor() {
         this.id = constants.ID_INVALID;
         this.server_id = '';
+        this.message_id = '';
         this.token = '';
         this.status = constants.STATUS_DISABLED;
         this.limit_time = Constants.get_default_date();
@@ -49,6 +51,7 @@ export class Recruitment {
         const v = new Recruitment();
         v.id = row.id;
         v.server_id = row.server_id;
+        v.message_id = row.message_id;
         v.token = row.token;
         v.status = row.status;
         // limit_time is nullable

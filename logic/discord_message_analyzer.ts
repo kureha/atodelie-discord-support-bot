@@ -27,6 +27,7 @@ export class DiscordMessageAnalyzer {
     // 解析結果を格納する変数
     id : number;
     server_id : string;
+    message_id : string;
     token : string;
     status : number;
     limit_time : Date;
@@ -55,6 +56,7 @@ export class DiscordMessageAnalyzer {
         this.server_id = server_id;
         
         // initialize variables
+        this.message_id = '';
         this.token = '';
         this.status = constants.STATUS_DISABLED;
         this.limit_time = Constants.get_default_date();
@@ -149,6 +151,14 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
+     * メッセージIDを設定します
+     * @param new_id message id
+     */
+    set_message_id(new_id : string) {
+        this.message_id = new_id;
+    }
+
+    /**
      * Analyzerの結果を募集オブジェクトとして返却します。
      * 募集が有効でない場合はundefinedが帰ります。
      * @returns {Recruitment} 募集オブジェクト
@@ -158,6 +168,7 @@ export class DiscordMessageAnalyzer {
         
         recruitment.id = this.id;
         recruitment.server_id = this.server_id;
+        recruitment.message_id = this.message_id;
         recruitment.token = this.token;
         recruitment.status = this.status;
         recruitment.limit_time = this.limit_time;

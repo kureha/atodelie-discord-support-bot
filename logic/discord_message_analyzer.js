@@ -23,6 +23,7 @@ class DiscordMessageAnalyzer {
         // copy server id
         this.server_id = server_id;
         // initialize variables
+        this.message_id = '';
         this.token = '';
         this.status = constants.STATUS_DISABLED;
         this.limit_time = constants_1.Constants.get_default_date();
@@ -102,6 +103,13 @@ class DiscordMessageAnalyzer {
         });
     }
     /**
+     * メッセージIDを設定します
+     * @param new_id message id
+     */
+    set_message_id(new_id) {
+        this.message_id = new_id;
+    }
+    /**
      * Analyzerの結果を募集オブジェクトとして返却します。
      * 募集が有効でない場合はundefinedが帰ります。
      * @returns {Recruitment} 募集オブジェクト
@@ -110,6 +118,7 @@ class DiscordMessageAnalyzer {
         const recruitment = new recruitment_1.Recruitment();
         recruitment.id = this.id;
         recruitment.server_id = this.server_id;
+        recruitment.message_id = this.message_id;
         recruitment.token = this.token;
         recruitment.status = this.status;
         recruitment.limit_time = this.limit_time;
