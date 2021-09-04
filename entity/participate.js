@@ -6,7 +6,7 @@ const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
 class Participate {
     /**
-     * コンストラクタ
+     * constructor
      * @constructor
      */
     constructor() {
@@ -18,9 +18,9 @@ class Participate {
         this.delete = false;
     }
     /**
-     * データベースの行情報をオブジェクトに変換する
-     * @param row Participateテーブルのデータ列
-     * @returns {Participate} オブジェクト
+     * convert database select data to instance
+     * @param row t_participate table single row
+     * @returns participate instance, return blank instance if error occuered
      */
     static parse_from_db(row) {
         let v = new Participate();

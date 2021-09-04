@@ -20,8 +20,8 @@ import { ServerInfo } from '../entity/server_info';
 
 export class CronController {
     /**
-     * フォローメッセージを作成し投稿します
-     * @param {Discord.Client} client Discordクライアント
+     * check follow recruitment and send message
+     * @param client discord client
      */
     static follow_recruitment_member(client: any) {
         // follow to date

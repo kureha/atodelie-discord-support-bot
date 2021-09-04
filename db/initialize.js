@@ -29,7 +29,7 @@ const constants = new constants_1.Constants();
 const fs = __importStar(require("fs"));
 class InitializeRepository {
     /**
-     * データベースファイルが存在するか確認し、存在しない場合は初期DBをコピーします
+     * check database file, copy if not exists database file
      */
     static initialize_database_if_not_exists() {
         if (fs.existsSync(constants.SQLITE_FILE)) {

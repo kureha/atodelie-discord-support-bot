@@ -10,12 +10,7 @@ import { Participate } from '../entity/participate';
 
 export class DiscordInteractionAnalyzer {
 
-    /**
-     * ボタンから参加した場合の募集説明文字列
-     */
-    static DESCRIPTION_FOR_JOIN_FROM_BUTTON = `ボタンからの参加`;
-
-    // 解析結果を格納する変数
+    // variables of analyzed value (in analyze method)
     id: number;
     token: string;
     status: number;
@@ -27,7 +22,7 @@ export class DiscordInteractionAnalyzer {
     delete: boolean;
 
     /**
-     * コンストラクタ
+     * constructor
      * @constructor
      */
     constructor() {
@@ -44,11 +39,11 @@ export class DiscordInteractionAnalyzer {
     }
 
     /**
-     * インタラクションを解析し、解析結果を設定する
-     * @param {string} custom_id 
-     * @param {string} user_id 
+     * analyze discord interaction, save data to this instance.
+     * @param custom_id recruitment id
+     * @param user_id discord bot's id
      */
-    analyze(custom_id: string, user_id: string) {
+    analyze(custom_id: string, user_id: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             // check custom id for recruitment join
             if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}`))) {
@@ -101,7 +96,7 @@ export class DiscordInteractionAnalyzer {
 
             // set valiables
             this.user_id = user_id;
-            this.description = DiscordInteractionAnalyzer.DESCRIPTION_FOR_JOIN_FROM_BUTTON;
+            this.description = constants.RECRUITMENT_DEFAULT_DESCRIPTION;
 
             // ok
             resolve();
@@ -109,15 +104,15 @@ export class DiscordInteractionAnalyzer {
     }
 
     /**
-     * 新規IDをインスタンスに適用します
-     * @param {number} new_id 
+     * save new recruitment's id
+     * @param new_id 
      */
     set_id(new_id: number) {
         this.id = new_id;
     }
 
     /**
-     * 新規トークンをインスタンスに適用します
+     * save new recruitment's token
      * @param {string} new_token 
      */
     set_token(new_token: string) {
@@ -125,11 +120,11 @@ export class DiscordInteractionAnalyzer {
     }
 
     /**
-     * DiscordのカスタムIDからトークンを取得します
-     * @param {string} custom_id DiscordのカスタムID
-     * @returns {string} トークン文字列
+     * extract token from discord interaction button's id
+     * @param custom_id button's id
+     * @returns extracted token
      */
-    get_token(custom_id: string, token_prefix: string) {
+    get_token(custom_id: string, token_prefix: string): string {
         const token_regexp = new RegExp(`^${token_prefix}(.+)$`);
         let match_result = custom_id.match(token_regexp);
 
@@ -141,10 +136,10 @@ export class DiscordInteractionAnalyzer {
     }
 
     /**
-     * 参加情報を返却します
-     * @returns {Participate} 参加オブジェクト
+     * get analyze result
+     * @returns participate instance
      */
-    get_join_participate() {
+    get_join_participate(): Participate {
         const participate = new Participate();
 
         participate.id = this.id;

@@ -12,7 +12,7 @@ export class ServerInfo {
     follow_time: Date;
 
     /**
-     * コンストラクタ
+     * constructor
      * @constructor
      */
     constructor() {
@@ -23,11 +23,11 @@ export class ServerInfo {
     }
 
     /**
-     * データベースの行情報をオブジェクトに変換する
-     * @param row ServerInfoテーブルのデータ列
-     * @returns {ServerInfo} オブジェクト
+     * convert database select data to instance
+     * @param row m_server_info table single row
+     * @returns server info instance, return blank instance if error occuered
      */
-    static parse_from_db(row: any) {
+    static parse_from_db(row: any): ServerInfo {
         let v = new ServerInfo();
 
         try {

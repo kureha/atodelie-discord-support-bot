@@ -14,7 +14,7 @@ export class Participate {
     delete: boolean;
 
     /**
-     * コンストラクタ
+     * constructor
      * @constructor
      */
     constructor() {
@@ -27,11 +27,11 @@ export class Participate {
     }
 
     /**
-     * データベースの行情報をオブジェクトに変換する
-     * @param row Participateテーブルのデータ列
-     * @returns {Participate} オブジェクト
+     * convert database select data to instance
+     * @param row t_participate table single row
+     * @returns participate instance, return blank instance if error occuered
      */
-    static parse_from_db(row: any) {
+    static parse_from_db(row: any): Participate {
         let v = new Participate();
 
         try {

@@ -11,8 +11,8 @@ export class Reference {
     message_id: string;
 
     /**
-     * コンストラクタ
-     * @param discord_reference Discordのmessage.reference
+     * constructor
+     * @param discord_reference discord's message reference (exists when interaction message)
      * @constructor
      */
     constructor(discord_reference: any) {

@@ -15,8 +15,8 @@ const discord_message_manager_1 = require("./../logic/discord_message_manager");
 const server_info_2 = require("../entity/server_info");
 class CronController {
     /**
-     * フォローメッセージを作成し投稿します
-     * @param {Discord.Client} client Discordクライアント
+     * check follow recruitment and send message
+     * @param client discord client
      */
     static follow_recruitment_member(client) {
         // follow to date

@@ -6,7 +6,7 @@ const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
 class ServerInfo {
     /**
-     * コンストラクタ
+     * constructor
      * @constructor
      */
     constructor() {
@@ -16,9 +16,9 @@ class ServerInfo {
         this.follow_time = constants_1.Constants.get_default_date();
     }
     /**
-     * データベースの行情報をオブジェクトに変換する
-     * @param row ServerInfoテーブルのデータ列
-     * @returns {ServerInfo} オブジェクト
+     * convert database select data to instance
+     * @param row m_server_info table single row
+     * @returns server info instance, return blank instance if error occuered
      */
     static parse_from_db(row) {
         let v = new ServerInfo();

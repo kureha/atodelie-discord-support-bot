@@ -18,9 +18,9 @@ const reference_1 = require("../entity/reference");
 const Discord = require('discord.js');
 class DiscordMessageController {
     /**
-     * 受信したメッセージを解析し結果を投稿します
-     * @param {Discord.Client} client Discordクライアント
-     * @param {Discord.Message} message Discordメッセージ
+     * analyze discord message and send result message
+     * @param client discord client
+     * @param message discord message
      */
     static recirve_controller(client, message) {
         if (message.mentions.users.has(client.user.id)) {
@@ -143,6 +143,13 @@ class DiscordMessageController {
                                     new Discord.MessageActionRow().addComponents(join_button, view_button, decline_button),
                                 ],
                             });
+                        })
+                            .then((sended_message) => {
+                            // recirve message id
+                            logger_1.logger.info(`send message completed. update message id to recruitment. : message_id = ${sended_message.id}`);
+                            analyzer.set_message_id(sended_message.id);
+                            // update recruitment
+                            return recruitment_repo.update_m_recruitment(analyzer.get_recruitment());
                         })
                             .catch((err) => {
                             // send error message

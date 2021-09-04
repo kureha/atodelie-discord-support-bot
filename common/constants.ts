@@ -63,6 +63,7 @@ export class Constants {
     RECRUITMENT_DEFAULT_MAX_NUMBERS: number;
     RECRUITMENT_INVALID_CHANNEL_ID: string;
     RECRUITMENT_INVALID_ROLE: string;
+    RECRUITMENT_DEFAULT_DESCRIPTION: string;
 
     DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX: string;
     DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX: string;
@@ -79,7 +80,7 @@ export class Constants {
     static STRING_EMPTY = '';
 
     /**
-     * コンストラクタ
+     * constructor, set all value from process.env
      * @constructor
      */
     constructor() {
@@ -158,6 +159,7 @@ export class Constants {
         this.RECRUITMENT_DEFAULT_MAX_NUMBERS = 6;
         this.RECRUITMENT_INVALID_CHANNEL_ID = 'TARGET_CHANNEL_ID_IS_NOT_FOUND';
         this.RECRUITMENT_INVALID_ROLE = 'TARGET_ROLE_IS_NOT_FOUND';
+        this.RECRUITMENT_DEFAULT_DESCRIPTION = 'joind by interaction button.';
 
         this.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX = 'join-recruite-token=';
         this.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX = 'decline-recruite-token=';
@@ -173,8 +175,8 @@ export class Constants {
     }
 
     /**
-     * デフォルトとする日時を返却します
-     * @returns {Date} 2000-01-01 00:00:00の日時
+     * get default data for this system
+     * @returns date instance of '2000-01-01 00:00:00'
      */
     static get_default_date(): Date {
         const temp_date = new Date();

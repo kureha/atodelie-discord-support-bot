@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Constants = void 0;
 class Constants {
     /**
-     * コンストラクタ
+     * constructor, set all value from process.env
      * @constructor
      */
     constructor() {
@@ -73,6 +73,7 @@ class Constants {
         this.RECRUITMENT_DEFAULT_MAX_NUMBERS = 6;
         this.RECRUITMENT_INVALID_CHANNEL_ID = 'TARGET_CHANNEL_ID_IS_NOT_FOUND';
         this.RECRUITMENT_INVALID_ROLE = 'TARGET_ROLE_IS_NOT_FOUND';
+        this.RECRUITMENT_DEFAULT_DESCRIPTION = 'joind by interaction button.';
         this.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX = 'join-recruite-token=';
         this.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX = 'decline-recruite-token=';
         this.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX = 'view-recruite-token=';
@@ -83,8 +84,8 @@ class Constants {
         this.REQUIRE_NAME_SQLITE3 = 'sqlite3';
     }
     /**
-     * デフォルトとする日時を返却します
-     * @returns {Date} 2000-01-01 00:00:00の日時
+     * get default data for this system
+     * @returns date instance of '2000-01-01 00:00:00'
      */
     static get_default_date() {
         const temp_date = new Date();

@@ -23,7 +23,7 @@ export class Recruitment {
     user_list: Participate[];
 
     /**
-     * コンストラクタ
+     * constructor
      * @constructor
      */
     constructor() {
@@ -43,11 +43,11 @@ export class Recruitment {
     }
 
     /**
-     * データベースの行情報をオブジェクトに変換する
-     * @param row Recruitmentテーブルのデータ列
-     * @returns {Recruitment} オブジェクト
+     * convert database select data to instance
+     * @param row m_recruitment table single row
+     * @returns recruitment's instance, return blank instance if error occured
      */
-    static parse_from_db(row: any) {
+    static parse_from_db(row: any): Recruitment {
         let v = new Recruitment();
 
         try {

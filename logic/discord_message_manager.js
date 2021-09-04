@@ -27,28 +27,28 @@ const constants = new constants_1.Constants();
 const Discord = __importStar(require("discord.js"));
 class DiscordMessageManager {
     /**
-     * 文字列のエスケープされた改行を有効にします
-     * @param {string} str
-     * @returns {string} \\nが\nに置換された文字列
+     * convert escaped lf character
+     * @param str string of lf is '\\n'
+     * @returns string of lf is '\n'
      */
     enable_lf(str) {
         return str.replace('\\n', '\n');
     }
     /**
-     * 日付のISO表現を読みやすい形に変形し返却します
-     * @param {string} parsed_date
-     * @returns {string}
+     * return date's readable locale string
+     * @param date value
+     * @returns date's readable string
      */
-    get_date_string(parsed_date) {
-        return `${parsed_date.toLocaleString()}`;
+    get_date_string(date) {
+        return `${date.toLocaleString()}`;
     }
     /**
-     * 募集用の組み込みメッセージを返す内部処理です。
-     * @param {Recruitment} recruitment
-     * @param {string} recruitment_target_role
-     * @param {string} title
-     * @param {string} desription
-     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     * return recruitment embed message
+     * @param recruitment
+     * @param recruitment_target_role
+     * @param title
+     * @param desription
+     * @returns Discord.MessageEmbed message
      */
     get_recruitment_embed_message(recruitment, recruitment_target_role, title, desription) {
         // create description
@@ -100,78 +100,78 @@ class DiscordMessageManager {
         });
     }
     /**
-     * 新規募集時のメッセージを返却します
-     * @param {Recruitment} recruitment
-     * @param {string} recruitment_target_role
-     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     * return new recruitment message
+     * @param recruitment
+     * @param recruitment_target_role
+     * @returns Discord.MessageEmbed message
      */
     get_new_recruitment_message(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT, constants.DISCORD_MESSAGE_NEW_RECRUITMENT);
     }
     /**
-     * 募集編集時のメッセージを返却します
-     * @param {Recruitment} recruitment
-     * @param {string} recruitment_target_role
-     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     * return edit recruitment message
+     * @param recruitment
+     * @param recruitment_target_role
+     * @returns Discord.MessageEmbed message
      */
     get_edit_recruitment_message(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_EDIT_RECRUITMENT, constants.DISCORD_MESSAGE_EDIT_RECRUITMENT);
     }
     /**
-     * 募集中止時のメッセージを返却します
-     * @param {Recruitment} recruitment
-     * @param {string} recruitment_target_role
-     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     * return cancel recruitment message
+     * @param recruitment
+     * @param recruitment_target_role
+     * @returns Discord.MessageEmbed message
      */
     get_delete_recruitment_message(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_DELETE_RECRUITMENT, constants.DISCORD_MESSAGE_DELETE_RECRUITMENT);
     }
     /**
-     * 募集参加時のメッセージを返却します
-     * @param {Recruitment} recruitment
-     * @param {string} recruitment_target_role
-     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     * return join recruitment message
+     * @param recruitment
+     * @param recruitment_target_role
+     * @returns Discord.MessageEmbed message
      */
     get_join_recruitment(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_SUCCESS_JOIN, constants.DISCORD_MESSAGE_SUCCESS_JOIN);
     }
     /**
-     * 参加取りやめのメッセージを返します
-     * @param {Recruitment} recruitment
-     * @param {string} recruitment_target_role
-     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     * return decline recruitment message
+     * @param recruitment
+     * @param recruitment_target_role
+     * @returns Discord.MessageEmbed message
      */
     get_decline_recruitment(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE, constants.DISCORD_MESSAGE_SUCCESS_DECLINE);
     }
     /**
-     * 観戦のメッセージを返します
-     * @param {Recruitment} recruitment
-     * @param {string} recruitment_target_role
-     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     * return view recruitment message
+     * @param recruitment
+     * @param recruitment_target_role
+     * @returns Discord.MessageEmbed message
      */
     get_view_recruitment(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_SUCCESS_VIEW, constants.DISCORD_MESSAGE_SUCCESS_VIEW);
     }
     /**
-     * 募集フォロー時の組み込みメッセージを返します
-     * @param {Recruitment} recruitment
-     * @param {string} recruitment_target_role
-     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     * return follow recruitment message
+     * @param recruitment
+     * @param recruitment_target_role
+     * @returns Discord.MessageEmbed message
      */
     get_join_recruitment_follow_message(recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT, constants.DISCORD_MESSAGE_FOLLOW_RECRUITMENT);
     }
     /**
-     * 募集が見つからないことを示すメッセージを返します
-     * @returns {string}
+     * return recruitment is not found message
+     * @returns message
      */
     get_no_recruitment() {
         let result = constants.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT;

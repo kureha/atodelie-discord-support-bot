@@ -11,33 +11,32 @@ import { Participate } from '../entity/participate';
 export class ParticipateRepository {
 
     /**
-     * 募集データテーブル作成用SQL
+     * create SQL
      */
     static SQL_CREATE_T_PARTICIPATE = 'CREATE TABLE IF NOT EXISTS [t_participate] ( [id] INTEGER NOT NULL, [status] INTEGER NOT NULL, [user_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id],[user_id]) )';
 
     /**
-     * 募集データテーブル選択用SQL
+     * select SQL
      */
     static SQL_SELECT_T_PARTICIPATE = 'SELECT t1.[id], t1.[status], t1.[user_id], t1.[description], t1.[regist_time], t1.[update_time], t1.[delete] FROM [t_participate] t1 ';
 
     /**
-     * 募集データテーブル挿入用SQL
+     * insert SQL
      */
     static SQL_INSERT_T_PARTICIPATE = 'INSERT INTO [t_participate] ([id], [status], [user_id], [description], [regist_time], [update_time], [delete]) SELECT [id], $status, $user_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') ';
 
     /**
-     * 募集データテーブル更新用SQL
+     * update SQL
      */
     static SQL_UPDATE_T_PARTICIPATE = 'UPDATE [t_participate] SET [status] = $status, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
 
     /**
-     * 募集データテーブル削除用SQL
+     * delete SQL
      */
     static SQL_DELETE_T_PARTICIPATE = 'DELETE FROM [t_participate] ';
 
     /**
-     * インスタンス化を行い、同時に、テーブルがない場合は作成する
-     * @returns {Promise} インスタンス
+     * constructor
      */
     constructor() {
         const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -45,9 +44,9 @@ export class ParticipateRepository {
     }
 
     /**
-     * sqlite3のデータベースのインスタンスを取得する
-     * @param {string} file_path sqlite3ファイルパス
-     * @returns {Database} sqlite3データベース用インスタンス
+     * get sqlite3 database instance
+     * @param file_path sqlite3 file path
+     * @returns sqlite3 database instance
      */
     get_db_instance(file_path: string) {
         // initialize SQLite instance
@@ -65,8 +64,8 @@ export class ParticipateRepository {
     }
 
     /**
-     * 全テーブルを作成する
-     * @param {Database} db sqlite3データベース用インスタンス
+     * create table
+     * @param db sqlite3 database instance
      */
     create_all_database(db: any) {
         return new Promise<void>((resolve, reject) => {
@@ -88,11 +87,11 @@ export class ParticipateRepository {
     }
 
     /**
-     * 参加データを1行追加します
-     * @param {Participate} data 
-     * @returns {Promise}
+     * insert data
+     * @param data 
+     * @returns 
      */
-    insert_t_participate(data: Participate) {
+    insert_t_participate(data: Participate): Promise<any> {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -121,11 +120,11 @@ export class ParticipateRepository {
     }
 
     /**
-     * 参加データを1行更新します
-     * @param {Participate} data キーは「data.token」「data.user_id」の二つ
-     * @returns {Promise}
+     * update data
+     * @param data key is [data.token] and [data.user_id]
+     * @returns 
      */
-    update_t_participate(data: Participate) {
+    update_t_participate(data: Participate): Promise<any> {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -156,11 +155,11 @@ export class ParticipateRepository {
 
 
     /**
-     * 参加データを削除します
-     * @param {string} token 
-     * @returns {Promise}
+     * delete data by token
+     * @param token 
+     * @returns 
      */
-    delete_t_participate(token: string) {
+    delete_t_participate(token: string): Promise<any> {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -186,11 +185,11 @@ export class ParticipateRepository {
     }
 
     /**
-     * 参加データをN行選択します
-     * @param {string} token 
-     * @returns {Promise<Participate[]>} Promiseオブジェクト、データベースの選択内容
+     * select data list by token
+     * @param token 
+     * @returns participate data list
      */
-    get_t_participate(token: string) {
+    get_t_participate(token: string): Promise<Participate[]> {
         // return promise
         return new Promise<Participate[]>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);

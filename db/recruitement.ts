@@ -14,43 +14,43 @@ import * as uuid from 'uuid';
 export class RecruitmentRepository {
 
     /**
-     * 募集マスタテーブル作成用SQL
+     * create SQL
      */
     static SQL_CREATE_M_RECRUITMENT = 'CREATE TABLE IF NOT EXISTS [m_recruitment] ( [id] INTEGER NOT NULL UNIQUE, [server_id] TEXT NOT NULL, [message_id] TEXT, [token] TEXT NOT NULL UNIQUE, [status] INTEGER NOT NULL, [limit_time] DATETIME NOT NULL, [name] TEXT NOT NULL, [owner_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id]) )';
 
     /**
-     * 募集マスタテーブル選択用SQL
+     * select SQL
      */
     static SQL_SELECT_M_RECRUITMENT = 'SELECT m1.[id], m1.[server_id], m1.[message_id], m1.[token], m1.[status], m1.[limit_time], m1.[name], m1.[owner_id], m1.[description], m1.[regist_time], m1.[update_time], m1.[delete] FROM [m_recruitment] m1 ';
 
     /**
-     * 募集マスタテーブル挿入用SQL
+     * insert SQL
      */
     static SQL_INSERT_M_RECRUITMENT = 'INSERT INTO [m_recruitment] ([id], [server_id], [message_id], [token], [status], [limit_time], [name], [owner_id], [description], [regist_time], [update_time], [delete]) values ($id, $server_id, $message_id, $token, $status, $limit_time, $name, $owner_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false) ';
 
     /**
-     * 募集マスタテーブル更新用SQL
+     * update SQL
      */
     static SQL_UPDATE_M_RECRUITMENT = 'UPDATE [m_recruitment] SET [server_id] = $server_id, [message_id] = $message_id, [status] = $status, [limit_time] = $limit_time, [name] = $name, [owner_id] = $owner_id, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
 
     /**
-     * 募集マスタテーブル削除用SQL
+     * delete SQL
      */
     static SQL_DELETE_M_RECRUITMENT = 'DELETE FROM [m_recruitment] ';
 
     /**
-     * 募集マスタテーブルから次のIDを取得するSQL
+     * get next id SQL
      */
     static SQL_SELECT_M_RECRUITMENT_MAX_ID = 'SELECT IFNULL(MAX(id) + 1, 1) AS id FROM [m_recruitment] ';
 
     /**
-     * 募集マスタテーブルから一致するトークンが有効募集で使われてるかを確認するSQL
+     * check token is exists SQL
      */
     static SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT = 'SELECT COUNT(*) AS [count] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') ';
 
     /**
-     * インスタンス化を行い、同時に、テーブルがない場合は作成する
-     * @returns {Promise} インスタンス
+     * constructor
+     * @constructor
      */
     constructor() {
         const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -58,9 +58,9 @@ export class RecruitmentRepository {
     }
 
     /**
-     * sqlite3のデータベースのインスタンスを取得する
-     * @param {string} file_path sqlite3ファイルパス
-     * @returns {Database} sqlite3データベース用インスタンス
+     * get sqlite3 database instance
+     * @param file_path sqlite3 file path
+     * @returns sqlite3 database instance
      */
     get_db_instance(file_path: string) {
         // initialize SQLite instance
@@ -78,8 +78,8 @@ export class RecruitmentRepository {
     }
 
     /**
-     * 全テーブルを作成する
-     * @param {Database} db sqlite3データベース用インスタンス
+     * create table
+     * @param db sqlite3 database instance
      */
     create_all_database(db: any) {
         return new Promise<void>((resolve, reject) => {
@@ -101,19 +101,19 @@ export class RecruitmentRepository {
     }
 
     /**
-     * UUIDのTokenを取得します
-     * @returns {string} UUIDベースのToken
+     * get UUID format token
+     * @returns UUID
      */
-    static create_uuid_token() {
+    static create_uuid_token(): string {
         return uuid.v4();
     }
 
     /**
-     * 募集マスタを1行追加します
-     * @param {Recruitment} data 
-     * @returns {Promise}
+     * insert data
+     * @param data 
+     * @returns
      */
-    insert_m_recruitment(data: Recruitment) {
+    insert_m_recruitment(data: Recruitment): Promise<any> {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -147,11 +147,11 @@ export class RecruitmentRepository {
     }
 
     /**
-     * 募集マスタを更新します
-     * @param {Recruitment} data 
-     * @returns {Promise}
+     * update data
+     * @param data 
+     * @returns 
      */
-    update_m_recruitment(data: Recruitment) {
+    update_m_recruitment(data: Recruitment): Promise<any> {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -186,11 +186,11 @@ export class RecruitmentRepository {
 
 
     /**
-     * 募集マスタを削除します
-     * @param {string} token 
-     * @returns {Promise}
+     * delete data
+     * @param token 
+     * @returns 
      */
-    delete_m_recruitment(token: string) {
+    delete_m_recruitment(token: string): Promise<any> {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -216,10 +216,10 @@ export class RecruitmentRepository {
     }
 
     /**
-     * 募集マスタ用のIDを選択します
-     * @returns {int} Promiseオブジェクト、データベースの選択内容
+     * get max id for m_recruitment
+     * @returns max id number
      */
-    get_m_recruitment_id() {
+    get_m_recruitment_id(): Promise<number> {
         // return promise
         return new Promise<number>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -243,13 +243,13 @@ export class RecruitmentRepository {
     }
 
     /**
-     * 募集フォロー対象の一覧を取得します
-     * @param {string} server_id 
-     * @param {string} from_datetime 
-     * @param {string} to_datetime 
-     * @returns {Promise<Recruitment[]>} 対象の募集マスタデータ
+     * get data list for follow 
+     * @param server_id 
+     * @param from_datetime 
+     * @param to_datetime 
+     * @returns follow up data list
      */
-    get_m_recruitment_for_follow(server_id: string, from_datetime: Date, to_datetime: Date) {
+    get_m_recruitment_for_follow(server_id: string, from_datetime: Date, to_datetime: Date): Promise<Recruitment[]> {
         // return promise
         return new Promise<Recruitment[]>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -285,11 +285,11 @@ export class RecruitmentRepository {
     }
 
     /**
-     * 募集マスタ用のTOKENを生成します。
-     * 生成値がかぶっていた場合にRejectするため、呼び出し時にRetry処理が必要です
-     * @returns {string} TOKEN
+     * get token for m_recruitment
+     * if token is already exists, this function will by reject, please retry
+     * @returns token string
      */
-    get_m_recruitment_token() {
+    get_m_recruitment_token(): Promise<string> {
         // return promise
         return new Promise<string>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -325,11 +325,11 @@ export class RecruitmentRepository {
     }
 
     /**
-     * 募集マスタを1行選択します
-     * @param {string} token 
-     * @returns {Promise<Recruitment>} Promiseオブジェクト、データベースの選択内容
+     * select single data
+     * @param token 
+     * @returns recruitment data
      */
-    get_m_recruitment(token: string) {
+    get_m_recruitment(token: string): Promise<Recruitment> {
         // return promise
         return new Promise<Recruitment>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -359,11 +359,12 @@ export class RecruitmentRepository {
     }
 
     /**
-     * 募集を募集メッセージIDと募集オーナーのIDから取得する
-     * @param message_id メッセージID
-     * @param owner_id 募集オーナーのID
+     * select data by message id and owner id
+     * @param message_id message id
+     * @param owner_id owner id
+     * @returns recruitment data
      */
-    get_m_recruitment_by_message_id(message_id: string, owner_id: string) {
+    get_m_recruitment_by_message_id(message_id: string, owner_id: string): Promise<Recruitment> {
         // return promise
         return new Promise<Recruitment>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -393,11 +394,11 @@ export class RecruitmentRepository {
     }
 
     /**
-     * 募集マスタを指定行選択します
-     * @param {string} server_id 
-     * @returns {Promise<Recruitment[]>} Promiseオブジェクト、データベースの選択内容
+     * select data list for server
+     * @param server_id server id
+     * @returns recruitment data
      */
-    get_m_recruitment_latests(server_id: string, count: number) {
+    get_m_recruitment_latests(server_id: string, count: number): Promise<Recruitment[]> {
         // return promise
         return new Promise<Recruitment[]>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);

@@ -16,19 +16,21 @@ import { ParticipateRepository } from '../db/participate';
 export class DiscordMessageAnalyzer {
 
     /**
-     * 募集時間のデフォルト時間後
+     * default recruitment time
      */
     static HOURS_DEFAULT = constants.RECRUITMENT_DEFAULT_LIMIT_HOURS;
 
     /**
-     * 募集のデフォルト人数
+     * default recruitment member count
      */
     static MAX_NUMBERS_DEFAULT = constants.RECRUITMENT_DEFAULT_MAX_NUMBERS;
 
-    // 解析対象のメッセージ
+    /**
+     * inputed message
+     */
     message: string;
 
-    // 解析結果を格納する変数
+    // variables of analyzed value (in analyze method)
     id: number;
     server_id: string;
     message_id: string;
@@ -48,7 +50,7 @@ export class DiscordMessageAnalyzer {
     default_date: Date;
 
     /**
-     * コンストラクタ
+     * constructor
      * @constructor
      */
     constructor() {
@@ -84,14 +86,14 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * メッセージを解析し、解析結果を返却する
-     * @param mes メッセージ本体
-     * @param server_id 
-     * @param message_user_id メッセージを送信したユーザID
-     * @param user_id botのDiscordユーザID
-     * @param reference 
+     * analyze discord message, save data to this instance.
+     * @param mes discord message
+     * @param server_id discord server id
+     * @param message_user_id discord message's sender id
+     * @param user_id discord bot's id
+     * @param reference message reference object (if exists when edit ... reply)
      */
-    analyze(mes: string, server_id: string, message_user_id: string, user_id: string, reference: Reference) {
+    analyze(mes: string, server_id: string, message_user_id: string, user_id: string, reference: Reference): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             // remove user.id from message
             this.message = mes.replace(new RegExp('^[ 　]*<@[!]*' + user_id + '>[ 　]*'), "");
@@ -236,8 +238,8 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 新規IDをインスタンスに適用します。
-     * @param {number} new_id 
+     * save new recruitment's id
+     * @param new_id recruitment's id
      */
     set_id(new_id: number) {
         this.id = new_id;
@@ -247,8 +249,8 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 新規トークンをインスタンスに適用します。
-     * @param {string} new_token 
+     * save new recruitment's token
+     * @param new_token token
      */
     set_token(new_token: string) {
         this.token = new_token;
@@ -258,7 +260,7 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * メッセージIDを設定します
+     * save new message id
      * @param new_id message id
      */
     set_message_id(new_id: string) {
@@ -266,30 +268,29 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 募集オブジェクトをAnalyzerに設定します
-     * @param v 募集オブジェクト
+     * set recruitment instance to this instance
+     * @param recruitment
      */
-    set_recruitment(v: Recruitment) {
-        this.id = v.id;
-        this.server_id = v.server_id;
-        this.message_id = v.message_id;
-        this.token = v.token;
-        this.status = v.status;
-        this.limit_time = v.limit_time;
-        this.name = v.name;
-        this.owner_id = v.owner_id;
-        this.description = v.description;
-        this.delete = v.delete;
+    set_recruitment(recruitment: Recruitment) {
+        this.id = recruitment.id;
+        this.server_id = recruitment.server_id;
+        this.message_id = recruitment.message_id;
+        this.token = recruitment.token;
+        this.status = recruitment.status;
+        this.limit_time = recruitment.limit_time;
+        this.name = recruitment.name;
+        this.owner_id = recruitment.owner_id;
+        this.description = recruitment.description;
+        this.delete = recruitment.delete;
 
-        this.user_list = v.user_list;
+        this.user_list = recruitment.user_list;
     }
 
     /**
-     * Analyzerの結果を募集オブジェクトとして返却します。
-     * 募集が有効でない場合はundefinedが帰ります。
-     * @returns {Recruitment} 募集オブジェクト
+     * get analyze result
+     * @returns recruitment instance
      */
-    get_recruitment() {
+    get_recruitment(): Recruitment {
         const recruitment = new Recruitment();
 
         recruitment.id = this.id;
@@ -310,10 +311,10 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 募集主の参加情報を返却します。
-     * @returns {Participate} 参加オブジェクト
+     * get analyze result of recruitment owner's information by participate instance
+     * @returns participate instance
      */
-    get_owner_participate() {
+    get_owner_participate(): Participate {
         const participate = new Participate();
 
         participate.id = this.id;
@@ -327,9 +328,9 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 指定メッセージを切り出して返却する
-     * @param {string} mes 
-     * @param {string | undefined} regexp 
+     * extract message by regexp
+     * @param mes message
+     * @param regexp regexp's string
      */
     static extract_by_regexp(mes: string, regexp: string): string | undefined {
         let result = undefined;
@@ -347,9 +348,9 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 時刻を認識し、日時オブジェクトを返却します
-     * @param {string} mes 
-     * @returns {Date | undefined}
+     * extract date string and convert date object
+     * @param mes message
+     * @returns recruitment's limit date
      */
     static get_recruitment_time(mes: string): Date | undefined {
         // needed variables
@@ -387,13 +388,13 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 募集時間を求めます。
-     * 募集時間が過ぎていたら翌日の募集とする。
-     * @param {int} hour 
-     * @param {int} minute 
-     * @returns {Date}
+     * analyze recruitment limit time
+     * if already passwd today's ${hour}:${minute}, return tommorow's date
+     * @param hour 
+     * @param minute 
+     * @returns recruitment's limit date
      */
-    static get_recruitment_date(hour: number, minute: number) {
+    static get_recruitment_date(hour: number, minute: number): Date | undefined {
         if (hour < 0 || hour > 23) {
             // error
             logger.error(`hour is out of range, return undefined. : hour = ${hour}, minute = ${minute}`);
@@ -427,11 +428,11 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 参加人数を返却します
-     * @param {string} mes 
-     * @returns {int}
+     * analyze recruitment member count
+     * @param mes message
+     * @returns recruitment member count. if member is not valid, return undefined.
      */
-    static get_recruitment_numbers(mes: string) {
+    static get_recruitment_numbers(mes: string): number | undefined {
         // check1
         var re_result = mes.match(/@([0-9]{1,2})/);
         if (re_result != undefined && re_result != null && re_result.length > 1) {
@@ -443,11 +444,11 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * メッセージが募集文であるかを確認します
-     * @param {string} mes 
-     * @returns {boolean}
+     * check message is new recruitment
+     * @param mes message
+     * @returns 
      */
-    static check_recruitment(mes: string) {
+    static check_recruitment(mes: string): boolean {
         if (this.extract_by_regexp(mes, '^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]') === undefined) {
             return false;
         } else {
@@ -456,20 +457,20 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 募集文を取得します
-     * @param {string}} mes 
-     * @returns {string}
+     * get message of new recruitment
+     * @param mes message
+     * @returns 
      */
-    static get_recruitment_text(mes: string) {
+    static get_recruitment_text(mes: string): string {
         return mes.replace(/^^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]/, "");
     }
 
     /**
-     * メッセージがリストであるかを確認します
-     * @param {string} mes 
-     * @returns {boolean}
+     * check message is listing recruitment
+     * @param mes message
+     * @returns 
      */
-    static check_type_list(mes: string) {
+    static check_type_list(mes: string): boolean {
         if (this.extract_by_regexp(mes, '^[ 　]*(リスト|一覧)') === undefined) {
             return false;
         } else {
@@ -478,11 +479,11 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * メッセージが編集であるかを確認します
-     * @param {string} mes 
-     * @returns {boolean}
+     * check message is edit recruitment
+     * @param mes message
+     * @returns 
      */
-    static check_edit(mes: string) {
+    static check_edit(mes: string): boolean {
         if (this.extract_by_regexp(mes, '^[ 　]*(編集|へんしゅう)[^ 　]*[ 　]') === undefined) {
             return false;
         } else {
@@ -491,20 +492,20 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 編集文を取得します
-     * @param {string}} mes 
-     * @returns {string}
+     * get message of edit recruitment
+     * @param mes message
+     * @returns 
      */
-    static get_edit_text(mes: string) {
+    static get_edit_text(mes: string): string {
         return mes.replace(/^^[ 　]*(編集|へんしゅう)[^ 　]*[ 　]/, "");
     }
 
     /**
-     * メッセージが中止であるかを確認します
-     * @param {string} mes 
-     * @returns {boolean}
+     * check message is cancel recruitment
+     * @param mes message
+     * @returns 
      */
-    static check_delete(mes: string) {
+    static check_delete(mes: string): boolean {
         if (this.extract_by_regexp(mes, '^[ 　]*(中止|ちゅうし)[^ 　]*[ 　]') === undefined) {
             return false;
         } else {
@@ -513,11 +514,11 @@ export class DiscordMessageAnalyzer {
     }
 
     /**
-     * 削除文を取得します
-     * @param {string}} mes 
-     * @returns {string}
+     * get message of cancel recruitment
+     * @param mes message
+     * @returns 
      */
-    static get_delete_text(mes: string) {
+    static get_delete_text(mes: string): string {
         return mes.replace(/^^[ 　]*(中止|ちゅうし)[^ 　]*[ 　]/, "");
     }
 }

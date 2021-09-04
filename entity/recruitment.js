@@ -6,7 +6,7 @@ const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
 class Recruitment {
     /**
-     * コンストラクタ
+     * constructor
      * @constructor
      */
     constructor() {
@@ -24,9 +24,9 @@ class Recruitment {
         this.user_list = [];
     }
     /**
-     * データベースの行情報をオブジェクトに変換する
-     * @param row Recruitmentテーブルのデータ列
-     * @returns {Recruitment} オブジェクト
+     * convert database select data to instance
+     * @param row m_recruitment table single row
+     * @returns recruitment's instance, return blank instance if error occured
      */
     static parse_from_db(row) {
         let v = new Recruitment();

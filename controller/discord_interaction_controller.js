@@ -19,9 +19,9 @@ const recruitment_1 = require("../entity/recruitment");
 const Discord = require('discord.js');
 class DiscordInteractionController {
     /**
-     * インタラクションメッセージを作成し投稿します
-     * @param {Discord.Client} client Discordクライアント
-     * @param {Discord.Interaction} interaction インタラクション情報
+     * analyze discord interaction and send result message
+     * @param client discord client
+     * @param interaction discord interaction
      */
     static recirve_controller(client, interaction) {
         logger_1.logger.info(`recirved interaction. customId = ${interaction.customId}`);

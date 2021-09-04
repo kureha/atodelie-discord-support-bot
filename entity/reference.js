@@ -8,8 +8,8 @@ const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
 class Reference {
     /**
-     * コンストラクタ
-     * @param discord_reference Discordのmessage.reference
+     * constructor
+     * @param discord_reference discord's message reference (exists when interaction message)
      * @constructor
      */
     constructor(discord_reference) {

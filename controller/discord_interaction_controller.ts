@@ -24,9 +24,9 @@ const Discord = require('discord.js');
 
 export class DiscordInteractionController {
     /**
-     * インタラクションメッセージを作成し投稿します
-     * @param {Discord.Client} client Discordクライアント
-     * @param {Discord.Interaction} interaction インタラクション情報
+     * analyze discord interaction and send result message
+     * @param client discord client
+     * @param interaction discord interaction
      */
     static recirve_controller(client: any, interaction: any) {
         logger.info(`recirved interaction. customId = ${interaction.customId}`);
@@ -111,7 +111,5 @@ export class DiscordInteractionController {
                 // send error message
                 interaction.reply(`${messageManager.get_no_recruitment()}`);
             });
-
-
     }
 }
