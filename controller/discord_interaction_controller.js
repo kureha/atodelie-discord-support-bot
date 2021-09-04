@@ -33,63 +33,70 @@ class DiscordInteractionController {
         // create message manager instance
         const messageManager = new discord_message_manager_1.DiscordMessageManager();
         // analyze message
-        let analyzer = new discord_interaction_analyzer_1.DiscordInteractionAnalyzer(interaction.customId, interaction.user.id);
-        logger_1.logger.trace(analyzer);
-        let recruitment_data = new recruitment_1.Recruitment();
-        let recruitment_target_role = '';
-        // join/view/decline to target plan
-        participate_repo.insert_t_participate(analyzer.get_join_participate())
-            .catch((err) => {
-            // failed to insert, try to update
-            return participate_repo.update_t_participate(analyzer.get_join_participate());
-        })
+        let analyzer = new discord_interaction_analyzer_1.DiscordInteractionAnalyzer();
+        analyzer.analyze(interaction.customId, interaction.user.id)
             .then(() => {
-            // get target role
-            return server_info_repo.get_m_server_info(interaction.guildId);
-        })
-            .then((server_info_data) => {
-            // get target role
-            recruitment_target_role = server_info_data.recruitment_target_role;
-            // update OK, send message
-            return recruitment_repo.get_m_recruitment(analyzer.token);
-        })
-            .then((data) => {
-            recruitment_data = data;
-            // set id to analyzer
-            analyzer.set_id(recruitment_data.id);
-            // get user list
-            return participate_repo.get_t_participate(recruitment_data.token);
-        })
-            .then((user_list) => {
-            // get user information
-            recruitment_data.user_list = user_list;
-            // create message
-            let message_by_interaction = new Discord.MessageEmbed();
-            switch (analyzer.type) {
-                case constants.TYPE_JOIN:
-                    message_by_interaction = messageManager.get_join_recruitment(recruitment_data, recruitment_target_role);
-                    break;
-                case constants.TYPE_VIEW:
-                    message_by_interaction = messageManager.get_view_recruitment(recruitment_data, recruitment_target_role);
-                    break;
-                case constants.TYPE_DECLINE:
-                    message_by_interaction = messageManager.get_decline_recruitment(recruitment_data, recruitment_target_role);
-                    break;
-                default:
-                    logger_1.logger.error(`this is not valid type. : ${analyzer.type}`);
-                    break;
-            }
-            // send message
-            interaction.reply({
-                embeds: [
-                    message_by_interaction
-                ],
+            logger_1.logger.trace(analyzer);
+            let recruitment_data = new recruitment_1.Recruitment();
+            let recruitment_target_role = '';
+            // join/view/decline to target plan
+            participate_repo.insert_t_participate(analyzer.get_join_participate())
+                .catch((err) => {
+                // failed to insert, try to update
+                return participate_repo.update_t_participate(analyzer.get_join_participate());
+            })
+                .then(() => {
+                // get target role
+                return server_info_repo.get_m_server_info(interaction.guildId);
+            })
+                .then((server_info_data) => {
+                // get target role
+                recruitment_target_role = server_info_data.recruitment_target_role;
+                // update OK, send message
+                return recruitment_repo.get_m_recruitment(analyzer.token);
+            })
+                .then((data) => {
+                recruitment_data = data;
+                // set id to analyzer
+                analyzer.set_id(recruitment_data.id);
+                // get user list
+                return participate_repo.get_t_participate(recruitment_data.token);
+            })
+                .then((user_list) => {
+                // get user information
+                recruitment_data.user_list = user_list;
+                // create message
+                let message_by_interaction = new Discord.MessageEmbed();
+                switch (analyzer.type) {
+                    case constants.TYPE_JOIN:
+                        message_by_interaction = messageManager.get_join_recruitment(recruitment_data, recruitment_target_role);
+                        break;
+                    case constants.TYPE_VIEW:
+                        message_by_interaction = messageManager.get_view_recruitment(recruitment_data, recruitment_target_role);
+                        break;
+                    case constants.TYPE_DECLINE:
+                        message_by_interaction = messageManager.get_decline_recruitment(recruitment_data, recruitment_target_role);
+                        break;
+                    default:
+                        logger_1.logger.error(`this is not valid type. : ${analyzer.type}`);
+                        break;
+                }
+                // send message
+                interaction.reply({
+                    embeds: [
+                        message_by_interaction
+                    ],
+                });
+            })
+                .catch((err) => {
+                // send error message
+                interaction.reply(`${messageManager.get_no_recruitment()}`);
+                logger_1.logger.error(err);
             });
         })
-            .catch((err) => {
+            .catch(() => {
             // send error message
             interaction.reply(`${messageManager.get_no_recruitment()}`);
-            logger_1.logger.error(err);
         });
     }
 }

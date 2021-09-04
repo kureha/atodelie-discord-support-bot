@@ -10,12 +10,10 @@ const constants = new constants_1.Constants();
 const participate_1 = require("../entity/participate");
 class DiscordInteractionAnalyzer {
     /**
-     * インタラクションを解析し、解析結果を返却する
-     * @param {string} custom_id
-     * @param {string} user_id
+     * コンストラクタ
      * @constructor
      */
-    constructor(custom_id, user_id) {
+    constructor() {
         // properties
         this.id = 0;
         this.token = '';
@@ -26,46 +24,60 @@ class DiscordInteractionAnalyzer {
         this.description = '';
         this.error_messages = [];
         this.delete = true;
-        // check custom id for recruitment join
-        if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}`))) {
-            logger_1.logger.debug(`interaction is valid. type = ${constants.TYPE_JOIN}`);
-            this.type = constants.TYPE_JOIN;
-            this.delete = false;
-            // status
-            this.status = constants.STATUS_ENABLED;
-            // get token from custom id
-            this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX);
-        }
-        else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}`))) {
-            logger_1.logger.debug(`interaction is valid.. type = ${constants.TYPE_VIEW}`);
-            this.type = constants.TYPE_VIEW;
-            this.delete = false;
-            // change status
-            this.status = constants.STATUS_VIEW;
-            // get token from custom id
-            this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX);
-        }
-        else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}`))) {
-            logger_1.logger.debug(`interaction is valid.. type = ${constants.TYPE_DECLINE}`);
-            this.type = constants.TYPE_DECLINE;
-            this.delete = true;
-            // status
-            this.status = constants.STATUS_DISABLED;
-            // get token from custom id
-            this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX);
-        }
-        else {
-            // error
-            logger_1.logger.warn(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
-            this.error_messages.push(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
-            return;
-        }
-        // this is valid interaction.
-        this.valid = true;
-        logger_1.logger.info(`this is valid interaction. token = ${this.token}`);
-        // set valiables
-        this.user_id = user_id;
-        this.description = DiscordInteractionAnalyzer.DESCRIPTION_FOR_JOIN_FROM_BUTTON;
+    }
+    /**
+     * インタラクションを解析し、解析結果を設定する
+     * @param {string} custom_id
+     * @param {string} user_id
+     */
+    analyze(custom_id, user_id) {
+        return new Promise((resolve, reject) => {
+            // check custom id for recruitment join
+            if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}`))) {
+                logger_1.logger.debug(`interaction is valid. type = ${constants.TYPE_JOIN}`);
+                this.type = constants.TYPE_JOIN;
+                this.delete = false;
+                // status
+                this.status = constants.STATUS_ENABLED;
+                // get token from custom id
+                this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX);
+            }
+            else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}`))) {
+                logger_1.logger.debug(`interaction is valid.. type = ${constants.TYPE_VIEW}`);
+                this.type = constants.TYPE_VIEW;
+                this.delete = false;
+                // change status
+                this.status = constants.STATUS_VIEW;
+                // get token from custom id
+                this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX);
+            }
+            else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}`))) {
+                logger_1.logger.debug(`interaction is valid.. type = ${constants.TYPE_DECLINE}`);
+                this.type = constants.TYPE_DECLINE;
+                this.delete = true;
+                // status
+                this.status = constants.STATUS_DISABLED;
+                // get token from custom id
+                this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX);
+            }
+            else {
+                // error
+                logger_1.logger.warn(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
+                this.error_messages.push(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
+                // this is not valid interaction.
+                this.valid = false;
+                // ng
+                reject();
+            }
+            // this is valid interaction.
+            this.valid = true;
+            logger_1.logger.info(`this is valid interaction. token = ${this.token}`);
+            // set valiables
+            this.user_id = user_id;
+            this.description = DiscordInteractionAnalyzer.DESCRIPTION_FOR_JOIN_FROM_BUTTON;
+            // ok
+            resolve();
+        });
     }
     /**
      * 新規IDをインスタンスに適用します
