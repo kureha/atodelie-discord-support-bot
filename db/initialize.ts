@@ -1,8 +1,8 @@
 // define logger
-import {logger} from '../common/logger';
+import { logger } from '../common/logger';
 
 // import constants
-import {Constants} from '../common/constants';
+import { Constants } from '../common/constants';
 const constants = new Constants();
 
 // import file module

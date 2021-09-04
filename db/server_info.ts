@@ -1,12 +1,12 @@
 // define logger
-import {logger} from '../common/logger';
+import { logger } from '../common/logger';
 
 // import constants
-import {Constants} from '../common/constants';
+import { Constants } from '../common/constants';
 const constants = new Constants();
 
 // import entities
-import {ServerInfo} from '../entity/server_info';
+import { ServerInfo } from '../entity/server_info';
 
 export class ServerInfoRepository {
 
@@ -33,7 +33,7 @@ export class ServerInfoRepository {
     /**
      * チャンネル情報マスタテーブル削除用SQL
      */
-     static SQL_DELETE_M_SERVER_INFO = 'DELETE FROM [m_server_info] ';
+    static SQL_DELETE_M_SERVER_INFO = 'DELETE FROM [m_server_info] ';
 
     /**
      * インスタンス化を行い、同時に、テーブルがない場合は作成する
@@ -49,7 +49,7 @@ export class ServerInfoRepository {
      * @param {string} file_path sqlite3ファイルパス
      * @returns {Database} sqlite3データベース用インスタンス
      */
-    get_db_instance(file_path : string) {
+    get_db_instance(file_path: string) {
         // initialize SQLite instance
         const sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
         var db = new sqlite.Database(file_path);
@@ -68,11 +68,11 @@ export class ServerInfoRepository {
      * 全テーブルを作成する
      * @param {Database} db sqlite3データベース用インスタンス
      */
-    create_all_database(db : any) {
+    create_all_database(db: any) {
         return new Promise<void>((resolve, reject) => {
             db.serialize(function () {
                 // run serialize
-                db.run(ServerInfoRepository.SQL_CREATE_M_SERVER_INFO, [], ((err : any) => {
+                db.run(ServerInfoRepository.SQL_CREATE_M_SERVER_INFO, [], ((err: any) => {
                     if (err) {
                         logger.error(`sql exception occured when create table. sql = ${ServerInfoRepository.SQL_CREATE_M_SERVER_INFO}`);
                         reject(err);
@@ -92,7 +92,7 @@ export class ServerInfoRepository {
      * @param {string} server_id 
      * @returns {Promise<ServerInfo>} Promiseオブジェクト、データベースの選択内容
      */
-    get_m_server_info(server_id : string) {
+    get_m_server_info(server_id: string) {
         // return promise
         return new Promise<ServerInfo>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -101,7 +101,7 @@ export class ServerInfoRepository {
                 // run serialize
                 const sql = `${ServerInfoRepository.SQL_SELECT_M_SERVER_INFO} WHERE m1.[server_id] = ? `;
                 logger.info(`sql = ${sql}, server_id = ${server_id}`);
-                db.get(sql, [server_id], ((err : any, row : any) => {
+                db.get(sql, [server_id], ((err: any, row: any) => {
                     // create error server_info data
                     const error_server_info = new ServerInfo();
                     // return blank data
@@ -137,7 +137,7 @@ export class ServerInfoRepository {
      * @param {ServerInfo} server_info_data 
      * @returns {Promise} Promiseオブジェクト、データベースの選択内容
      */
-     insert_m_server_info(server_info_data : ServerInfo) {
+    insert_m_server_info(server_info_data: ServerInfo) {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -150,7 +150,7 @@ export class ServerInfoRepository {
                     $server_id: server_info_data.server_id,
                     $channel_id: server_info_data.channel_id,
                     $recruitment_target_role: server_info_data.recruitment_target_role,
-                }, ((err : any) => {
+                }, ((err: any) => {
                     if (err) {
                         logger.error(`insert m_server_info failed. err = ${err}`);
                         reject(err);
@@ -171,7 +171,7 @@ export class ServerInfoRepository {
      * @param {Date} follow_time
      * @returns {Promise} Promiseオブジェクト、データベースの選択内容
      */
-    update_m_server_info_follow_time(server_id : string, follow_time : Date) {
+    update_m_server_info_follow_time(server_id: string, follow_time: Date) {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -183,7 +183,7 @@ export class ServerInfoRepository {
                 db.run(sql, {
                     $server_id: server_id,
                     $follow_time: follow_time.toISOString(),
-                }, ((err : any) => {
+                }, ((err: any) => {
                     if (err) {
                         logger.error(`update m_server_info failed. err = ${err}`);
                         reject(err);
@@ -203,7 +203,7 @@ export class ServerInfoRepository {
      * @param {string} server_id 
      * @returns {Promise} Promiseオブジェクト、データベースの選択内容
      */
-     delete_m_server_info(server_id : string) {
+    delete_m_server_info(server_id: string) {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -214,7 +214,7 @@ export class ServerInfoRepository {
                 logger.info(`sql = ${sql}, server_id = ${server_id}`);
                 db.run(sql, {
                     $server_id: server_id,
-                }, ((err : any) => {
+                }, ((err: any) => {
                     if (err) {
                         logger.error(`delete m_server_info failed. err = ${err}`);
                         reject(err);

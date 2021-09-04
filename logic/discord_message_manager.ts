@@ -1,13 +1,13 @@
 // define logger
-import {logger} from '../common/logger';
+import { logger } from '../common/logger';
 
 // import constants
-import {Constants} from '../common/constants';
+import { Constants } from '../common/constants';
 const constants = new Constants();
 
 // import entities
-import {Recruitment} from '../entity/recruitment';
-import {Participate} from '../entity/participate';
+import { Recruitment } from '../entity/recruitment';
+import { Participate } from '../entity/participate';
 
 // import discord modules
 import * as Discord from 'discord.js';
@@ -19,7 +19,7 @@ export class DiscordMessageManager {
      * @param {string} str 
      * @returns {string} \\nが\nに置換された文字列
      */
-    enable_lf(str : string) {
+    enable_lf(str: string) {
         return str.replace('\\n', '\n');
     }
 
@@ -28,7 +28,7 @@ export class DiscordMessageManager {
      * @param {string} parsed_date 
      * @returns {string}
      */
-    get_date_string(parsed_date : Date) {
+    get_date_string(parsed_date: Date) {
         return `${parsed_date.toLocaleString()}`
     }
 
@@ -40,7 +40,7 @@ export class DiscordMessageManager {
      * @param {string} desription 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
-    get_recruitment_embed_message(recruitment : Recruitment, recruitment_target_role : string, title : string, desription : string) {
+    get_recruitment_embed_message(recruitment: Recruitment, recruitment_target_role: string, title: string, desription: string) {
         // create description
         let description_converted = this.enable_lf(desription)
             .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
@@ -99,7 +99,7 @@ export class DiscordMessageManager {
      * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
-    get_new_recruitment_message(recruitment : Recruitment, recruitment_target_role : string) {
+    get_new_recruitment_message(recruitment: Recruitment, recruitment_target_role: string) {
         // call interanal function
         return this.get_recruitment_embed_message(
             recruitment,
@@ -114,7 +114,7 @@ export class DiscordMessageManager {
      * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
-     get_edit_recruitment_message(recruitment : Recruitment, recruitment_target_role : string) {
+    get_edit_recruitment_message(recruitment: Recruitment, recruitment_target_role: string) {
         // call interanal function
         return this.get_recruitment_embed_message(
             recruitment,
@@ -129,7 +129,7 @@ export class DiscordMessageManager {
      * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
-     get_delete_recruitment_message(recruitment : Recruitment, recruitment_target_role : string) {
+    get_delete_recruitment_message(recruitment: Recruitment, recruitment_target_role: string) {
         // call interanal function
         return this.get_recruitment_embed_message(
             recruitment,
@@ -137,14 +137,14 @@ export class DiscordMessageManager {
             constants.DISCORD_MESSAGE_TITLE_DELETE_RECRUITMENT,
             constants.DISCORD_MESSAGE_DELETE_RECRUITMENT);
     }
-    
+
     /**
      * 募集参加時のメッセージを返却します
      * @param {Recruitment} recruitment 
      * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
-    get_join_recruitment(recruitment : Recruitment, recruitment_target_role : string) {
+    get_join_recruitment(recruitment: Recruitment, recruitment_target_role: string) {
         // call interanal function
         return this.get_recruitment_embed_message(
             recruitment,
@@ -159,7 +159,7 @@ export class DiscordMessageManager {
      * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
-    get_decline_recruitment(recruitment : Recruitment, recruitment_target_role : string) {
+    get_decline_recruitment(recruitment: Recruitment, recruitment_target_role: string) {
         // call interanal function
         return this.get_recruitment_embed_message(
             recruitment,
@@ -174,7 +174,7 @@ export class DiscordMessageManager {
      * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
-    get_view_recruitment(recruitment : Recruitment, recruitment_target_role : string) {
+    get_view_recruitment(recruitment: Recruitment, recruitment_target_role: string) {
         // call interanal function
         return this.get_recruitment_embed_message(
             recruitment,
@@ -189,7 +189,7 @@ export class DiscordMessageManager {
      * @param {string} recruitment_target_role 
      * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
      */
-    get_join_recruitment_follow_message(recruitment : Recruitment, recruitment_target_role : string) {
+    get_join_recruitment_follow_message(recruitment: Recruitment, recruitment_target_role: string) {
         // call interanal function
         return this.get_recruitment_embed_message(
             recruitment,

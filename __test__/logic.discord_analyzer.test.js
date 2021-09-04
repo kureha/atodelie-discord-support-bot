@@ -39,7 +39,7 @@ test("Test for constructor", () => {
         expect(v.message).toEqual('ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）');
         expect(v.name).toEqual('もーーー！（バグだらけじゃん自分で作っておきながらー！）');
         expect(v.max_number).toEqual(DiscordAnalyzer.MAX_NUMBERS_DEFAULT);
-    }); 
+    });
 })
 
 test("Test for constructor", () => {

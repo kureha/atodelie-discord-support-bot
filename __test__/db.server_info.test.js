@@ -44,49 +44,49 @@ test("test for m_server_info c/r/u/d", () => {
 
         // delete first
         server_info_repo.delete_m_server_info(id)
-        .then(() => {
-            // get blank data
-            return server_info_repo.get_m_server_info(id);
-        })
-        .then((data) => {
-            // check expected
-            expect(data.server_id).toEqual(id);
-            expect(data.channel_id).toEqual(constants.RECRUITMENT_INVALID_CHANNEL_ID);
-            expect(data.recruitment_target_role).toEqual(constants.RECRUITMENT_INVALID_ROLE);
-            expect(data.follow_time).toEqual(Constants.get_default_date());
+            .then(() => {
+                // get blank data
+                return server_info_repo.get_m_server_info(id);
+            })
+            .then((data) => {
+                // check expected
+                expect(data.server_id).toEqual(id);
+                expect(data.channel_id).toEqual(constants.RECRUITMENT_INVALID_CHANNEL_ID);
+                expect(data.recruitment_target_role).toEqual(constants.RECRUITMENT_INVALID_ROLE);
+                expect(data.follow_time).toEqual(Constants.get_default_date());
 
-            // insert check
-            return server_info_repo.insert_m_server_info(server_info_data);
-        })
-        .then(() => {
-            // select check
-            return server_info_repo.get_m_server_info(id);
-        })
-        .then((data) => {
-            // expect data
-            expect(data).toEqual(server_info_data_for_test);
-            
-            // update time
-            return server_info_repo.update_m_server_info_follow_time(server_info_data.server_id, follow_target_time);
-        }).then(() => {
-            // select check
-            return server_info_repo.get_m_server_info(id);
-        })
-        .then((data) => {
-            // expect data
-            expect(data.follow_time).toEqual(follow_target_time);
+                // insert check
+                return server_info_repo.insert_m_server_info(server_info_data);
+            })
+            .then(() => {
+                // select check
+                return server_info_repo.get_m_server_info(id);
+            })
+            .then((data) => {
+                // expect data
+                expect(data).toEqual(server_info_data_for_test);
 
-            // delete test data
-            return server_info_repo.delete_m_server_info(id);
-        })
-        .then(() => {
-            // test complete ok all data
-            resolve();
-        })
-        .catch((err) => {
-            console.log(err);
-            expect(true).toBe(false);
-            reject(err);
-        });
+                // update time
+                return server_info_repo.update_m_server_info_follow_time(server_info_data.server_id, follow_target_time);
+            }).then(() => {
+                // select check
+                return server_info_repo.get_m_server_info(id);
+            })
+            .then((data) => {
+                // expect data
+                expect(data.follow_time).toEqual(follow_target_time);
+
+                // delete test data
+                return server_info_repo.delete_m_server_info(id);
+            })
+            .then(() => {
+                // test complete ok all data
+                resolve();
+            })
+            .catch((err) => {
+                console.log(err);
+                expect(true).toBe(false);
+                reject(err);
+            });
     });
 });

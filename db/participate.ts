@@ -1,12 +1,12 @@
 // define logger
-import {logger} from '../common/logger';
+import { logger } from '../common/logger';
 
 // import constants
-import {Constants} from '../common/constants';
+import { Constants } from '../common/constants';
 const constants = new Constants();
 
 // import entities
-import {Participate} from '../entity/participate';
+import { Participate } from '../entity/participate';
 
 export class ParticipateRepository {
 
@@ -49,7 +49,7 @@ export class ParticipateRepository {
      * @param {string} file_path sqlite3ファイルパス
      * @returns {Database} sqlite3データベース用インスタンス
      */
-    get_db_instance(file_path : string) {
+    get_db_instance(file_path: string) {
         // initialize SQLite instance
         const sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
         var db = new sqlite.Database(file_path);
@@ -68,11 +68,11 @@ export class ParticipateRepository {
      * 全テーブルを作成する
      * @param {Database} db sqlite3データベース用インスタンス
      */
-    create_all_database(db : any) {
+    create_all_database(db: any) {
         return new Promise<void>((resolve, reject) => {
             db.serialize(function () {
                 // run serialize
-                db.run(ParticipateRepository.SQL_CREATE_T_PARTICIPATE, [], ((err : any) => {
+                db.run(ParticipateRepository.SQL_CREATE_T_PARTICIPATE, [], ((err: any) => {
                     if (err) {
                         logger.error(`sql exception occured when create table. sql = ${ParticipateRepository.SQL_CREATE_T_PARTICIPATE}`);
                         reject(err);
@@ -92,7 +92,7 @@ export class ParticipateRepository {
      * @param {Participate} data 
      * @returns {Promise}
      */
-    insert_t_participate(data : Participate) {
+    insert_t_participate(data: Participate) {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -106,7 +106,7 @@ export class ParticipateRepository {
                     $status: data.status,
                     $user_id: data.user_id,
                     $description: data.description,
-                }, (err : any) => {
+                }, (err: any) => {
                     if (err) {
                         logger.error(err);
                         reject(err);
@@ -125,7 +125,7 @@ export class ParticipateRepository {
      * @param {Participate} data キーは「data.token」「data.user_id」の二つ
      * @returns {Promise}
      */
-    update_t_participate(data : Participate) {
+    update_t_participate(data: Participate) {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -140,7 +140,7 @@ export class ParticipateRepository {
                     $status: data.status,
                     $description: data.description,
                     $delete: data.delete,
-                }, (err : any) => {
+                }, (err: any) => {
                     if (err) {
                         logger.error(err);
                         reject(err);
@@ -160,7 +160,7 @@ export class ParticipateRepository {
      * @param {string} token 
      * @returns {Promise}
      */
-    delete_t_participate(token : string) {
+    delete_t_participate(token: string) {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -171,7 +171,7 @@ export class ParticipateRepository {
                 const stmt = db.prepare(sql);
                 stmt.run({
                     $token: token,
-                }, (err : any) => {
+                }, (err: any) => {
                     if (err) {
                         logger.error(err);
                         reject(err);
@@ -190,7 +190,7 @@ export class ParticipateRepository {
      * @param {string} token 
      * @returns {Promise<Participate[]>} Promiseオブジェクト、データベースの選択内容
      */
-    get_t_participate(token : string) {
+    get_t_participate(token: string) {
         // return promise
         return new Promise<Participate[]>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -200,7 +200,7 @@ export class ParticipateRepository {
                 const sql = `${ParticipateRepository.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and datetime(m1.[limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') order by t1.[update_time] `;
                 logger.info(`sql = ${sql}, token = ${token}`);
 
-                db.all(sql, [token], ((err : any, rows : any[]) => {
+                db.all(sql, [token], ((err: any, rows: any[]) => {
                     if (err) {
                         logger.error(`select t_participate failed. sql = ${sql}, key = ${token}`);
                         reject(err);
@@ -210,7 +210,7 @@ export class ParticipateRepository {
                         resolve([]);
                     } else {
                         // return value list
-                        const participate_list : Participate[] = [];
+                        const participate_list: Participate[] = [];
                         rows.forEach(v => {
                             participate_list.push(Participate.parse_from_db(v));
                         });

@@ -1,80 +1,80 @@
 export class Constants {
     // common section
-    DISCORD_BOT_TOKEN : string;
-    DISCORD_LATEST_LIST_LENGTH : number;
-    DISCORD_FOLLOW_MINUTE : number;
-    DISCORD_FOLLOW_CRON : string;
+    DISCORD_BOT_TOKEN: string;
+    DISCORD_LATEST_LIST_LENGTH: number;
+    DISCORD_FOLLOW_MINUTE: number;
+    DISCORD_FOLLOW_CRON: string;
 
     // sqlite section
-    SQLITE_FILE : string;
-    SQLITE_TEMPLATE_FILE : string;
+    SQLITE_FILE: string;
+    SQLITE_TEMPLATE_FILE: string;
 
     // message section
-    DISCORD_ACTIVITY_NAME : string;
-    DISCORD_MESSAGE_IS_INVALID : string;
-    DISCORD_MESSAGE_TYPE_INVALID : string;
-    DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT : string;
-    DISCORD_MESSAGE_EXCEPTION : string;
-    DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED : string;
-    DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT : string;
-    DISCORD_MESSAGE_NEW_RECRUITMENT : string;
-    DISCORD_MESSAGE_TITLE_EDIT_RECRUITMENT : string;
-    DISCORD_MESSAGE_EDIT_RECRUITMENT : string;
-    DISCORD_MESSAGE_TITLE_DELETE_RECRUITMENT : string;
-    DISCORD_MESSAGE_DELETE_RECRUITMENT : string;
-    DISCORD_MESSAGE_TITLE_SUCCESS_JOIN : string;
-    DISCORD_MESSAGE_SUCCESS_JOIN : string;
-    DISCORD_MESSAGE_TITLE_SUCCESS_VIEW : string;
-    DISCORD_MESSAGE_SUCCESS_VIEW : string;
-    DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE : string;
-    DISCORD_MESSAGE_SUCCESS_DECLINE : string;
-    DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT : string;
-    DISCORD_MESSAGE_FOLLOW_RECRUITMENT : string;
+    DISCORD_ACTIVITY_NAME: string;
+    DISCORD_MESSAGE_IS_INVALID: string;
+    DISCORD_MESSAGE_TYPE_INVALID: string;
+    DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT: string;
+    DISCORD_MESSAGE_EXCEPTION: string;
+    DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED: string;
+    DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT: string;
+    DISCORD_MESSAGE_NEW_RECRUITMENT: string;
+    DISCORD_MESSAGE_TITLE_EDIT_RECRUITMENT: string;
+    DISCORD_MESSAGE_EDIT_RECRUITMENT: string;
+    DISCORD_MESSAGE_TITLE_DELETE_RECRUITMENT: string;
+    DISCORD_MESSAGE_DELETE_RECRUITMENT: string;
+    DISCORD_MESSAGE_TITLE_SUCCESS_JOIN: string;
+    DISCORD_MESSAGE_SUCCESS_JOIN: string;
+    DISCORD_MESSAGE_TITLE_SUCCESS_VIEW: string;
+    DISCORD_MESSAGE_SUCCESS_VIEW: string;
+    DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE: string;
+    DISCORD_MESSAGE_SUCCESS_DECLINE: string;
+    DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT: string;
+    DISCORD_MESSAGE_FOLLOW_RECRUITMENT: string;
 
-    DISCORD_BUTTUN_JOIN : string;
-    DISCORD_BUTTON_DECLINE : string;
-    DISCORD_BUTTON_VIEW : string;
+    DISCORD_BUTTUN_JOIN: string;
+    DISCORD_BUTTON_DECLINE: string;
+    DISCORD_BUTTON_VIEW: string;
 
     // message static values section
-    DISCORD_MESSAGE_EMBED_NO_MEMBER : string;
-    DISCORD_MESSAGE_EMBED_TITLE : string;
-    DISCORD_MESSAGE_EMBED_OWNER : string;
-    DISCORD_MESSAGE_EMBED_START_TIME : string;
-    DISCORD_MESSAGE_EMBED_JOIN_MEMBERS : string;
-    DISCORD_MESSAGE_EMBED_VIEW_MEMBERS : string;
+    DISCORD_MESSAGE_EMBED_NO_MEMBER: string;
+    DISCORD_MESSAGE_EMBED_TITLE: string;
+    DISCORD_MESSAGE_EMBED_OWNER: string;
+    DISCORD_MESSAGE_EMBED_START_TIME: string;
+    DISCORD_MESSAGE_EMBED_JOIN_MEMBERS: string;
+    DISCORD_MESSAGE_EMBED_VIEW_MEMBERS: string;
 
     // static values
-    ID_INVALID : number;
+    ID_INVALID: number;
 
-    TYPE_INIT : number;
-    TYPE_RECRUITEMENT : number;
-    TYPE_JOIN : number;
-    TYPE_DECLINE : number;
-    TYPE_LIST : number;
-    TYPE_VIEW : number;
-    TYPE_EDIT : number;
-    TYPE_DELETE : number;
+    TYPE_INIT: number;
+    TYPE_RECRUITEMENT: number;
+    TYPE_JOIN: number;
+    TYPE_DECLINE: number;
+    TYPE_LIST: number;
+    TYPE_VIEW: number;
+    TYPE_EDIT: number;
+    TYPE_DELETE: number;
 
-    STATUS_DISABLED : number;
-    STATUS_ENABLED : number;
-    STATUS_VIEW : number;
+    STATUS_DISABLED: number;
+    STATUS_ENABLED: number;
+    STATUS_VIEW: number;
 
-    RECRUITMENT_DEFAULT_LIMIT_HOURS : number;
-    RECRUITMENT_DEFAULT_MAX_NUMBERS : number;
-    RECRUITMENT_INVALID_CHANNEL_ID : string;
-    RECRUITMENT_INVALID_ROLE : string;
+    RECRUITMENT_DEFAULT_LIMIT_HOURS: number;
+    RECRUITMENT_DEFAULT_MAX_NUMBERS: number;
+    RECRUITMENT_INVALID_CHANNEL_ID: string;
+    RECRUITMENT_INVALID_ROLE: string;
 
-    DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX : string;
-    DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX : string;
-    DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX : string;
+    DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX: string;
+    DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX: string;
+    DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX: string;
 
-    DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT : string;
-    DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT : string;
-    DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT : string;
+    DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT: string;
+    DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT: string;
+    DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT: string;
 
-    ERROR_RECRUITMENT_TOKEN : string;
+    ERROR_RECRUITMENT_TOKEN: string;
 
-    REQUIRE_NAME_SQLITE3 : string;
+    REQUIRE_NAME_SQLITE3: string;
 
     static STRING_EMPTY = '';
 
@@ -82,7 +82,7 @@ export class Constants {
      * コンストラクタ
      * @constructor
      */
-    constructor () {
+    constructor() {
         // readed from env file
         require('dotenv').config();
 
@@ -176,7 +176,7 @@ export class Constants {
      * デフォルトとする日時を返却します
      * @returns {Date} 2000-01-01 00:00:00の日時
      */
-     static get_default_date() : Date {
+    static get_default_date(): Date {
         const temp_date = new Date();
         temp_date.setFullYear(2000);
         temp_date.setMonth(0);
