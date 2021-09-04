@@ -112,6 +112,7 @@ class DiscordMessageAnalyzer {
                 })
                     .catch(() => {
                     logger_1.logger.info(`loaded unsuccessful. message_id : ${reference.message_id}, owner_id = ${message_user_id}`);
+                    this.error_messages.push(constants.DISCORD_MESSAGE_IS_INVALID);
                     // ng
                     reject();
                 });

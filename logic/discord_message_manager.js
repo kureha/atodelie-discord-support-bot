@@ -110,6 +110,26 @@ class DiscordMessageManager {
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT, constants.DISCORD_MESSAGE_NEW_RECRUITMENT);
     }
     /**
+     * 募集編集時のメッセージを返却します
+     * @param {Recruitment} recruitment
+     * @param {string} recruitment_target_role
+     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     */
+    get_edit_recruitment_message(recruitment, recruitment_target_role) {
+        // call interanal function
+        return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_EDIT_RECRUITMENT, constants.DISCORD_MESSAGE_EDIT_RECRUITMENT);
+    }
+    /**
+     * 募集中止時のメッセージを返却します
+     * @param {Recruitment} recruitment
+     * @param {string} recruitment_target_role
+     * @returns {Discord.MessageEmbed} Discord.MessageEmbed形式のメッセージ
+     */
+    get_delete_recruitment_message(recruitment, recruitment_target_role) {
+        // call interanal function
+        return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_DELETE_RECRUITMENT, constants.DISCORD_MESSAGE_DELETE_RECRUITMENT);
+    }
+    /**
      * 募集参加時のメッセージを返却します
      * @param {Recruitment} recruitment
      * @param {string} recruitment_target_role

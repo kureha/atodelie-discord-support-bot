@@ -31,23 +31,27 @@ test("Test for get_recruitment_text", () => {
 });
 
 test("Test for constructor", () => {
-    var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', 'SENDER_ID', '868275869540569110');
-    expect(v.server_id).toEqual('CHR');
-    expect(v.valid).toEqual(true);
-    expect(v.type).toEqual(constants.TYPE_RECRUITEMENT);
-    expect(v.message).toEqual('ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）');
-    expect(v.name).toEqual('もーーー！（バグだらけじゃん自分で作っておきながらー！）');
-    expect(v.max_number).toEqual(DiscordAnalyzer.MAX_NUMBERS_DEFAULT);
+    var v = new DiscordAnalyzer();
+    v.analyze('<@!868275869540569110> ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', 'SENDER_ID', '868275869540569110', null).then(() => {
+        expect(v.server_id).toEqual('CHR');
+        expect(v.valid).toEqual(true);
+        expect(v.type).toEqual(constants.TYPE_RECRUITEMENT);
+        expect(v.message).toEqual('ぼしゅう もーーー！（バグだらけじゃん自分で作っておきながらー！）');
+        expect(v.name).toEqual('もーーー！（バグだらけじゃん自分で作っておきながらー！）');
+        expect(v.max_number).toEqual(DiscordAnalyzer.MAX_NUMBERS_DEFAULT);
+    }); 
 })
 
 test("Test for constructor", () => {
-    var v = new DiscordAnalyzer('<@!868275869540569110> ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', 'SENDER_ID', '868275869540569110');
-    expect(v.server_id).toEqual('CHR');
-    expect(v.valid).toEqual(true);
-    expect(v.type).toEqual(constants.TYPE_RECRUITEMENT);
-    expect(v.message).toEqual('ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
-    expect(v.name).toEqual('21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
-    expect(v.max_number).toEqual(3);
+    var v = new DiscordAnalyzer()
+    v.analyze('<@!868275869540569110> ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）', 'CHR', 'SENDER_ID', '868275869540569110', null).then(() => {
+        expect(v.server_id).toEqual('CHR');
+        expect(v.valid).toEqual(true);
+        expect(v.type).toEqual(constants.TYPE_RECRUITEMENT);
+        expect(v.message).toEqual('ぼしゅう 21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
+        expect(v.name).toEqual('21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
+        expect(v.max_number).toEqual(3);
+    })
 })
 
 test("Test for get numbers", () => {

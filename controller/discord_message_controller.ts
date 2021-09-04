@@ -160,7 +160,7 @@ export class DiscordMessageController {
                                     // send success message
                                     return message.channel.send({
                                         embeds: [
-                                            messageManager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                                            messageManager.get_edit_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                         ],
                                         components: [
                                             new Discord.MessageActionRow().addComponents(join_button, view_button, decline_button),
