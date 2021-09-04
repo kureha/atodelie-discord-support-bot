@@ -91,6 +91,8 @@ export class DiscordInteractionAnalyzer {
 
                 // ng
                 reject();
+
+                return;
             }
 
             // this is valid interaction.

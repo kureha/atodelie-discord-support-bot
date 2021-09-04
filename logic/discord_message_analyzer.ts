@@ -158,7 +158,45 @@ export class DiscordMessageAnalyzer {
 
                         return participate_repo.get_t_participate(this.token);
                     })
-                    .then((user_list : Participate[]) => {
+                    .then((user_list: Participate[]) => {
+                        // load user
+                        logger.info(`loaded user list completed. count = ${user_list.length}`);
+                        this.user_list = user_list;
+
+                        // ok
+                        resolve();
+                    })
+                    .catch(() => {
+                        logger.info(`loaded unsuccessful. message_id : ${reference.message_id}, owner_id = ${message_user_id}`);
+                        this.error_messages.push(constants.DISCORD_MESSAGE_IS_INVALID);
+
+                        // ng
+                        reject();
+                    })
+            }
+            else if (DiscordMessageAnalyzer.check_delete(this.message) == true) {
+                // edit command
+                logger.info(`target message is delete. : mes = ${this.message}`);
+                this.type = constants.TYPE_DELETE;
+
+                // try to load id from message id and owner id
+                const recruitment_repo = new RecruitmentRepository();
+                const participate_repo = new ParticipateRepository();
+                recruitment_repo.get_m_recruitment_by_message_id(reference.message_id, message_user_id)
+                    .then((recruitment: Recruitment) => {
+                        logger.info(`loaded successful. message_id : ${reference.message_id}, owner_id = ${message_user_id}`);
+                        this.set_recruitment(recruitment);
+
+                        // edit attributes
+                        this.name = DiscordMessageAnalyzer.get_delete_text(this.message);
+                        logger.debug(`recruitment's name, owner_id : name = ${this.name}, owner_id = ${message_user_id}`);
+
+                        // delete flag true
+                        this.delete = true;
+
+                        return participate_repo.get_t_participate(this.token);
+                    })
+                    .then((user_list: Participate[]) => {
                         // load user
                         logger.info(`loaded user list completed. count = ${user_list.length}`);
                         this.user_list = user_list;
@@ -439,7 +477,6 @@ export class DiscordMessageAnalyzer {
         }
     }
 
-
     /**
      * メッセージが編集であるかを確認します
      * @param {string} mes 
@@ -460,5 +497,27 @@ export class DiscordMessageAnalyzer {
      */
     static get_edit_text(mes: string) {
         return mes.replace(/^^[ 　]*(編集|へんしゅう)[^ 　]*[ 　]/, "");
+    }
+
+    /**
+     * メッセージが中止であるかを確認します
+     * @param {string} mes 
+     * @returns {boolean}
+     */
+    static check_delete(mes: string) {
+        if (this.extract_by_regexp(mes, '^[ 　]*(中止|ちゅうし)[^ 　]*[ 　]') === undefined) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 削除文を取得します
+     * @param {string}} mes 
+     * @returns {string}
+     */
+    static get_delete_text(mes: string) {
+        return mes.replace(/^^[ 　]*(中止|ちゅうし)[^ 　]*[ 　]/, "");
     }
 }

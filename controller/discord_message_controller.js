@@ -150,6 +150,33 @@ class DiscordMessageController {
                             logger_1.logger.error(err);
                         });
                         break;
+                    case constants.TYPE_DELETE:
+                        // update recruitment
+                        recruitment_repo.update_m_recruitment(analyzer.get_recruitment())
+                            .then(() => {
+                            // get target role
+                            return server_info_repo.get_m_server_info(message.guild.id);
+                        })
+                            .then((server_info) => {
+                            // get target role
+                            recruitment_target_role = server_info.recruitment_target_role;
+                            // compete all tasks
+                            logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, recruitment_target_role = ${recruitment_target_role}`);
+                            logger_1.logger.trace(analyzer.get_recruitment());
+                            logger_1.logger.trace(analyzer.get_owner_participate());
+                            // send success message
+                            return message.channel.send({
+                                embeds: [
+                                    messageManager.get_delete_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                                ]
+                            });
+                        })
+                            .catch((err) => {
+                            // send error message
+                            message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+                            logger_1.logger.error(err);
+                        });
+                        break;
                     default:
                         // send error message
                         message.channel.send(`${constants.DISCORD_MESSAGE_TYPE_INVALID} (Error : ${analyzer.error_messages.join(',')})`);

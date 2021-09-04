@@ -68,6 +68,7 @@ class DiscordInteractionAnalyzer {
                 this.valid = false;
                 // ng
                 reject();
+                return;
             }
             // this is valid interaction.
             this.valid = true;
