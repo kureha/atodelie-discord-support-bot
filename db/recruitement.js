@@ -332,7 +332,7 @@ class RecruitmentRepository {
                         logger_1.logger.error(`select m_recruitment failed. sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
                         reject(err);
                     }
-                    else if (row === undefined) {
+                    else if (row === undefined || row.length === 0) {
                         logger_1.logger.error(`data not found on m_recruitment. sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
                         reject(`data not found on m_recruitment. sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
                     }

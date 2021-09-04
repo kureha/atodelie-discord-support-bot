@@ -29,23 +29,29 @@ class Recruitment {
      * @returns {Recruitment} オブジェクト
      */
     static parse_from_db(row) {
-        const v = new Recruitment();
-        v.id = row.id;
-        v.server_id = row.server_id;
-        v.message_id = row.message_id;
-        v.token = row.token;
-        v.status = row.status;
-        // limit_time is nullable
+        let v = new Recruitment();
         try {
-            v.limit_time = new Date(row.limit_time);
+            v.id = row.id;
+            v.server_id = row.server_id;
+            v.message_id = row.message_id;
+            v.token = row.token;
+            v.status = row.status;
+            // limit_time is nullable
+            try {
+                v.limit_time = new Date(row.limit_time);
+            }
+            catch (e) {
+                v.limit_time = constants_1.Constants.get_default_date();
+            }
+            v.name = row.name;
+            v.owner_id = row.owner_id;
+            v.description = row.description;
+            v.delete = row.delete;
         }
         catch (e) {
-            v.limit_time = constants_1.Constants.get_default_date();
+            // if error, re-create new instance
+            v = new Recruitment();
         }
-        v.name = row.name;
-        v.owner_id = row.owner_id;
-        v.description = row.description;
-        v.delete = row.delete;
         return v;
     }
 }

@@ -1,0 +1,31 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Reference = void 0;
+// define logger
+const logger_1 = require("../common/logger");
+// import constants
+const constants_1 = require("../common/constants");
+const constants = new constants_1.Constants();
+class Reference {
+    /**
+     * コンストラクタ
+     * @param discord_reference Discordのmessage.reference
+     * @constructor
+     */
+    constructor(discord_reference) {
+        if (discord_reference) {
+            this.channel_id = discord_reference.channelId;
+            this.guild_id = discord_reference.guildId;
+            this.message_id = discord_reference.messageId;
+            logger_1.logger.trace(`valid discord reference.`);
+            logger_1.logger.trace(this);
+        }
+        else {
+            this.channel_id = '';
+            this.guild_id = '';
+            this.message_id = '';
+        }
+    }
+}
+exports.Reference = Reference;
+//# sourceMappingURL=reference.js.map

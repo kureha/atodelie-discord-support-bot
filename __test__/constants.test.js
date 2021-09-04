@@ -22,6 +22,10 @@ test("Test for constants", () => {
     expect(v.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_NEW_RECRUITMENT).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_TITLE_EDIT_RECRUITMENT).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_EDIT_RECRUITMENT).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_TITLE_DELETE_RECRUITMENT).not.toBe(undefined);
+    expect(v.DISCORD_MESSAGE_DELETE_RECRUITMENT).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_SUCCESS_JOIN).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_TITLE_SUCCESS_JOIN).not.toBe(undefined);
     expect(v.DISCORD_MESSAGE_SUCCESS_VIEW).not.toBe(undefined);

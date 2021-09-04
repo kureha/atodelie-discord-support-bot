@@ -23,13 +23,19 @@ class Participate {
      * @returns {Participate} オブジェクト
      */
     static parse_from_db(row) {
-        const v = new Participate();
-        v.id = row.id;
-        v.token = row.token;
-        v.status = row.status;
-        v.user_id = row.user_id;
-        v.description = row.description;
-        v.delete = row.delete;
+        let v = new Participate();
+        try {
+            v.id = row.id;
+            v.token = row.token;
+            v.status = row.status;
+            v.user_id = row.user_id;
+            v.description = row.description;
+            v.delete = row.delete;
+        }
+        catch (e) {
+            // if error, re-create new instance
+            v = new Participate();
+        }
         return v;
     }
 }
