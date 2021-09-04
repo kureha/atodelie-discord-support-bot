@@ -5,7 +5,7 @@ import {logger} from '../common/logger';
 import {Constants} from '../common/constants';
 const constants = new Constants();
 
-// 参加情報を定義
+// define participate
 import {Participate} from './participate';
 
 export class Recruitment {

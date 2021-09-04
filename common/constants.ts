@@ -48,6 +48,8 @@ export class Constants {
     TYPE_DECLINE : number;
     TYPE_LIST : number;
     TYPE_VIEW : number;
+    TYPE_EDIT : number;
+    TYPE_DELETE : number;
 
     STATUS_DISABLED : number;
     STATUS_ENABLED : number;
@@ -137,6 +139,8 @@ export class Constants {
         this.TYPE_DECLINE = 3;
         this.TYPE_LIST = 4;
         this.TYPE_VIEW = 5;
+        this.TYPE_EDIT = 6;
+        this.TYPE_DELETE = 7;
 
         this.STATUS_DISABLED = 0;
         this.STATUS_ENABLED = 1;

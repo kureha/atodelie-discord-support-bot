@@ -315,6 +315,36 @@ class RecruitmentRepository {
         });
     }
     /**
+     * 募集を募集メッセージIDと募集オーナーのIDから取得する
+     * @param message_id メッセージID
+     * @param owner_id 募集オーナーのID
+     */
+    get_m_recruitment_by_message_id(message_id, owner_id) {
+        // return promise
+        return new Promise((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+            db.serialize(function () {
+                // run serialize
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[message_id] = ? and m1.[owner_id] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                logger_1.logger.info(`sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
+                db.get(sql, [message_id, owner_id], ((err, row) => {
+                    if (err) {
+                        logger_1.logger.error(`select m_recruitment failed. sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
+                        reject(err);
+                    }
+                    else if (row === undefined) {
+                        logger_1.logger.error(`data not found on m_recruitment. sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
+                        reject(`data not found on m_recruitment. sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
+                    }
+                    logger_1.logger.info(`selected single m_reqruitement successed. : message_id = ${message_id}, owner_id = ${owner_id}`);
+                    logger_1.logger.trace(row);
+                    resolve(recruitment_1.Recruitment.parse_from_db(row));
+                }));
+            });
+            db.close();
+        });
+    }
+    /**
      * 募集マスタを指定行選択します
      * @param {string} server_id
      * @returns {Promise<Recruitment[]>} Promiseオブジェクト、データベースの選択内容

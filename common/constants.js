@@ -60,6 +60,8 @@ class Constants {
         this.TYPE_DECLINE = 3;
         this.TYPE_LIST = 4;
         this.TYPE_VIEW = 5;
+        this.TYPE_EDIT = 6;
+        this.TYPE_DELETE = 7;
         this.STATUS_DISABLED = 0;
         this.STATUS_ENABLED = 1;
         this.STATUS_VIEW = 2;

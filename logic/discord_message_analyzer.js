@@ -9,19 +9,18 @@ const constants = new constants_1.Constants();
 // import entities
 const recruitment_1 = require("../entity/recruitment");
 const participate_1 = require("../entity/participate");
+const recruitement_1 = require("../db/recruitement");
+const participate_2 = require("../db/participate");
 class DiscordMessageAnalyzer {
     /**
-     * メッセージを解析し、解析結果を返却する
-     * @param {string} mes メッセージ本体
-     * @param {string} message_user_id メッセージを送信したユーザID
-     * @param {string} user_id botのDiscordユーザID
+     * コンストラクタ
      * @constructor
      */
-    constructor(mes, server_id, message_user_id, user_id) {
+    constructor() {
         // remove user.id from message
-        this.message = mes.replace(new RegExp('^[ 　]*<@[!]*' + user_id + '>[ 　]*'), "");
+        this.message = '';
         // copy server id
-        this.server_id = server_id;
+        this.server_id = '';
         // initialize variables
         this.message_id = '';
         this.token = '';
@@ -39,48 +38,102 @@ class DiscordMessageAnalyzer {
         this.type = constants.TYPE_INIT;
         // participate members
         this.user_list = [];
-        // error messages
-        let error_messages_list = [];
         // default limit date
-        let default_date = new Date();
-        default_date.setHours(default_date.getHours() + DiscordMessageAnalyzer.HOURS_DEFAULT);
-        // detect recruitment
-        if (DiscordMessageAnalyzer.check_recruitment(this.message) == true) {
-            logger_1.logger.info(`target message is new recruitment. : mes = ${this.message}`);
-            this.type = constants.TYPE_RECRUITEMENT;
-            this.name = DiscordMessageAnalyzer.get_recruitment_text(this.message);
-            this.owner_id = message_user_id;
-            logger_1.logger.debug(`recruitment's name, owner_id : name = ${this.name}, owner_id = ${message_user_id}`);
-            // recruitmentis valid
-            this.valid = true;
-            // token is setted after
-            this.token = '';
-            // analyze limit_time and max_member
-            this.limit_time = DiscordMessageAnalyzer.get_recruitment_time(this.message) || default_date;
-            logger_1.logger.debug(`recruitment's target time : ${this.limit_time}`);
-            this.max_number = DiscordMessageAnalyzer.get_recruitment_numbers(this.message) || DiscordMessageAnalyzer.MAX_NUMBERS_DEFAULT;
-            logger_1.logger.debug(`recruitment's target number : ${this.max_number}`);
-            // initialize other values
-            this.status = constants.STATUS_ENABLED;
-            this.description = "";
-            this.delete = false;
-            // add owner info to participate members
-            this.user_list.push(this.get_owner_participate());
-        }
-        else if (DiscordMessageAnalyzer.check_type_list(this.message) == true) {
-            // show command
-            logger_1.logger.info(`target message is listing. : mes = ${this.message}`);
-            this.type = constants.TYPE_LIST;
-        }
-        else {
-            // this is not valid message
-            logger_1.logger.info(`target message is not valid. : mes = ${this.message}`);
-            error_messages_list.push(constants.DISCORD_MESSAGE_IS_INVALID);
-        }
-        // set error messages if not valied
-        if (this.valid === false) {
-            this.error_messages = error_messages_list;
-        }
+        this.default_date = new Date();
+        this.default_date.setHours(this.default_date.getHours() + DiscordMessageAnalyzer.HOURS_DEFAULT);
+    }
+    /**
+     * メッセージを解析し、解析結果を返却する
+     * @param mes メッセージ本体
+     * @param server_id
+     * @param message_user_id メッセージを送信したユーザID
+     * @param user_id botのDiscordユーザID
+     * @param reference
+     */
+    analyze(mes, server_id, message_user_id, user_id, reference) {
+        return new Promise((resolve, reject) => {
+            // remove user.id from message
+            this.message = mes.replace(new RegExp('^[ 　]*<@[!]*' + user_id + '>[ 　]*'), "");
+            // copy server id
+            this.server_id = server_id;
+            // detect recruitment
+            if (DiscordMessageAnalyzer.check_recruitment(this.message) == true) {
+                logger_1.logger.info(`target message is new recruitment. : mes = ${this.message}`);
+                this.type = constants.TYPE_RECRUITEMENT;
+                this.name = DiscordMessageAnalyzer.get_recruitment_text(this.message);
+                this.owner_id = message_user_id;
+                logger_1.logger.debug(`recruitment's name, owner_id : name = ${this.name}, owner_id = ${message_user_id}`);
+                // recruitmentis valid
+                this.valid = true;
+                // token is setted after
+                this.token = '';
+                // analyze limit_time and max_member
+                this.limit_time = DiscordMessageAnalyzer.get_recruitment_time(this.message) || this.default_date;
+                logger_1.logger.debug(`recruitment's target time : ${this.limit_time}`);
+                this.max_number = DiscordMessageAnalyzer.get_recruitment_numbers(this.message) || DiscordMessageAnalyzer.MAX_NUMBERS_DEFAULT;
+                logger_1.logger.debug(`recruitment's target number : ${this.max_number}`);
+                // initialize other values
+                this.status = constants.STATUS_ENABLED;
+                this.description = "";
+                this.delete = false;
+                // add owner info to participate members
+                this.user_list.push(this.get_owner_participate());
+                // ok
+                resolve();
+            }
+            else if (DiscordMessageAnalyzer.check_edit(this.message) == true) {
+                // edit command
+                logger_1.logger.info(`target message is editing. : mes = ${this.message}`);
+                this.type = constants.TYPE_EDIT;
+                // try to load id from message id and owner id
+                const recruitment_repo = new recruitement_1.RecruitmentRepository();
+                const participate_repo = new participate_2.ParticipateRepository();
+                recruitment_repo.get_m_recruitment_by_message_id(reference.message_id, message_user_id)
+                    .then((recruitment) => {
+                    logger_1.logger.info(`loaded successful. message_id : ${reference.message_id}, owner_id = ${message_user_id}`);
+                    this.set_recruitment(recruitment);
+                    // edit attributes
+                    this.name = DiscordMessageAnalyzer.get_edit_text(this.message);
+                    logger_1.logger.debug(`recruitment's name, owner_id : name = ${this.name}, owner_id = ${message_user_id}`);
+                    // set limit time
+                    this.limit_time = DiscordMessageAnalyzer.get_recruitment_time(this.message) || this.default_date;
+                    logger_1.logger.debug(`recruitment's target time : ${this.limit_time}`);
+                    // max number
+                    this.max_number = DiscordMessageAnalyzer.get_recruitment_numbers(this.message) || DiscordMessageAnalyzer.MAX_NUMBERS_DEFAULT;
+                    logger_1.logger.debug(`recruitment's target number : ${this.max_number}`);
+                    return participate_repo.get_t_participate(this.token);
+                })
+                    .then((user_list) => {
+                    // load user
+                    logger_1.logger.info(`loaded user list completed. count = ${user_list.length}`);
+                    this.user_list = user_list;
+                    // ok
+                    resolve();
+                })
+                    .catch(() => {
+                    logger_1.logger.info(`loaded unsuccessful. message_id : ${reference.message_id}, owner_id = ${message_user_id}`);
+                    // ng
+                    reject();
+                });
+            }
+            else if (DiscordMessageAnalyzer.check_type_list(this.message) == true) {
+                // show command
+                logger_1.logger.info(`target message is listing. : mes = ${this.message}`);
+                this.type = constants.TYPE_LIST;
+                this.error_messages.push(constants.DISCORD_MESSAGE_IS_INVALID);
+                // ng
+                reject();
+            }
+            else {
+                // this is not valid message
+                logger_1.logger.info(`target message is not valid. : mes = ${this.message}`);
+                this.error_messages.push(constants.DISCORD_MESSAGE_IS_INVALID);
+                // edit attributes
+                this.name = DiscordMessageAnalyzer.get_recruitment_text(this.message);
+                // ng
+                reject();
+            }
+        });
     }
     /**
      * 新規IDをインスタンスに適用します。
@@ -108,6 +161,23 @@ class DiscordMessageAnalyzer {
      */
     set_message_id(new_id) {
         this.message_id = new_id;
+    }
+    /**
+     * 募集オブジェクトをAnalyzerに設定します
+     * @param v 募集オブジェクト
+     */
+    set_recruitment(v) {
+        this.id = v.id;
+        this.server_id = v.server_id;
+        this.message_id = v.message_id;
+        this.token = v.token;
+        this.status = v.status;
+        this.limit_time = v.limit_time;
+        this.name = v.name;
+        this.owner_id = v.owner_id;
+        this.description = v.description;
+        this.delete = v.delete;
+        this.user_list = v.user_list;
     }
     /**
      * Analyzerの結果を募集オブジェクトとして返却します。
@@ -277,6 +347,27 @@ class DiscordMessageAnalyzer {
         else {
             return true;
         }
+    }
+    /**
+     * メッセージが編集であるかを確認します
+     * @param {string} mes
+     * @returns {boolean}
+     */
+    static check_edit(mes) {
+        if (this.extract_by_regexp(mes, '^[ 　]*(編集|へんしゅう)[^ 　]*[ 　]') === undefined) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    /**
+     * 編集文を取得します
+     * @param {string}} mes
+     * @returns {string}
+     */
+    static get_edit_text(mes) {
+        return mes.replace(/^^[ 　]*(編集|へんしゅう)[^ 　]*[ 　]/, "");
     }
 }
 exports.DiscordMessageAnalyzer = DiscordMessageAnalyzer;

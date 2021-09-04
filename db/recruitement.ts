@@ -1,12 +1,12 @@
 // define logger
-import {logger} from '../common/logger';
+import { logger } from '../common/logger';
 
 // import constants
-import {Constants} from '../common/constants';
+import { Constants } from '../common/constants';
 const constants = new Constants();
 
 // import entities
-import {Recruitment} from '../entity/recruitment';
+import { Recruitment } from '../entity/recruitment';
 
 // UUID有効化
 import * as uuid from 'uuid';
@@ -62,7 +62,7 @@ export class RecruitmentRepository {
      * @param {string} file_path sqlite3ファイルパス
      * @returns {Database} sqlite3データベース用インスタンス
      */
-    get_db_instance(file_path : string) {
+    get_db_instance(file_path: string) {
         // initialize SQLite instance
         const sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
         var db = new sqlite.Database(file_path);
@@ -81,11 +81,11 @@ export class RecruitmentRepository {
      * 全テーブルを作成する
      * @param {Database} db sqlite3データベース用インスタンス
      */
-    create_all_database(db : any) {
+    create_all_database(db: any) {
         return new Promise<void>((resolve, reject) => {
             db.serialize(function () {
                 // run serialize
-                db.run(RecruitmentRepository.SQL_CREATE_M_RECRUITMENT, [], ((err : any) => {
+                db.run(RecruitmentRepository.SQL_CREATE_M_RECRUITMENT, [], ((err: any) => {
                     if (err) {
                         logger.error(`sql exception occured when create table. sql = ${RecruitmentRepository.SQL_CREATE_M_RECRUITMENT}`);
                         reject(err);
@@ -113,7 +113,7 @@ export class RecruitmentRepository {
      * @param {Recruitment} data 
      * @returns {Promise}
      */
-    insert_m_recruitment(data : Recruitment) {
+    insert_m_recruitment(data: Recruitment) {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -125,14 +125,14 @@ export class RecruitmentRepository {
                 stmt.run({
                     $id: data.id,
                     $server_id: data.server_id,
-                    $message_id : data.message_id,
+                    $message_id: data.message_id,
                     $token: data.token,
                     $status: data.status,
                     $limit_time: data.limit_time.toISOString(),
                     $name: data.name,
                     $owner_id: data.owner_id,
                     $description: data.description,
-                }, (err : any) => {
+                }, (err: any) => {
                     if (err) {
                         logger.error(err);
                         reject(err);
@@ -151,7 +151,7 @@ export class RecruitmentRepository {
      * @param {Recruitment} data 
      * @returns {Promise}
      */
-    update_m_recruitment(data : Recruitment) {
+    update_m_recruitment(data: Recruitment) {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -162,7 +162,7 @@ export class RecruitmentRepository {
                 const stmt = db.prepare(sql);
                 stmt.run({
                     $server_id: data.server_id,
-                    $message_id : data.message_id,
+                    $message_id: data.message_id,
                     $token: data.token,
                     $status: data.status,
                     $limit_time: data.limit_time.toISOString(),
@@ -170,7 +170,7 @@ export class RecruitmentRepository {
                     $owner_id: data.owner_id,
                     $description: data.description,
                     $delete: data.delete
-                }, (err : any) => {
+                }, (err: any) => {
                     if (err) {
                         logger.error(err);
                         reject(err);
@@ -190,7 +190,7 @@ export class RecruitmentRepository {
      * @param {string} token 
      * @returns {Promise}
      */
-    delete_m_recruitment(token : string) {
+    delete_m_recruitment(token: string) {
         // return promise
         return new Promise<void>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -201,7 +201,7 @@ export class RecruitmentRepository {
                 const stmt = db.prepare(sql);
                 stmt.run({
                     $token: token,
-                }, (err : any) => {
+                }, (err: any) => {
                     if (err) {
                         logger.error(err);
                         reject(err);
@@ -228,7 +228,7 @@ export class RecruitmentRepository {
                 // run serialize
                 const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT_MAX_ID}`;
                 logger.info(`sql = ${sql}`);
-                db.get(sql, [], ((err : any, row : any) => {
+                db.get(sql, [], ((err: any, row: any) => {
                     if (err) {
                         logger.error(`sql exception occured when create table. sql = ${RecruitmentRepository.SQL_CREATE_M_RECRUITMENT}`);
                         reject(err);
@@ -249,7 +249,7 @@ export class RecruitmentRepository {
      * @param {string} to_datetime 
      * @returns {Promise<Recruitment[]>} 対象の募集マスタデータ
      */
-    get_m_recruitment_for_follow(server_id : string, from_datetime : Date, to_datetime : Date) {
+    get_m_recruitment_for_follow(server_id: string, from_datetime: Date, to_datetime: Date) {
         // return promise
         return new Promise<Recruitment[]>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -262,14 +262,14 @@ export class RecruitmentRepository {
                     $server_id: server_id,
                     $from_datetime: from_datetime.toISOString(),
                     $to_datetime: to_datetime.toISOString(),
-                }, ((err : any, rows : any[]) => {
+                }, ((err: any, rows: any[]) => {
                     if (err) {
                         logger.error(`sql exception occured when create table. sql = ${RecruitmentRepository.SQL_CREATE_M_RECRUITMENT}`);
                         reject(err);
                     }
 
                     // return valie list
-                    const recruitment_list : Recruitment[] = [];
+                    const recruitment_list: Recruitment[] = [];
                     rows.forEach(v => {
                         recruitment_list.push(Recruitment.parse_from_db(v));
                     });
@@ -304,7 +304,7 @@ export class RecruitmentRepository {
                 logger.info(`sql = ${sql}`);
                 db.get(sql, {
                     $token: token
-                }, ((err : any, row : any) => {
+                }, ((err: any, row: any) => {
                     if (err) {
                         logger.error(`sql exception occured when select token count. sql = ${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT}`);
                         reject(err);
@@ -329,7 +329,7 @@ export class RecruitmentRepository {
      * @param {string} token 
      * @returns {Promise<Recruitment>} Promiseオブジェクト、データベースの選択内容
      */
-    get_m_recruitment(token : string) {
+    get_m_recruitment(token: string) {
         // return promise
         return new Promise<Recruitment>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -338,7 +338,7 @@ export class RecruitmentRepository {
                 // run serialize
                 const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[token] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= datetime(\'now\', \'localtime\') `;
                 logger.info(`sql = ${sql}, token = ${token}`);
-                db.get(sql, [token], ((err : any, row : any) => {
+                db.get(sql, [token], ((err: any, row: any) => {
                     if (err) {
                         logger.error(`select m_recruitment failed. sql = ${sql}, key = ${token}`);
                         reject(err);
@@ -359,11 +359,45 @@ export class RecruitmentRepository {
     }
 
     /**
+     * 募集を募集メッセージIDと募集オーナーのIDから取得する
+     * @param message_id メッセージID
+     * @param owner_id 募集オーナーのID
+     */
+    get_m_recruitment_by_message_id(message_id: string, owner_id: string) {
+        // return promise
+        return new Promise<Recruitment>((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[message_id] = ? and m1.[owner_id] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                logger.info(`sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
+                db.get(sql, [message_id, owner_id], ((err: any, row: any) => {
+                    if (err) {
+                        logger.error(`select m_recruitment failed. sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
+                        reject(err);
+                    }
+                    else if (row === undefined || row.length === 0) {
+                        logger.error(`data not found on m_recruitment. sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
+                        reject(`data not found on m_recruitment. sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
+                    }
+
+                    logger.info(`selected single m_reqruitement successed. : message_id = ${message_id}, owner_id = ${owner_id}`);
+                    logger.trace(row);
+                    resolve(Recruitment.parse_from_db(row));
+                }));
+            });
+
+            db.close();
+        });
+    }
+
+    /**
      * 募集マスタを指定行選択します
      * @param {string} server_id 
      * @returns {Promise<Recruitment[]>} Promiseオブジェクト、データベースの選択内容
      */
-    get_m_recruitment_latests(server_id : string, count : number) {
+    get_m_recruitment_latests(server_id: string, count: number) {
         // return promise
         return new Promise<Recruitment[]>((resolve, reject) => {
             const db = this.get_db_instance(constants.SQLITE_FILE);
@@ -372,7 +406,7 @@ export class RecruitmentRepository {
                 // run serialize
                 const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE [server_id] = ? AND datetime(m1.[limit_time], 'localtime') > datetime('now', 'localtime') ORDER BY m1.[limit_time], m1.[id] LIMIT ${count}`;
                 logger.info(`sql = ${sql}, token = ${server_id}`);
-                db.all(sql, [server_id], ((err : any, rows : any[]) => {
+                db.all(sql, [server_id], ((err: any, rows: any[]) => {
                     if (err) {
                         logger.error(`select m_recruitment failed. sql = ${sql}, key = ${server_id}`);
                         reject(err);
@@ -382,7 +416,7 @@ export class RecruitmentRepository {
                         resolve([]);
                     } else {
                         // return valie list
-                        const recruitment_list : Recruitment[] = [];
+                        const recruitment_list: Recruitment[] = [];
                         rows.forEach(v => {
                             recruitment_list.push(Recruitment.parse_from_db(v));
                         });
