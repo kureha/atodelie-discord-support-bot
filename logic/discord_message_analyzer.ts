@@ -449,7 +449,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static check_recruitment(mes: string): boolean {
-        if (this.extract_by_regexp(mes, '^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]') === undefined) {
+        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_NEW_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
             return false;
         } else {
             return true;
@@ -462,7 +462,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static get_recruitment_text(mes: string): string {
-        return mes.replace(/^^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]/, "");
+        return mes.replace(new RegExp(`^^[ 　]*(${constants.DISCORD_COMMAND_NEW_RECRUITMENT})[^ 　]*[ 　]`), "");
     }
 
     /**
@@ -471,7 +471,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static check_type_list(mes: string): boolean {
-        if (this.extract_by_regexp(mes, '^[ 　]*(リスト|一覧)') === undefined) {
+        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_LIST_RECRUITMENT})`) === undefined) {
             return false;
         } else {
             return true;
@@ -484,7 +484,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static check_edit(mes: string): boolean {
-        if (this.extract_by_regexp(mes, '^[ 　]*(編集|へんしゅう)[^ 　]*[ 　]') === undefined) {
+        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_EDIT_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
             return false;
         } else {
             return true;
@@ -497,7 +497,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static get_edit_text(mes: string): string {
-        return mes.replace(/^^[ 　]*(編集|へんしゅう)[^ 　]*[ 　]/, "");
+        return mes.replace(new RegExp(`^^[ 　]*(${constants.DISCORD_COMMAND_EDIT_RECRUITMENT})[^ 　]*[ 　]`), "");
     }
 
     /**
@@ -506,7 +506,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static check_delete(mes: string): boolean {
-        if (this.extract_by_regexp(mes, '^[ 　]*(中止|ちゅうし)[^ 　]*[ 　]') === undefined) {
+        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_DELETE_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
             return false;
         } else {
             return true;
@@ -519,6 +519,6 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static get_delete_text(mes: string): string {
-        return mes.replace(/^^[ 　]*(中止|ちゅうし)[^ 　]*[ 　]/, "");
+        return mes.replace(new RegExp(`^^[ 　]*(${constants.DISCORD_COMMAND_DELETE_RECRUITMENT})[^ 　]*[ 　]`), "");
     }
 }

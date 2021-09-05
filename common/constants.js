@@ -49,6 +49,10 @@ class Constants {
         this.DISCORD_BUTTUN_JOIN = process.env.DISCORD_BUTTUN_JOIN || Constants.STRING_EMPTY;
         this.DISCORD_BUTTON_DECLINE = process.env.DISCORD_BUTTON_DECLINE || Constants.STRING_EMPTY;
         this.DISCORD_BUTTON_VIEW = process.env.DISCORD_BUTTON_VIEW || Constants.STRING_EMPTY;
+        this.DISCORD_COMMAND_NEW_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env.DISCORD_COMMAND_NEW_RECRUITMENT, ',');
+        this.DISCORD_COMMAND_EDIT_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env.DISCORD_COMMAND_EDIT_RECRUITMENT, ',');
+        this.DISCORD_COMMAND_DELETE_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env.DISCORD_COMMAND_DELETE_RECRUITMENT, ',');
+        this.DISCORD_COMMAND_LIST_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env.DISCORD_COMMAND_LIST_RECRUITMENT, ',');
         // message static values section
         this.DISCORD_MESSAGE_EMBED_NO_MEMBER = process.env.DISCORD_MESSAGE_EMBED_NO_MEMBER || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_EMBED_TITLE = process.env.DISCORD_MESSAGE_EMBED_TITLE || Constants.STRING_EMPTY;
@@ -97,6 +101,32 @@ class Constants {
         temp_date.setSeconds(0);
         temp_date.setMilliseconds(0);
         return temp_date;
+    }
+    /**
+     * get escape string from env file
+     * @param v non-escaped regexp string list
+     * @param split_char list split char
+     * @returns regexp escaped string (not list)
+     */
+    static get_escaped_regexp_string_from_env(v, split_char) {
+        let result = '';
+        if (v === undefined) {
+            return result;
+        }
+        else {
+            v.split(split_char).forEach(e => {
+                e = Constants.escape_regexp(e);
+            });
+            return v.split(split_char).join('|');
+        }
+    }
+    /**
+     * escape string for regexp (e.g. escape user input string)
+     * @param v regexp string non-escaped
+     * @returns escaped regexp string
+     */
+    static escape_regexp(v) {
+        return v.replace(/[.*+?^=!:${}()|[\]\/\\]/g, '\\$&');
     }
 }
 exports.Constants = Constants;

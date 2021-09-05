@@ -352,7 +352,7 @@ class DiscordMessageAnalyzer {
      * @returns
      */
     static check_recruitment(mes) {
-        if (this.extract_by_regexp(mes, '^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]') === undefined) {
+        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_NEW_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
             return false;
         }
         else {
@@ -365,7 +365,7 @@ class DiscordMessageAnalyzer {
      * @returns
      */
     static get_recruitment_text(mes) {
-        return mes.replace(/^^[ 　]*(募集|ぼしゅう)[^ 　]*[ 　]/, "");
+        return mes.replace(new RegExp(`^^[ 　]*(${constants.DISCORD_COMMAND_NEW_RECRUITMENT})[^ 　]*[ 　]`), "");
     }
     /**
      * check message is listing recruitment
@@ -373,7 +373,7 @@ class DiscordMessageAnalyzer {
      * @returns
      */
     static check_type_list(mes) {
-        if (this.extract_by_regexp(mes, '^[ 　]*(リスト|一覧)') === undefined) {
+        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_LIST_RECRUITMENT})`) === undefined) {
             return false;
         }
         else {
@@ -386,7 +386,7 @@ class DiscordMessageAnalyzer {
      * @returns
      */
     static check_edit(mes) {
-        if (this.extract_by_regexp(mes, '^[ 　]*(編集|へんしゅう)[^ 　]*[ 　]') === undefined) {
+        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_EDIT_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
             return false;
         }
         else {
@@ -399,7 +399,7 @@ class DiscordMessageAnalyzer {
      * @returns
      */
     static get_edit_text(mes) {
-        return mes.replace(/^^[ 　]*(編集|へんしゅう)[^ 　]*[ 　]/, "");
+        return mes.replace(new RegExp(`^^[ 　]*(${constants.DISCORD_COMMAND_EDIT_RECRUITMENT})[^ 　]*[ 　]`), "");
     }
     /**
      * check message is cancel recruitment
@@ -407,7 +407,7 @@ class DiscordMessageAnalyzer {
      * @returns
      */
     static check_delete(mes) {
-        if (this.extract_by_regexp(mes, '^[ 　]*(中止|ちゅうし)[^ 　]*[ 　]') === undefined) {
+        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_DELETE_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
             return false;
         }
         else {
@@ -420,7 +420,7 @@ class DiscordMessageAnalyzer {
      * @returns
      */
     static get_delete_text(mes) {
-        return mes.replace(/^^[ 　]*(中止|ちゅうし)[^ 　]*[ 　]/, "");
+        return mes.replace(new RegExp(`^^[ 　]*(${constants.DISCORD_COMMAND_DELETE_RECRUITMENT})[^ 　]*[ 　]`), "");
     }
 }
 exports.DiscordMessageAnalyzer = DiscordMessageAnalyzer;
