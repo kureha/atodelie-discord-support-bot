@@ -109,9 +109,8 @@ class Constants {
      * @returns regexp escaped string (not list)
      */
     static get_escaped_regexp_string_from_env(v, split_char) {
-        let result = '';
         if (v === undefined) {
-            return result;
+            return '';
         }
         else {
             v.split(split_char).forEach(e => {

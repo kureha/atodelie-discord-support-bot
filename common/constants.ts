@@ -207,11 +207,9 @@ export class Constants {
      * @param split_char list split char
      * @returns regexp escaped string (not list)
      */
-    static get_escaped_regexp_string_from_env(v: string|undefined, split_char: string) {
-        let result: string = '';
-
+    static get_escaped_regexp_string_from_env(v: string | undefined, split_char: string): string {
         if (v === undefined) {
-            return result;
+            return '';
         } else {
             v.split(split_char).forEach(e => {
                 e = Constants.escape_regexp(e);
