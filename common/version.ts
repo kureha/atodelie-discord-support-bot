@@ -4,7 +4,7 @@ import { logger } from '../common/logger';
 // import constants
 import { Constants } from '../common/constants';
 import { VersionRepository } from '../db/version';
-import { resolve } from 'path/posix';
+
 const constants = new Constants();
 
 export class Version {
