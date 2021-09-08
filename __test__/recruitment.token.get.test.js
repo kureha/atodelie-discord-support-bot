@@ -1,26 +1,21 @@
-const logger_1 = require('./../common/logger');
-let logger = logger_1.logger;
-
-const Recruitment_1 = require('../db/recruitement');
-const Recruitment = Recruitment_1.RecruitmentRepository;
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const logger_1 = require("../common/logger");
+const recruitement_1 = require("../db/recruitement");
 test("test for get token", () => {
     return new Promise((resolve, reject) => {
-        const recruitment = new Recruitment();
+        const recruitment = new recruitement_1.RecruitmentRepository();
         const token_function = recruitment.get_m_recruitment_token();
         token_function
-            // retry max 3 times
-            .catch(token_function)
-            .catch(token_function)
-            .catch(token_function)
             .then((token) => {
-                logger.debug(`token : ${token}`);
-                resolve();
-            })
+            logger_1.logger.debug(`token : ${token}`);
+            resolve();
+        })
             .catch(err => {
-                logger.error(err);
-                expect(true).toEqual(false);
-                reject(err);
-            });
+            logger_1.logger.error(err);
+            expect(true).toEqual(false);
+            reject(err);
+        });
     });
 });
+//# sourceMappingURL=recruitment.token.get.test.js.map
