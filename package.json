@@ -11,6 +11,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/jest": "^27.0.1",
     "@types/log4js": "^2.3.5",
     "@types/node": "^16.7.1",
     "@types/node-cron": "^2.0.4",
@@ -18,6 +19,7 @@
     "@types/uuid": "^8.3.1",
     "dotenv": "^10.0.0",
     "jest": "^27.0.6",
+    "nodemon": "^2.0.12",
     "ts-node": "^10.2.1",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.3.5"
@@ -28,5 +30,9 @@
   },
   "engines": {
     "node": "16.x"
+  },
+  "jest": {
+    "moduleFileExtensions": ["js"],
+    "verbose": true
   }
 }

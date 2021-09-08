@@ -1,0 +1,54 @@
+import { Constants } from './../common/constants';
+
+test("Test for constants", () => {
+    let v = new Constants();
+
+    expect(v.DISCORD_BOT_TOKEN).not.toEqual('');
+    expect(v.DISCORD_LATEST_LIST_LENGTH).not.toEqual('');
+    expect(v.DISCORD_LATEST_LIST_LENGTH).not.toEqual(NaN);
+    expect(v.DISCORD_FOLLOW_MINUTE).not.toEqual('');
+    expect(v.DISCORD_FOLLOW_MINUTE).not.toEqual(NaN);
+    expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toEqual('');
+    expect(v.DISCORD_FOLLOW_CRON).not.toEqual('');
+
+    expect(v.SQLITE_FILE).not.toEqual('');
+    expect(v.SQLITE_TEMPLATE_FILE).not.toEqual('');
+
+    expect(v.DISCORD_ACTIVITY_NAME).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_IS_INVALID).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_EXCEPTION).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_NEW_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_TITLE_EDIT_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_EDIT_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_TITLE_DELETE_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_DELETE_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_SUCCESS_JOIN).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_TITLE_SUCCESS_JOIN).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_SUCCESS_VIEW).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_TITLE_SUCCESS_VIEW).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_SUCCESS_DECLINE).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_FOLLOW_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_FOLLOW_RECRUITMENT).not.toEqual('');
+
+    expect(v.DISCORD_BUTTUN_JOIN).not.toEqual('');
+    expect(v.DISCORD_BUTTON_DECLINE).not.toEqual('');
+    expect(v.DISCORD_BUTTON_VIEW).not.toEqual('');
+
+    expect(v.DISCORD_COMMAND_NEW_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_COMMAND_EDIT_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_COMMAND_DELETE_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_COMMAND_LIST_RECRUITMENT).not.toEqual('');
+
+    expect(v.DISCORD_MESSAGE_EMBED_NO_MEMBER).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_EMBED_TITLE).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_EMBED_OWNER).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_EMBED_START_TIME).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS).not.toEqual('');
+})
+

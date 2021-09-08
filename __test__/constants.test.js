@@ -1,9 +1,8 @@
-const constants_1 = require('./../common/constants');
-const Constants = constants_1.Constants;
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const constants_1 = require("./../common/constants");
 test("Test for constants", () => {
-    var v = new Constants();
-
+    let v = new constants_1.Constants();
     expect(v.DISCORD_BOT_TOKEN).not.toEqual('');
     expect(v.DISCORD_LATEST_LIST_LENGTH).not.toEqual('');
     expect(v.DISCORD_LATEST_LIST_LENGTH).not.toEqual(NaN);
@@ -11,10 +10,8 @@ test("Test for constants", () => {
     expect(v.DISCORD_FOLLOW_MINUTE).not.toEqual(NaN);
     expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toEqual('');
     expect(v.DISCORD_FOLLOW_CRON).not.toEqual('');
-
     expect(v.SQLITE_FILE).not.toEqual('');
     expect(v.SQLITE_TEMPLATE_FILE).not.toEqual('');
-
     expect(v.DISCORD_ACTIVITY_NAME).not.toEqual('');
     expect(v.DISCORD_MESSAGE_IS_INVALID).not.toEqual('');
     expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toEqual('');
@@ -35,21 +32,18 @@ test("Test for constants", () => {
     expect(v.DISCORD_MESSAGE_FOLLOW_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_MESSAGE_FOLLOW_RECRUITMENT).not.toEqual('');
-
     expect(v.DISCORD_BUTTUN_JOIN).not.toEqual('');
     expect(v.DISCORD_BUTTON_DECLINE).not.toEqual('');
     expect(v.DISCORD_BUTTON_VIEW).not.toEqual('');
-
     expect(v.DISCORD_COMMAND_NEW_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_EDIT_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_DELETE_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_LIST_RECRUITMENT).not.toEqual('');
-    
     expect(v.DISCORD_MESSAGE_EMBED_NO_MEMBER).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EMBED_TITLE).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EMBED_OWNER).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EMBED_START_TIME).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS).not.toEqual('');
-})
-
+});
+//# sourceMappingURL=constants.test.js.map
