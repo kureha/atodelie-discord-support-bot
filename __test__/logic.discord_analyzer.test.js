@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const discord_message_analyzer_1 = require("../logic/discord_message_analyzer");
 const constants_1 = require("../common/constants");
-const reference_1 = require("../entity/reference");
 const constants = new constants_1.Constants();
+const reference_1 = require("../entity/reference");
+const discord_message_analyzer_1 = require("../logic/discord_message_analyzer");
 test("Test for CheckReqcruitement", () => {
     expect(discord_message_analyzer_1.DiscordMessageAnalyzer.check_recruitment("test")).toBe(false);
     expect(discord_message_analyzer_1.DiscordMessageAnalyzer.check_recruitment("5")).toBe(false);

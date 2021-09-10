@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const constants_1 = require("../common/constants");
+const constants = new constants_1.Constants();
 const recruitement_1 = require("../db/recruitement");
 const participate_1 = require("../db/participate");
 const server_info_1 = require("../db/server_info");
-const constants_1 = require("../common/constants");
-const constants = new constants_1.Constants();
 test("test for database initialize", () => {
     let server_info_repo = new server_info_1.ServerInfoRepository();
     expect(server_info_repo).not.toBe(undefined);

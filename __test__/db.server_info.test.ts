@@ -1,15 +1,14 @@
 import { logger } from './../common/logger';
 
-import { RecruitmentRepository } from '../db/recruitement';
-
-import { ParticipateRepository } from '../db/participate';
-
-import { ServerInfoRepository } from '../db/server_info';
-import { Recruitment } from '../entity/recruitment';
-import { Participate } from '../entity/participate';
-
 import { Constants } from '../common/constants';
 const constants = new Constants();
+
+import { RecruitmentRepository } from '../db/recruitement';
+import { ParticipateRepository } from '../db/participate';
+import { ServerInfoRepository } from '../db/server_info';
+
+import { Recruitment } from '../entity/recruitment';
+import { Participate } from '../entity/participate';
 
 test("test for database initialize", () => {
     let server_info_repo = new ServerInfoRepository();

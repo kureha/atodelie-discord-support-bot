@@ -14,7 +14,14 @@ export class Version {
      */
     static get_app_version(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            resolve('1.0.0.0');
+            const r = new VersionRepository();
+            r.get_m_version()
+                .then((data) => {
+                    resolve(data.app_version);
+                })
+                .catch(() => {
+                    reject();
+                })
         });
     }
 
@@ -25,7 +32,7 @@ export class Version {
     static get_database_version(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             const r = new VersionRepository();
-            r.get_m_server_info()
+            r.get_m_version()
                 .then((data) => {
                     resolve(data.database_version);
                 })

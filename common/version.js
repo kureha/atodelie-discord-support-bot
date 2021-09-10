@@ -12,7 +12,14 @@ class Version {
      */
     static get_app_version() {
         return new Promise((resolve, reject) => {
-            resolve('1.0.0.0');
+            const r = new version_1.VersionRepository();
+            r.get_m_version()
+                .then((data) => {
+                resolve(data.app_version);
+            })
+                .catch(() => {
+                reject();
+            });
         });
     }
     /**
@@ -22,7 +29,7 @@ class Version {
     static get_database_version() {
         return new Promise((resolve, reject) => {
             const r = new version_1.VersionRepository();
-            r.get_m_server_info()
+            r.get_m_version()
                 .then((data) => {
                 resolve(data.database_version);
             })

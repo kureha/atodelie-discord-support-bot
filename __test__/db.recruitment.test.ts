@@ -1,10 +1,9 @@
 import { logger } from './../common/logger';
 
 import { RecruitmentRepository } from '../db/recruitement';
-
 import { ParticipateRepository } from '../db/participate';
-
 import { ServerInfoRepository } from '../db/server_info';
+
 import { Recruitment } from '../entity/recruitment';
 import { Participate } from '../entity/participate';
 
