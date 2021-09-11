@@ -67,6 +67,7 @@ class DiscordMessageController {
                             logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, recruitment_target_role = ${recruitment_target_role}`);
                             logger_1.logger.trace(analyzer.get_recruitment());
                             logger_1.logger.trace(analyzer.get_owner_participate());
+                            // create thread title
                             const thread_title = message_manager.get_recruitment_thread_title(constants.DISCORD_RECRUITMENT_THREAD_TITLE, analyzer.get_recruitment());
                             logger_1.logger.info(`thread title : ${thread_title}`);
                             // create thread
@@ -109,10 +110,13 @@ class DiscordMessageController {
                             });
                         })
                             .then((sended_message) => {
-                            // recirve message id
+                            // set recirve message id
                             logger_1.logger.info(`send message completed. update message id to recruitment. : message_id = ${sended_message.id}`);
                             analyzer.set_message_id(sended_message.id);
-                            // update recruitment
+                            // send thread annoucement message
+                            return message.channel.send(message_manager.get_recruitment_announcement_message(constants.DISCORD_RECRUITMENT_THREAD_ANNOUNCEMENT, recruitment_target_role, analyzer.get_recruitment()));
+                        }).then(() => {
+                            // final phase : update recruitment
                             return recruitment_repo.update_m_recruitment(analyzer.get_recruitment());
                         })
                             .catch((err) => {

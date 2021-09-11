@@ -57,6 +57,22 @@ class DiscordMessageManager {
         return title;
     }
     /**
+     * return recruitment annouce message
+     * replaceing:
+     * %%DISCORD_REPLY_ROLE%% -> role id
+     * %%TOKEN%% -> recruitment token
+     * @param template
+     * @param recruitment_target_role
+     * @param recruitment
+     * @returns Discord.MessageEmbed message
+     */
+    get_recruitment_announcement_message(template, recruitment_target_role, recruitment) {
+        let message = this.enable_lf(template)
+            .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
+            .replace('%%TOKEN%%', recruitment.token);
+        return message;
+    }
+    /**
      * return recruitment embed message
      * replaceing:
      * %%DISCORD_REPLY_ROLE%% -> role id
