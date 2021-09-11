@@ -40,7 +40,7 @@ export class DiscordMessageController {
             const server_info_repo = new ServerInfoRepository();
 
             // create message manager instance
-            const messageManager = new DiscordMessageManager();
+            const message_manager = new DiscordMessageManager();
 
             // analyze message
             let analyzer = new DiscordMessageAnalyzer();
@@ -80,10 +80,13 @@ export class DiscordMessageController {
                                     logger.trace(analyzer.get_recruitment());
                                     logger.trace(analyzer.get_owner_participate());
 
+                                    const thread_title = message_manager.get_recruitment_thread_title(constants.DISCORD_RECRUITMENT_THREAD_TITLE, analyzer.get_recruitment());
+                                    logger.info(`thread title : ${thread_title}`);
+
                                     // create thread
                                     return message.channel.threads
                                         .create({
-                                            name: analyzer.get_recruitment().name,
+                                            name: thread_title,
                                             autoArchiveDuration: 60 * 24,
                                             reason: analyzer.get_recruitment().description,
                                         });
@@ -91,7 +94,7 @@ export class DiscordMessageController {
                                 .then((thread_channel: any) => {
                                     // recirve thread channel
                                     logger.info(`create thread channel complete. thread id = ${thread_channel.id}, parent channel id = ${thread_channel.parentId}`)
-                                    logger.info(thread_channel)
+                                    logger.trace(thread_channel)
 
                                     // set thread id to analyzer
                                     analyzer.set_thread_id(thread_channel.id);
@@ -117,7 +120,7 @@ export class DiscordMessageController {
                                     // send success message
                                     return thread_channel.send({
                                         embeds: [
-                                            messageManager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                                            message_manager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                         ],
                                         components: [
                                             new Discord.MessageActionRow().addComponents(join_button, view_button, decline_button),
@@ -176,7 +179,7 @@ export class DiscordMessageController {
                                     // send success message
                                     return message.channel.send({
                                         embeds: [
-                                            messageManager.get_edit_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                                            message_manager.get_edit_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                         ],
                                         components: [
                                             new Discord.MessageActionRow().addComponents(join_button, view_button, decline_button),
@@ -216,7 +219,7 @@ export class DiscordMessageController {
                                     // send success message
                                     return message.channel.send({
                                         embeds: [
-                                            messageManager.get_delete_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                                            message_manager.get_delete_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                         ]
                                     });
                                 })

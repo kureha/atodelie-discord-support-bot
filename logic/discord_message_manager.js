@@ -43,7 +43,24 @@ class DiscordMessageManager {
         return `${date.toLocaleString()}`;
     }
     /**
+     * return recruitment thread's title
+     * replacing:
+     * %%TITLE%% -> recruitment name
+     * %%LIMIT_TIEM%% -> recruitment limit time with format
+     * @param template title template (e.g. constants.DISCORD_RECRUITMENT_THREAD_TITLE)
+     * @param recruitment
+     * @returns
+     */
+    get_recruitment_thread_title(template, recruitment) {
+        let title = template
+            .replace('%%TITLE%%', recruitment.name);
+        return title;
+    }
+    /**
      * return recruitment embed message
+     * replaceing:
+     * %%DISCORD_REPLY_ROLE%% -> role id
+     * %%TOKEN%% -> recruitment token
      * @param recruitment
      * @param recruitment_target_role
      * @param title

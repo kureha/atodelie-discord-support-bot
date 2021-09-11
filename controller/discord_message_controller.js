@@ -31,7 +31,7 @@ class DiscordMessageController {
             const participate_repo = new participate_1.ParticipateRepository();
             const server_info_repo = new server_info_1.ServerInfoRepository();
             // create message manager instance
-            const messageManager = new discord_message_manager_1.DiscordMessageManager();
+            const message_manager = new discord_message_manager_1.DiscordMessageManager();
             // analyze message
             let analyzer = new discord_message_analyzer_1.DiscordMessageAnalyzer();
             analyzer.analyze(message.content, message.guild.id, message.author.id, client.user.id, new reference_1.Reference(message.reference))
@@ -67,10 +67,12 @@ class DiscordMessageController {
                             logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, recruitment_target_role = ${recruitment_target_role}`);
                             logger_1.logger.trace(analyzer.get_recruitment());
                             logger_1.logger.trace(analyzer.get_owner_participate());
+                            const thread_title = message_manager.get_recruitment_thread_title(constants.DISCORD_RECRUITMENT_THREAD_TITLE, analyzer.get_recruitment());
+                            logger_1.logger.info(`thread title : ${thread_title}`);
                             // create thread
                             return message.channel.threads
                                 .create({
-                                name: analyzer.get_recruitment().name,
+                                name: thread_title,
                                 autoArchiveDuration: 60 * 24,
                                 reason: analyzer.get_recruitment().description,
                             });
@@ -78,7 +80,7 @@ class DiscordMessageController {
                             .then((thread_channel) => {
                             // recirve thread channel
                             logger_1.logger.info(`create thread channel complete. thread id = ${thread_channel.id}, parent channel id = ${thread_channel.parentId}`);
-                            logger_1.logger.info(thread_channel);
+                            logger_1.logger.trace(thread_channel);
                             // set thread id to analyzer
                             analyzer.set_thread_id(thread_channel.id);
                             // create join button
@@ -99,7 +101,7 @@ class DiscordMessageController {
                             // send success message
                             return thread_channel.send({
                                 embeds: [
-                                    messageManager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                                    message_manager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                 ],
                                 components: [
                                     new Discord.MessageActionRow().addComponents(join_button, view_button, decline_button),
@@ -151,7 +153,7 @@ class DiscordMessageController {
                             // send success message
                             return message.channel.send({
                                 embeds: [
-                                    messageManager.get_edit_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                                    message_manager.get_edit_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                 ],
                                 components: [
                                     new Discord.MessageActionRow().addComponents(join_button, view_button, decline_button),
@@ -188,7 +190,7 @@ class DiscordMessageController {
                             // send success message
                             return message.channel.send({
                                 embeds: [
-                                    messageManager.get_delete_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                                    message_manager.get_delete_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                 ]
                             });
                         })
