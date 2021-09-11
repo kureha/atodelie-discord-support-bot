@@ -53,7 +53,11 @@ class CronController {
                         recruitment_data.user_list = user_list;
                         // if user more than 0 member, followup executed.
                         if (recruitment_data.user_list.length > 0) {
-                            client.channels.cache.get(server_info_data.channel_id).send({
+                            // search channel
+                            client.channels.cache.get(server_info_data.channel_id)
+                                // search thread
+                                .threads.cache.find((x) => x.id === recruitment_data.thread_id)
+                                .send({
                                 embeds: [
                                     messageManager.get_join_recruitment_follow_message(recruitment_data, server_info_data.recruitment_target_role),
                                 ]

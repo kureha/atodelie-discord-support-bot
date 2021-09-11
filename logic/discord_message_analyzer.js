@@ -23,6 +23,7 @@ class DiscordMessageAnalyzer {
         this.server_id = '';
         // initialize variables
         this.message_id = '';
+        this.thread_id = '';
         this.token = '';
         this.status = constants.STATUS_DISABLED;
         this.limit_time = constants_1.Constants.get_default_date();
@@ -196,6 +197,13 @@ class DiscordMessageAnalyzer {
         this.message_id = new_id;
     }
     /**
+     * save new thread id
+     * @param new_id thread id
+     */
+    set_thread_id(new_id) {
+        this.thread_id = new_id;
+    }
+    /**
      * set recruitment instance to this instance
      * @param recruitment
      */
@@ -203,6 +211,7 @@ class DiscordMessageAnalyzer {
         this.id = recruitment.id;
         this.server_id = recruitment.server_id;
         this.message_id = recruitment.message_id;
+        this.thread_id = recruitment.thread_id;
         this.token = recruitment.token;
         this.status = recruitment.status;
         this.limit_time = recruitment.limit_time;
@@ -221,6 +230,7 @@ class DiscordMessageAnalyzer {
         recruitment.id = this.id;
         recruitment.server_id = this.server_id;
         recruitment.message_id = this.message_id;
+        recruitment.thread_id = this.thread_id;
         recruitment.token = this.token;
         recruitment.status = this.status;
         recruitment.limit_time = this.limit_time;

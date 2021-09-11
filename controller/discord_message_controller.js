@@ -67,6 +67,20 @@ class DiscordMessageController {
                             logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, recruitment_target_role = ${recruitment_target_role}`);
                             logger_1.logger.trace(analyzer.get_recruitment());
                             logger_1.logger.trace(analyzer.get_owner_participate());
+                            // create thread
+                            return message.channel.threads
+                                .create({
+                                name: analyzer.get_recruitment().name,
+                                autoArchiveDuration: 60 * 24,
+                                reason: analyzer.get_recruitment().description,
+                            });
+                        })
+                            .then((thread_channel) => {
+                            // recirve thread channel
+                            logger_1.logger.info(`create thread channel complete. thread id = ${thread_channel.id}, parent channel id = ${thread_channel.parentId}`);
+                            logger_1.logger.info(thread_channel);
+                            // set thread id to analyzer
+                            analyzer.set_thread_id(thread_channel.id);
                             // create join button
                             let join_button = new Discord.MessageButton()
                                 .setCustomId(`${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}${analyzer.token}`)
@@ -83,7 +97,7 @@ class DiscordMessageController {
                                 .setStyle(constants.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT)
                                 .setLabel(constants.DISCORD_BUTTON_VIEW);
                             // send success message
-                            return message.channel.send({
+                            return thread_channel.send({
                                 embeds: [
                                     messageManager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                 ],

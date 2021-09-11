@@ -80,6 +80,22 @@ export class DiscordMessageController {
                                     logger.trace(analyzer.get_recruitment());
                                     logger.trace(analyzer.get_owner_participate());
 
+                                    // create thread
+                                    return message.channel.threads
+                                        .create({
+                                            name: analyzer.get_recruitment().name,
+                                            autoArchiveDuration: 60 * 24,
+                                            reason: analyzer.get_recruitment().description,
+                                        });
+                                })
+                                .then((thread_channel: any) => {
+                                    // recirve thread channel
+                                    logger.info(`create thread channel complete. thread id = ${thread_channel.id}, parent channel id = ${thread_channel.parentId}`)
+                                    logger.info(thread_channel)
+
+                                    // set thread id to analyzer
+                                    analyzer.set_thread_id(thread_channel.id);
+
                                     // create join button
                                     let join_button = new Discord.MessageButton()
                                         .setCustomId(`${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}${analyzer.token}`)
@@ -99,7 +115,7 @@ export class DiscordMessageController {
                                         .setLabel(constants.DISCORD_BUTTON_VIEW);
 
                                     // send success message
-                                    return message.channel.send({
+                                    return thread_channel.send({
                                         embeds: [
                                             messageManager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                         ],

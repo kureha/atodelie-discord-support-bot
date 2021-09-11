@@ -13,6 +13,7 @@ class Recruitment {
         this.id = constants.ID_INVALID;
         this.server_id = '';
         this.message_id = '';
+        this.thread_id = '';
         this.token = '';
         this.status = constants.STATUS_DISABLED;
         this.limit_time = constants_1.Constants.get_default_date();
@@ -34,6 +35,7 @@ class Recruitment {
             v.id = row.id;
             v.server_id = row.server_id;
             v.message_id = row.message_id;
+            v.thread_id = row.thread_id;
             v.token = row.token;
             v.status = row.status;
             // limit_time is nullable
