@@ -1,10 +1,15 @@
-// <APP ROOT>/config/log4js.configuration.js
-const path = require("path");
-
-// ログ出力先は、サーバー内の絶対パスを動的に取得して出力先を設定したい
-const APP_ROOT = path.join(__dirname, "../");
-
-module.exports = {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.configuration = void 0;
+// use path
+const path_1 = __importDefault(require("path"));
+// log output directory is ${APP_ROOT}/logs/
+const APP_ROOT = path_1.default.join(__dirname, "../");
+// configuration section
+exports.configuration = {
     appenders: {
         console: {
             type: "console"
@@ -12,17 +17,18 @@ module.exports = {
         // ADD
         error: {
             type: "file",
-            filename: path.join(APP_ROOT, "./logs/error.log"),
-            maxLogSize: 5000000, // 5MB
-            backups: 5 // 世代管理は5ファイルまで、古いやつgzで圧縮されていく
+            filename: path_1.default.join(APP_ROOT, "./logs/error.log"),
+            maxLogSize: 5000000,
+            backups: 5 // Max 5 backup files
         }
     },
     categories: {
         default: {
-            // appendersで設定した名称を指定する
-            // levelは出力対象とするものを設定ここではALL（すべて）
+            // console and file
             appenders: ["console", "error"],
-            level: "ALL"
+            // output level over info
+            level: "info"
         }
     }
-}
+};
+//# sourceMappingURL=log4js.configuration.js.map

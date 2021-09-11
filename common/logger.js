@@ -21,7 +21,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logger = void 0;
 const log4js = __importStar(require("log4js"));
-const configuration = require("./../configs/log4js.configuration");
-log4js.configure(configuration);
+const log4js_configuration_1 = require("./../configs/log4js.configuration");
+// log4js initialize
+log4js.configure(log4js_configuration_1.configuration);
+// export logger
 exports.logger = log4js.getLogger();
 //# sourceMappingURL=logger.js.map
