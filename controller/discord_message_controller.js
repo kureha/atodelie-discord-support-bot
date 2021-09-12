@@ -74,7 +74,7 @@ class DiscordMessageController {
                             return message.channel.threads
                                 .create({
                                 name: thread_title,
-                                autoArchiveDuration: 60 * 24,
+                                autoArchiveDuration: constants.DISCORD_RECRUITMENT_THREAD_DURATION,
                                 reason: analyzer.get_recruitment().description,
                             });
                         })
