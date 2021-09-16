@@ -67,23 +67,6 @@ class DiscordMessageController {
                             logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, recruitment_target_role = ${recruitment_target_role}`);
                             logger_1.logger.trace(analyzer.get_recruitment());
                             logger_1.logger.trace(analyzer.get_owner_participate());
-                            // create thread title
-                            const thread_title = message_manager.get_recruitment_thread_title(constants.DISCORD_RECRUITMENT_THREAD_TITLE, analyzer.get_recruitment());
-                            logger_1.logger.info(`thread title : ${thread_title}`);
-                            // create thread
-                            return message.channel.threads
-                                .create({
-                                name: thread_title,
-                                autoArchiveDuration: constants.DISCORD_RECRUITMENT_THREAD_DURATION,
-                                reason: analyzer.get_recruitment().description,
-                            });
-                        })
-                            .then((thread_channel) => {
-                            // recirve thread channel
-                            logger_1.logger.info(`create thread channel complete. thread id = ${thread_channel.id}, parent channel id = ${thread_channel.parentId}`);
-                            logger_1.logger.trace(thread_channel);
-                            // set thread id to analyzer
-                            analyzer.set_thread_id(thread_channel.id);
                             // create join button
                             let join_button = new Discord.MessageButton()
                                 .setCustomId(`${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}${analyzer.token}`)
@@ -100,7 +83,7 @@ class DiscordMessageController {
                                 .setStyle(constants.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT)
                                 .setLabel(constants.DISCORD_BUTTON_VIEW);
                             // send success message
-                            return thread_channel.send({
+                            return message.channel.send({
                                 embeds: [
                                     message_manager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
                                 ],
@@ -113,9 +96,6 @@ class DiscordMessageController {
                             // set recirve message id
                             logger_1.logger.info(`send message completed. update message id to recruitment. : message_id = ${sended_message.id}`);
                             analyzer.set_message_id(sended_message.id);
-                            // send thread annoucement message
-                            return message.channel.send(message_manager.get_recruitment_announcement_message(constants.DISCORD_RECRUITMENT_THREAD_ANNOUNCEMENT, recruitment_target_role, analyzer.get_recruitment()));
-                        }).then(() => {
                             // final phase : update recruitment
                             return recruitment_repo.update_m_recruitment(analyzer.get_recruitment());
                         })
