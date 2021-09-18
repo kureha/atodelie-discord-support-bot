@@ -106,7 +106,7 @@ class DiscordInteractionAnalyzer {
             return constants.ERROR_RECRUITMENT_TOKEN;
         }
         else {
-            return match_result[1];
+            return match_result[1] || '';
         }
     }
     /**

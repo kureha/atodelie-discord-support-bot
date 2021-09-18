@@ -131,7 +131,7 @@ export class DiscordInteractionAnalyzer {
         if (match_result === null || match_result.length < 2) {
             return constants.ERROR_RECRUITMENT_TOKEN;
         } else {
-            return match_result[1];
+            return match_result[1] || '';
         }
     }
 

@@ -352,7 +352,7 @@ class DiscordMessageAnalyzer {
         var re_result = mes.match(/@([0-9]{1,2})/);
         if (re_result != undefined && re_result != null && re_result.length > 1) {
             let num = re_result[1];
-            return parseInt(num);
+            return parseInt(num || '0');
         }
         return undefined;
     }

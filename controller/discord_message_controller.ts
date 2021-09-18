@@ -102,7 +102,7 @@ export class DiscordMessageController {
             })
             .then(() => {
                 // participate registration.
-                return participate_repo.insert_t_participate(analyzer.user_list[0]);
+                return participate_repo.insert_t_participate(analyzer.get_owner_participate());
             })
             .then(() => {
                 // get target role

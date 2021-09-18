@@ -40,5 +40,5 @@ node_cron_1.default.schedule(constants.DISCORD_FOLLOW_CRON, (() => {
     cron_controller_1.CronController.follow_recruitment_member(client);
 }));
 // discord client login
-client.login(process.env.DISCORD_BOT_TOKEN);
+client.login(process.env['DISCORD_BOT_TOKEN']);
 //# sourceMappingURL=bot.js.map
