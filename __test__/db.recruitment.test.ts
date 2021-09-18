@@ -1,5 +1,3 @@
-import { logger } from './../common/logger';
-
 import { RecruitmentRepository } from '../db/recruitement';
 import { ParticipateRepository } from '../db/participate';
 import { ServerInfoRepository } from '../db/server_info';
@@ -19,8 +17,6 @@ test("test for database initialize", () => {
 test("test for m_recruitment c/r/u/d", () => {
     return new Promise<void>((resolve, reject) => {
         let recruitment_repo = new RecruitmentRepository();
-        let participate_repo = new ParticipateRepository();
-        let server_info_repo = new ServerInfoRepository();
 
         let test_token: string = 'token_';
         let test_id: number = 0;
@@ -102,7 +98,6 @@ test('test for t_participate c/r/u/d', () => {
     return new Promise<void>((resolve, reject) => {
         let recruitment_repo = new RecruitmentRepository();
         let participate_repo = new ParticipateRepository();
-        let server_info_repo = new ServerInfoRepository();
         let test_token = 'token_';
         let test_id: number = 0;
 

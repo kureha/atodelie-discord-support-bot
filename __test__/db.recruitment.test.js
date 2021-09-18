@@ -16,8 +16,6 @@ test("test for database initialize", () => {
 test("test for m_recruitment c/r/u/d", () => {
     return new Promise((resolve, reject) => {
         let recruitment_repo = new recruitement_1.RecruitmentRepository();
-        let participate_repo = new participate_1.ParticipateRepository();
-        let server_info_repo = new server_info_1.ServerInfoRepository();
         let test_token = 'token_';
         let test_id = 0;
         // get id test
@@ -91,7 +89,6 @@ test('test for t_participate c/r/u/d', () => {
     return new Promise((resolve, reject) => {
         let recruitment_repo = new recruitement_1.RecruitmentRepository();
         let participate_repo = new participate_1.ParticipateRepository();
-        let server_info_repo = new server_info_1.ServerInfoRepository();
         let test_token = 'token_';
         let test_id = 0;
         let p01 = new participate_2.Participate();

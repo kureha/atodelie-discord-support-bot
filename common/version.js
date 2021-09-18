@@ -2,9 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Version = void 0;
 // import constants
-const constants_1 = require("../common/constants");
 const version_1 = require("../db/version");
-const constants = new constants_1.Constants();
 class Version {
     /**
      * return application version

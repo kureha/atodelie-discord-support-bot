@@ -1,6 +1,3 @@
-import { logger } from './../common/logger';
-import { Constants } from '../common/constants';
-
 import { VersionRepository } from '../db/version';
 import { Version } from '../entity/version';
 

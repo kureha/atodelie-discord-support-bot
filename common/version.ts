@@ -1,11 +1,5 @@
-// define logger
-import { logger } from '../common/logger';
-
 // import constants
-import { Constants } from '../common/constants';
 import { VersionRepository } from '../db/version';
-
-const constants = new Constants();
 
 export class Version {
     /**

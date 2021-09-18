@@ -1,14 +1,7 @@
-import { logger } from './../common/logger';
-
 import { Constants } from '../common/constants';
 const constants = new Constants();
 
-import { RecruitmentRepository } from '../db/recruitement';
-import { ParticipateRepository } from '../db/participate';
 import { ServerInfoRepository } from '../db/server_info';
-
-import { Recruitment } from '../entity/recruitment';
-import { Participate } from '../entity/participate';
 
 test("test for database initialize", () => {
     let server_info_repo = new ServerInfoRepository();
@@ -17,8 +10,6 @@ test("test for database initialize", () => {
 
 test("test for m_server_info c/r/u/d", () => {
     return new Promise<void>((resolve, reject) => {
-        let recruitment_repo = new RecruitmentRepository();
-        let participate_repo = new ParticipateRepository();
         let server_info_repo = new ServerInfoRepository();
 
         let id = `test_id_for_jest_code`

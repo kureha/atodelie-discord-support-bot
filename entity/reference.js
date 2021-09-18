@@ -3,9 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Reference = void 0;
 // define logger
 const logger_1 = require("../common/logger");
-// import constants
-const constants_1 = require("../common/constants");
-const constants = new constants_1.Constants();
 class Reference {
     /**
      * constructor

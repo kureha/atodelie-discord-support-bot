@@ -2,8 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
-const recruitement_1 = require("../db/recruitement");
-const participate_1 = require("../db/participate");
 const server_info_1 = require("../db/server_info");
 test("test for database initialize", () => {
     let server_info_repo = new server_info_1.ServerInfoRepository();
@@ -11,8 +9,6 @@ test("test for database initialize", () => {
 });
 test("test for m_server_info c/r/u/d", () => {
     return new Promise((resolve, reject) => {
-        let recruitment_repo = new recruitement_1.RecruitmentRepository();
-        let participate_repo = new participate_1.ParticipateRepository();
         let server_info_repo = new server_info_1.ServerInfoRepository();
         let id = `test_id_for_jest_code`;
         let server_info_data = {

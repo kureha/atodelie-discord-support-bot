@@ -1,9 +1,5 @@
-// define logger
-import { logger } from '../common/logger';
-
 // import constants
 import { Constants } from '../common/constants';
-const constants = new Constants();
 
 export class ServerInfo {
     server_id: string;

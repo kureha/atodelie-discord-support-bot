@@ -15,8 +15,6 @@ import { DiscordMessageAnalyzer } from './../logic/discord_message_analyzer';
 import { DiscordMessageManager } from './../logic/discord_message_manager';
 
 // import entities
-import { Recruitment } from '../entity/recruitment';
-import { Participate } from '../entity/participate';
 import { ServerInfo } from '../entity/server_info';
 import { Reference } from '../entity/reference';
 
@@ -168,7 +166,6 @@ export class DiscordMessageController {
     static update_recruitment(message: any, analyzer: DiscordMessageAnalyzer) {
         // create db instances
         const recruitment_repo = new RecruitmentRepository();
-        const participate_repo = new ParticipateRepository();
         const server_info_repo = new ServerInfoRepository();
 
         // create message manager instance
@@ -243,7 +240,6 @@ export class DiscordMessageController {
     static delete_recruitment(message: any, analyzer: DiscordMessageAnalyzer) {
         // create db instances
         const recruitment_repo = new RecruitmentRepository();
-        const participate_repo = new ParticipateRepository();
         const server_info_repo = new ServerInfoRepository();
 
         // create message manager instance

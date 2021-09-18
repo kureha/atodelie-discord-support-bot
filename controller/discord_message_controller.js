@@ -144,7 +144,6 @@ class DiscordMessageController {
     static update_recruitment(message, analyzer) {
         // create db instances
         const recruitment_repo = new recruitement_1.RecruitmentRepository();
-        const participate_repo = new participate_1.ParticipateRepository();
         const server_info_repo = new server_info_1.ServerInfoRepository();
         // create message manager instance
         const message_manager = new discord_message_manager_1.DiscordMessageManager();
@@ -209,7 +208,6 @@ class DiscordMessageController {
     static delete_recruitment(message, analyzer) {
         // create db instances
         const recruitment_repo = new recruitement_1.RecruitmentRepository();
-        const participate_repo = new participate_1.ParticipateRepository();
         const server_info_repo = new server_info_1.ServerInfoRepository();
         // create message manager instance
         const message_manager = new discord_message_manager_1.DiscordMessageManager();

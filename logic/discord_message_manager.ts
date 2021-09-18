@@ -1,13 +1,9 @@
-// define logger
-import { logger } from '../common/logger';
-
 // import constants
 import { Constants } from '../common/constants';
 const constants = new Constants();
 
 // import entities
 import { Recruitment } from '../entity/recruitment';
-import { Participate } from '../entity/participate';
 
 // import discord modules
 import * as Discord from 'discord.js';
