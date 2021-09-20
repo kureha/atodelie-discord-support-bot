@@ -35,15 +35,15 @@ class DiscordMessageController {
                 switch (analyzer.type) {
                     case constants.TYPE_RECRUITEMENT:
                         // create recruitment
-                        DiscordMessageController.create_new_recruitment(message, analyzer);
+                        DiscordMessageController.create_new_recruitment(client, message, analyzer);
                         break;
                     case constants.TYPE_EDIT:
                         // update recruitment
-                        DiscordMessageController.update_recruitment(message, analyzer);
+                        DiscordMessageController.update_recruitment(client, message, analyzer);
                         break;
                     case constants.TYPE_DELETE:
                         // delete recruitment
-                        DiscordMessageController.delete_recruitment(message, analyzer);
+                        DiscordMessageController.delete_recruitment(client, message, analyzer);
                         break;
                     default:
                         // send error message
@@ -62,7 +62,7 @@ class DiscordMessageController {
      * @param message
      * @param analyzer
      */
-    static create_new_recruitment(message, analyzer) {
+    static create_new_recruitment(client, message, analyzer) {
         // create db instances
         const recruitment_repo = new recruitement_1.RecruitmentRepository();
         const participate_repo = new participate_1.ParticipateRepository();
@@ -70,7 +70,7 @@ class DiscordMessageController {
         // create message manager instance
         const message_manager = new discord_message_manager_1.DiscordMessageManager();
         // recruitment role string
-        let recruitment_target_role = '';
+        let server_info;
         // get token function
         recruitment_repo.get_m_recruitment_token()
             .then((token) => {
@@ -91,11 +91,11 @@ class DiscordMessageController {
             // get target role
             return server_info_repo.get_m_server_info(message.guild.id);
         })
-            .then((server_info) => {
-            // get target role
-            recruitment_target_role = server_info.recruitment_target_role;
+            .then((server_info_data) => {
+            // get server info data
+            server_info = server_info_data;
             // compete all tasks
-            logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, recruitment_target_role = ${recruitment_target_role}`);
+            logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, channel_id = ${server_info.channel_id}, recruitment_target_role = ${server_info.recruitment_target_role}`);
             logger_1.logger.trace(analyzer.get_recruitment());
             logger_1.logger.trace(analyzer.get_owner_participate());
             // create join button
@@ -114,9 +114,9 @@ class DiscordMessageController {
                 .setStyle(constants.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT)
                 .setLabel(constants.DISCORD_BUTTON_VIEW);
             // send success message
-            return message.channel.send({
+            return client.channels.cache.get(server_info.channel_id).send({
                 embeds: [
-                    message_manager.get_new_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                    message_manager.get_new_recruitment_message(analyzer.get_recruitment(), server_info.recruitment_target_role)
                 ],
                 components: [
                     new Discord.MessageActionRow().addComponents(join_button, view_button, decline_button),
@@ -141,25 +141,25 @@ class DiscordMessageController {
      * @param message
      * @param analyzer
      */
-    static update_recruitment(message, analyzer) {
+    static update_recruitment(client, message, analyzer) {
         // create db instances
         const recruitment_repo = new recruitement_1.RecruitmentRepository();
         const server_info_repo = new server_info_1.ServerInfoRepository();
         // create message manager instance
         const message_manager = new discord_message_manager_1.DiscordMessageManager();
         // recruitment role string
-        let recruitment_target_role = '';
+        let server_info;
         // update recruitment
         recruitment_repo.update_m_recruitment(analyzer.get_recruitment())
             .then(() => {
             // get target role
             return server_info_repo.get_m_server_info(message.guild.id);
         })
-            .then((server_info) => {
+            .then((server_info_data) => {
             // get target role
-            recruitment_target_role = server_info.recruitment_target_role;
+            server_info = server_info_data;
             // compete all tasks
-            logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, recruitment_target_role = ${recruitment_target_role}`);
+            logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, channel_id = ${server_info.channel_id}, recruitment_target_role = ${server_info.recruitment_target_role}`);
             logger_1.logger.trace(analyzer.get_recruitment());
             logger_1.logger.trace(analyzer.get_owner_participate());
             // create join button
@@ -178,9 +178,9 @@ class DiscordMessageController {
                 .setStyle(constants.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT)
                 .setLabel(constants.DISCORD_BUTTON_VIEW);
             // send success message
-            return message.channel.send({
+            return client.channels.cache.get(server_info.channel_id).send({
                 embeds: [
-                    message_manager.get_edit_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                    message_manager.get_edit_recruitment_message(analyzer.get_recruitment(), server_info.recruitment_target_role)
                 ],
                 components: [
                     new Discord.MessageActionRow().addComponents(join_button, view_button, decline_button),
@@ -205,30 +205,30 @@ class DiscordMessageController {
      * @param message
      * @param analyzer
      */
-    static delete_recruitment(message, analyzer) {
+    static delete_recruitment(client, message, analyzer) {
         // create db instances
         const recruitment_repo = new recruitement_1.RecruitmentRepository();
         const server_info_repo = new server_info_1.ServerInfoRepository();
         // create message manager instance
         const message_manager = new discord_message_manager_1.DiscordMessageManager();
         // recruitment role string
-        let recruitment_target_role = '';
+        let server_info;
         recruitment_repo.update_m_recruitment(analyzer.get_recruitment())
             .then(() => {
             // get target role
             return server_info_repo.get_m_server_info(message.guild.id);
         })
-            .then((server_info) => {
+            .then((server_info_data) => {
             // get target role
-            recruitment_target_role = server_info.recruitment_target_role;
+            server_info = server_info_data;
             // compete all tasks
-            logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, recruitment_target_role = ${recruitment_target_role}`);
+            logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, channel_id = ${server_info.channel_id}, recruitment_target_role = ${server_info.recruitment_target_role}`);
             logger_1.logger.trace(analyzer.get_recruitment());
             logger_1.logger.trace(analyzer.get_owner_participate());
             // send success message
-            return message.channel.send({
+            return client.channels.cache.get(server_info.channel_id).send({
                 embeds: [
-                    message_manager.get_delete_recruitment_message(analyzer.get_recruitment(), recruitment_target_role)
+                    message_manager.get_delete_recruitment_message(analyzer.get_recruitment(), server_info.recruitment_target_role)
                 ]
             });
         })
