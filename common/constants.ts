@@ -1,6 +1,7 @@
 export class Constants {
     // common section
     DISCORD_BOT_TOKEN: string;
+    DISCORD_BOT_ADMIN_USER_ID: string;
     DISCORD_LATEST_LIST_LENGTH: number;
     DISCORD_FOLLOW_MINUTE: number;
     DISCORD_FOLLOW_CRON: string;
@@ -98,6 +99,7 @@ export class Constants {
 
         // common section
         this.DISCORD_BOT_TOKEN = process.env['DISCORD_BOT_TOKEN'] || Constants.STRING_EMPTY;
+        this.DISCORD_BOT_ADMIN_USER_ID = process.env['DISCORD_BOT_ADMIN_USER_ID'] || Constants.STRING_EMPTY;
         this.DISCORD_LATEST_LIST_LENGTH = parseInt(process.env['DISCORD_LATEST_LIST_LENGTH'] || Constants.STRING_EMPTY);
         if (isNaN(this.DISCORD_LATEST_LIST_LENGTH)) {
             // set default

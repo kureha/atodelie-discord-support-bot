@@ -4,6 +4,7 @@ const constants_1 = require("./../common/constants");
 test("Test for constants", () => {
     let v = new constants_1.Constants();
     expect(v.DISCORD_BOT_TOKEN).not.toEqual('');
+    expect(v.DISCORD_BOT_ADMIN_USER_ID).not.toEqual('');
     expect(v.DISCORD_LATEST_LIST_LENGTH).not.toEqual('');
     expect(v.DISCORD_LATEST_LIST_LENGTH).not.toEqual(NaN);
     expect(v.DISCORD_FOLLOW_MINUTE).not.toEqual('');
