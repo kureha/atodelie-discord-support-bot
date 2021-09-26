@@ -223,10 +223,9 @@ class DiscordMessageManager {
      * return setting is not ready message
      * @returns message
      */
-    get_setting_is_not_ready(admin_user_id, bot_user_id) {
+    get_setting_is_not_ready(admin_user_id) {
         let result = this.enable_lf(constants.DISCORD_MESSAGE_SETTING_IS_NOT_READY)
-            .replace('%%DISCORD_BOT_ADMIN_USER_ID%%', admin_user_id)
-            .replace('%%DISCORD_BOT_USER_ID%%', bot_user_id);
+            .replace('%%DISCORD_BOT_ADMIN_USER_ID%%', admin_user_id);
         return result;
     }
 }

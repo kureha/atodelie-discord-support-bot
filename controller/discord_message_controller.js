@@ -100,6 +100,14 @@ class DiscordMessageController {
             .then((server_info_data) => {
             // get server info data
             server_info = server_info_data;
+            // check server info registed
+            if (server_info.channel_id == constants.RECRUITMENT_INVALID_CHANNEL_ID) {
+                logger_1.logger.warn(`not regist server info, send warning message.`);
+                message.channel.send(message_manager.get_setting_is_not_ready(constants.DISCORD_BOT_ADMIN_USER_ID));
+                // input temprary values to server info
+                server_info.server_id = message.guildId;
+                server_info.channel_id = message.channelId;
+            }
             // compete all tasks
             logger_1.logger.info(`registration complete. : id = ${analyzer.id}, token = ${analyzer.token}, channel_id = ${server_info.channel_id}, recruitment_target_role = ${server_info.recruitment_target_role}`);
             logger_1.logger.trace(analyzer.get_recruitment());
