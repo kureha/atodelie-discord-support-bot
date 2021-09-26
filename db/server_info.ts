@@ -23,6 +23,11 @@ export class ServerInfoRepository {
     /**
      * update SQL
      */
+    static SQL_UPDATE_M_SERVER_INFO = 'UPDATE [m_server_info] set [channel_id] = $channel_id, [recruitment_target_role] = $recruitment_target_role, [follow_time] = $follow_time ';
+
+    /**
+     * update SQL follow time
+     */
     static SQL_UPDATE_M_SERVER_INFO_FOLLOW_TIME = 'UPDATE [m_server_info] SET follow_time = $follow_time ';
 
     /**
@@ -154,10 +159,44 @@ export class ServerInfoRepository {
                     if (err) {
                         logger.error(`insert m_server_info failed. err = ${err}`);
                         reject(err);
+                    } else {
+                        logger.info(`insert m_server_info successed. : server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, recruitment_target_role = ${server_info_data.recruitment_target_role}`);
+                        resolve();
                     }
+                }));
+            });
 
-                    logger.info(`insert m_server_info successed. : server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, recruitment_target_role = ${server_info_data.recruitment_target_role}`);
-                    resolve();
+            db.close();
+        });
+    }
+
+    /**
+     * update data
+     * @param server_info_data 
+     * @returns
+     */
+    update_m_server_info(server_info_data: ServerInfo): Promise<any> {
+        // return promise
+        return new Promise<void>((resolve, reject) => {
+            const db = this.get_db_instance(constants.SQLITE_FILE);
+
+            db.serialize(function () {
+                // run serialize
+                const sql = `${ServerInfoRepository.SQL_UPDATE_M_SERVER_INFO} WHERE [server_id] = $server_id`;
+                logger.info(`sql = ${sql}, server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, recruitment_target_role = ${server_info_data.recruitment_target_role}, follow_time = ${server_info_data.follow_time}`);
+                db.run(sql, {
+                    $server_id: server_info_data.server_id,
+                    $channel_id: server_info_data.channel_id,
+                    $recruitment_target_role: server_info_data.recruitment_target_role,
+                    $follow_time: server_info_data.follow_time,
+                }, ((err: any) => {
+                    if (err) {
+                        logger.error(`update m_server_info failed. err = ${err}`);
+                        reject(err);
+                    } else {
+                        logger.info(`update m_server_info successed. : server_id = ${server_info_data.server_id}, channel_id = ${server_info_data.channel_id}, recruitment_target_role = ${server_info_data.recruitment_target_role}, follow_time = ${server_info_data.follow_time}`);
+                        resolve();
+                    }
                 }));
             });
 

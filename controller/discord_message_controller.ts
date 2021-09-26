@@ -55,6 +55,11 @@ export class DiscordMessageController {
                             DiscordMessageController.delete_recruitment(client, message, analyzer);
                             break;
 
+                        case constants.TYPE_REGIST_MAETER:
+                            // regist master
+                            DiscordMessageController.regist_master(client, message, analyzer);
+                            break;
+
                         default:
                             // send error message
                             message.channel.send(`${constants.DISCORD_MESSAGE_TYPE_INVALID} (Error : ${analyzer.error_messages.join(',')})`);
@@ -268,6 +273,55 @@ export class DiscordMessageController {
                         message_manager.get_delete_recruitment_message(analyzer.get_recruitment(), server_info.recruitment_target_role)
                     ]
                 });
+            })
+            .catch((err: any) => {
+                // send error message
+                message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+                logger.error(err);
+            });
+    }
+
+    /**
+     * regist master
+     * @param message 
+     * @param analyzer 
+     */
+    static regist_master(client: any, message: any, analyzer: DiscordMessageAnalyzer) {
+        // create db instances
+        const server_info_repo = new ServerInfoRepository();
+
+        // create message manager instance
+        const message_manager = new DiscordMessageManager();
+
+        // recruitment role string
+        let server_info: ServerInfo = new ServerInfo();
+
+        // create server info instance
+        server_info.server_id = message.guildId;
+        server_info.channel_id = message.channelId;
+        server_info.recruitment_target_role = analyzer.owner_id;
+        server_info.follow_time = Constants.get_default_date();
+
+        // try to insert
+        server_info_repo.insert_m_server_info(server_info)
+            .catch(() => {
+                // insert failed - try to update
+                logger.info(`insert server info failed, try to update.`);
+                return server_info_repo.update_m_server_info(server_info);
+            })
+            .then(() => {
+                // get date for confirm
+                return server_info_repo.get_m_server_info(message.guild.id);
+            })
+            .then((server_info_data) => {
+                // send success message
+                logger.info(`server info registration successed.`);
+                logger.trace(server_info_data);
+
+                // send success message
+                return client.channels.cache.get(server_info.channel_id).send(
+                    message_manager.get_regist_server_info(server_info.recruitment_target_role)
+                );
             })
             .catch((err: any) => {
                 // send error message

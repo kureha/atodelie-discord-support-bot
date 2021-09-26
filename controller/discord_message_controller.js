@@ -13,6 +13,8 @@ const server_info_1 = require("../db/server_info");
 // create message modules
 const discord_message_analyzer_1 = require("./../logic/discord_message_analyzer");
 const discord_message_manager_1 = require("./../logic/discord_message_manager");
+// import entities
+const server_info_2 = require("../entity/server_info");
 const reference_1 = require("../entity/reference");
 // import discord modules
 const Discord = require('discord.js');
@@ -44,6 +46,10 @@ class DiscordMessageController {
                     case constants.TYPE_DELETE:
                         // delete recruitment
                         DiscordMessageController.delete_recruitment(client, message, analyzer);
+                        break;
+                    case constants.TYPE_REGIST_MAETER:
+                        // regist master
+                        DiscordMessageController.regist_master(client, message, analyzer);
                         break;
                     default:
                         // send error message
@@ -231,6 +237,47 @@ class DiscordMessageController {
                     message_manager.get_delete_recruitment_message(analyzer.get_recruitment(), server_info.recruitment_target_role)
                 ]
             });
+        })
+            .catch((err) => {
+            // send error message
+            message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+            logger_1.logger.error(err);
+        });
+    }
+    /**
+     * regist master
+     * @param message
+     * @param analyzer
+     */
+    static regist_master(client, message, analyzer) {
+        // create db instances
+        const server_info_repo = new server_info_1.ServerInfoRepository();
+        // create message manager instance
+        const message_manager = new discord_message_manager_1.DiscordMessageManager();
+        // recruitment role string
+        let server_info = new server_info_2.ServerInfo();
+        // create server info instance
+        server_info.server_id = message.guildId;
+        server_info.channel_id = message.channelId;
+        server_info.recruitment_target_role = analyzer.owner_id;
+        server_info.follow_time = constants_1.Constants.get_default_date();
+        // try to insert
+        server_info_repo.insert_m_server_info(server_info)
+            .catch(() => {
+            // insert failed - try to update
+            logger_1.logger.info(`insert server info failed, try to update.`);
+            return server_info_repo.update_m_server_info(server_info);
+        })
+            .then(() => {
+            // get date for confirm
+            return server_info_repo.get_m_server_info(message.guild.id);
+        })
+            .then((server_info_data) => {
+            // send success message
+            logger_1.logger.info(`server info registration successed.`);
+            logger_1.logger.trace(server_info_data);
+            // send success message
+            return client.channels.cache.get(server_info.channel_id).send(message_manager.get_regist_server_info(server_info.recruitment_target_role));
         })
             .catch((err) => {
             // send error message

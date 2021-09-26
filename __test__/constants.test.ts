@@ -20,6 +20,8 @@ test("Test for constants", () => {
     expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EXCEPTION).not.toEqual('');
     expect(v.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_NO_PERMISSION).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_SETTING_IS_NOT_READY).not.toEqual('');
 
     expect(v.DISCORD_RECRUITMENT_THREAD_TITLE).not.toEqual('');
     expect(v.DISCORD_RECRUITMENT_THREAD_ANNOUNCEMENT).not.toEqual('');
@@ -38,6 +40,7 @@ test("Test for constants", () => {
     expect(v.DISCORD_MESSAGE_FOLLOW_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_MESSAGE_FOLLOW_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_REGIST_SERVER_INFO).not.toEqual('');
 
     expect(v.DISCORD_BUTTUN_JOIN).not.toEqual('');
     expect(v.DISCORD_BUTTON_DECLINE).not.toEqual('');
@@ -47,6 +50,7 @@ test("Test for constants", () => {
     expect(v.DISCORD_COMMAND_EDIT_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_DELETE_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_LIST_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_COMMAND_REGIST_MASTER).not.toEqual('');
 
     expect(v.DISCORD_MESSAGE_EMBED_NO_MEMBER).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EMBED_TITLE).not.toEqual('');

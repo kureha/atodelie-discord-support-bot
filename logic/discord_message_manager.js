@@ -210,6 +210,25 @@ class DiscordMessageManager {
         let result = constants.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT;
         return result;
     }
+    /**
+     * return regist server info message
+     * @returns message
+     */
+    get_regist_server_info(recruitment_target_role) {
+        let result = this.enable_lf(constants.DISCORD_MESSAGE_REGIST_SERVER_INFO)
+            .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role);
+        return result;
+    }
+    /**
+     * return setting is not ready message
+     * @returns message
+     */
+    get_setting_is_not_ready(admin_user_id, bot_user_id) {
+        let result = this.enable_lf(constants.DISCORD_MESSAGE_SETTING_IS_NOT_READY)
+            .replace('%%DISCORD_BOT_ADMIN_USER_ID%%', admin_user_id)
+            .replace('%%DISCORD_BOT_USER_ID%%', bot_user_id);
+        return result;
+    }
 }
 exports.DiscordMessageManager = DiscordMessageManager;
 ;

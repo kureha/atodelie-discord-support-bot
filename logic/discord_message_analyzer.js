@@ -158,6 +158,30 @@ class DiscordMessageAnalyzer {
                 // ng
                 reject();
             }
+            else if (DiscordMessageAnalyzer.check_regist_master(this.message) == true) {
+                // regist command
+                logger_1.logger.info(`target message is regist master. : mes = ${this.message}`);
+                // check id
+                if (message_user_id == constants.DISCORD_BOT_ADMIN_USER_ID) {
+                    this.type = constants.TYPE_REGIST_MAETER;
+                    // extract user id
+                    let user_id_list = DiscordMessageAnalyzer.extract_mention_id_list(this.message);
+                    user_id_list.forEach((v) => {
+                        if (v != user_id) {
+                            logger_1.logger.info(`extracted message target id. : id = ${v}`);
+                            this.owner_id = v;
+                        }
+                    });
+                    // ok
+                    resolve();
+                }
+                else {
+                    logger_1.logger.warn(`target user is not admin, can't execute regist master. : message_user_id = ${message_user_id}`);
+                    this.error_messages.push(constants.DISCORD_MESSAGE_NO_PERMISSION);
+                    // ng
+                    reject();
+                }
+            }
             else {
                 // this is not valid message
                 logger_1.logger.info(`target message is not valid. : mes = ${this.message}`);
@@ -431,6 +455,35 @@ class DiscordMessageAnalyzer {
      */
     static get_delete_text(mes) {
         return mes.replace(new RegExp(`^^[ 　]*(${constants.DISCORD_COMMAND_DELETE_RECRUITMENT})[^ 　]*[ 　]`), "");
+    }
+    /**
+     * check message is regist master
+     * @param mes message
+     * @returns
+     */
+    static check_regist_master(mes) {
+        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_REGIST_MASTER})[^ 　]*[ 　]`) === undefined) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    /**
+     * extract mention id from message
+     * @param mes
+     * @returns mention id list
+     */
+    static extract_mention_id_list(mes) {
+        let result_list = [];
+        let extract_id = new RegExp('<@&(\\d+)>', 'g');
+        let temp_id = null;
+        while ((temp_id = extract_id.exec(mes)) !== null) {
+            if (temp_id[1]) {
+                result_list.push(temp_id[1]);
+            }
+        }
+        return result_list;
     }
 }
 exports.DiscordMessageAnalyzer = DiscordMessageAnalyzer;

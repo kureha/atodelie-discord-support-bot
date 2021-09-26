@@ -33,6 +33,8 @@ class Constants {
         this.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT = process.env['DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_EXCEPTION = process.env['DISCORD_MESSAGE_EXCEPTION'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED = process.env['DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED'] || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_NO_PERMISSION = process.env['DISCORD_MESSAGE_NO_PERMISSION'] || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_SETTING_IS_NOT_READY = process.env['DISCORD_MESSAGE_SETTING_IS_NOT_READY'] || Constants.STRING_EMPTY;
         this.DISCORD_RECRUITMENT_THREAD_TITLE = process.env['DISCORD_RECRUITMENT_THREAD_TITLE'] || Constants.STRING_EMPTY;
         this.DISCORD_RECRUITMENT_THREAD_ANNOUNCEMENT = process.env['DISCORD_RECRUITMENT_THREAD_ANNOUNCEMENT'] || Constants.STRING_EMPTY;
         // thread recruitment duration (minute)
@@ -51,6 +53,7 @@ class Constants {
         this.DISCORD_MESSAGE_SUCCESS_DECLINE = process.env['DISCORD_MESSAGE_SUCCESS_DECLINE'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT = process.env['DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_FOLLOW_RECRUITMENT = process.env['DISCORD_MESSAGE_FOLLOW_RECRUITMENT'] || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_REGIST_SERVER_INFO = process.env['DISCORD_MESSAGE_REGIST_SERVER_INFO'] || Constants.STRING_EMPTY;
         this.DISCORD_BUTTUN_JOIN = process.env['DISCORD_BUTTUN_JOIN'] || Constants.STRING_EMPTY;
         this.DISCORD_BUTTON_DECLINE = process.env['DISCORD_BUTTON_DECLINE'] || Constants.STRING_EMPTY;
         this.DISCORD_BUTTON_VIEW = process.env['DISCORD_BUTTON_VIEW'] || Constants.STRING_EMPTY;
@@ -58,6 +61,7 @@ class Constants {
         this.DISCORD_COMMAND_EDIT_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_EDIT_RECRUITMENT'], ',');
         this.DISCORD_COMMAND_DELETE_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_DELETE_RECRUITMENT'], ',');
         this.DISCORD_COMMAND_LIST_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_LIST_RECRUITMENT'], ',');
+        this.DISCORD_COMMAND_REGIST_MASTER = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_REGIST_MASTER'], ',');
         // message static values section
         this.DISCORD_MESSAGE_EMBED_NO_MEMBER = process.env['DISCORD_MESSAGE_EMBED_NO_MEMBER'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_EMBED_TITLE = process.env['DISCORD_MESSAGE_EMBED_TITLE'] || Constants.STRING_EMPTY;
@@ -72,6 +76,7 @@ class Constants {
         this.TYPE_JOIN = 2;
         this.TYPE_DECLINE = 3;
         this.TYPE_LIST = 4;
+        this.TYPE_REGIST_MAETER = 21;
         this.TYPE_VIEW = 5;
         this.TYPE_EDIT = 6;
         this.TYPE_DELETE = 7;
