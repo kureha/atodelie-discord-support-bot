@@ -18,7 +18,7 @@ Discordでイベント（ゲーム、TRPG）の募集補助を行うbotです。
 - 各種文言カスタマイズ機能
     - 募集、参加、辞退等の文言を自由に変更することが可能。
   
-
+- Example
 ![Sample Image 01](snapshot_01.png)
 
 ## Requirements
