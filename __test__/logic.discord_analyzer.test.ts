@@ -40,7 +40,7 @@ test("Test for constructor", () => {
         expect(v.name).toEqual('もーーー！（バグだらけじゃん自分で作っておきながらー！）');
         expect(v.max_number).toEqual(DiscordMessageAnalyzer.MAX_NUMBERS_DEFAULT);
     });
-})
+});
 
 test("Test for constructor", () => {
     var v = new DiscordMessageAnalyzer()
@@ -52,7 +52,19 @@ test("Test for constructor", () => {
         expect(v.name).toEqual('21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
         expect(v.max_number).toEqual(3);
     })
-})
+});
+
+test("Test for constructor", () => {
+    var v = new DiscordMessageAnalyzer()
+    v.analyze(`<@!868275869540569110>\r\n ぼしゅう \r\n21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）`, 'CHR', 'SENDER_ID', '868275869540569110', new Reference(undefined)).then(() => {
+        expect(v.server_id).toEqual('CHR');
+        expect(v.valid).toEqual(true);
+        expect(v.type).toEqual(constants.TYPE_RECRUITEMENT);
+        expect(v.message).toEqual('\r\n ぼしゅう \r\n21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
+        expect(v.name).toEqual('\r\n ぼしゅう \r\n21:00から @3 もーーー！（バグだらけじゃん自分で作っておきながらー！）');
+        expect(v.max_number).toEqual(3);
+    }).catch((err) => {console.log(err)})
+});
 
 test("Test for get numbers", () => {
     expect(DiscordMessageAnalyzer.get_recruitment_numbers("募集します @3")).toEqual(3);

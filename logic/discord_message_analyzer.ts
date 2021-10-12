@@ -488,7 +488,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static check_recruitment(mes: string): boolean {
-        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_NEW_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
+        if (this.extract_by_regexp(mes.replace(/[\r\n|\r|\n]+/g, ' '), `^[ 　]*(${constants.DISCORD_COMMAND_NEW_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
             return false;
         } else {
             return true;
@@ -510,7 +510,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static check_type_list(mes: string): boolean {
-        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_LIST_RECRUITMENT})`) === undefined) {
+        if (this.extract_by_regexp(mes.replace(/[\r\n|\r|\n]+/g, ' '), `^[ 　]*(${constants.DISCORD_COMMAND_LIST_RECRUITMENT})`) === undefined) {
             return false;
         } else {
             return true;
@@ -523,7 +523,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static check_edit(mes: string): boolean {
-        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_EDIT_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
+        if (this.extract_by_regexp(mes.replace(/[\r\n|\r|\n]+/g, ' '), `^[ 　]*(${constants.DISCORD_COMMAND_EDIT_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
             return false;
         } else {
             return true;
@@ -545,7 +545,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static check_delete(mes: string): boolean {
-        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_DELETE_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
+        if (this.extract_by_regexp(mes.replace(/[\r\n|\r|\n]+/g, ' '), `^[ 　]*(${constants.DISCORD_COMMAND_DELETE_RECRUITMENT})[^ 　]*[ 　]`) === undefined) {
             return false;
         } else {
             return true;
@@ -567,7 +567,7 @@ export class DiscordMessageAnalyzer {
      * @returns 
      */
     static check_regist_master(mes: string): boolean {
-        if (this.extract_by_regexp(mes, `^[ 　]*(${constants.DISCORD_COMMAND_REGIST_MASTER})[^ 　]*[ 　]`) === undefined) {
+        if (this.extract_by_regexp(mes.replace(/[\r\n|\r|\n]+/g, ' '), `^[ 　]*(${constants.DISCORD_COMMAND_REGIST_MASTER})[^ 　]*[ 　]`) === undefined) {
             return false;
         } else {
             return true;

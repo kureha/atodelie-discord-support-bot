@@ -1,5 +1,5 @@
 // use path
-import path from "path";
+import * as path from "path";
 
 // log output directory is ${APP_ROOT}/logs/
 const APP_ROOT = path.join(__dirname, "../");

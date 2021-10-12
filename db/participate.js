@@ -1,51 +1,51 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.ParticipateRepository = void 0;
 // define logger
-const logger_1 = require("../common/logger");
+var logger_1 = require("../common/logger");
 // import constants
-const constants_1 = require("../common/constants");
-const constants = new constants_1.Constants();
+var constants_1 = require("../common/constants");
+var constants = new constants_1.Constants();
 // import entities
-const participate_1 = require("../entity/participate");
-class ParticipateRepository {
+var participate_1 = require("../entity/participate");
+var ParticipateRepository = /** @class */ (function () {
     /**
      * constructor
      */
-    constructor() {
-        const db = this.get_db_instance(constants.SQLITE_FILE);
-        logger_1.logger.info(`database open successed. db = ${db}`);
+    function ParticipateRepository() {
+        var db = this.get_db_instance(constants.SQLITE_FILE);
+        logger_1.logger.info("database open successed. db = " + db);
     }
     /**
      * get sqlite3 database instance
      * @param file_path sqlite3 file path
      * @returns sqlite3 database instance
      */
-    get_db_instance(file_path) {
+    ParticipateRepository.prototype.get_db_instance = function (file_path) {
         // initialize SQLite instance
-        const sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
+        var sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
         var db = new sqlite.Database(file_path);
         // detect SQLite error from instance
         if (db === undefined || db === null) {
-            logger_1.logger.error(`database instance is undefined or null.`);
-            throw `database instance is undefined or null.`;
+            logger_1.logger.error("database instance is undefined or null.");
+            throw "database instance is undefined or null.";
         }
         else {
             // return SQLite instance if status is good
             return db;
         }
-    }
+    };
     /**
      * create table
      * @param db sqlite3 database instance
      */
-    create_all_database(db) {
-        return new Promise((resolve, reject) => {
+    ParticipateRepository.prototype.create_all_database = function (db) {
+        return new Promise(function (resolve, reject) {
             db.serialize(function () {
                 // run serialize
-                db.run(ParticipateRepository.SQL_CREATE_T_PARTICIPATE, [], ((err) => {
+                db.run(ParticipateRepository.SQL_CREATE_T_PARTICIPATE, [], (function (err) {
                     if (err) {
-                        logger_1.logger.error(`sql exception occured when create table. sql = ${ParticipateRepository.SQL_CREATE_T_PARTICIPATE}`);
+                        logger_1.logger.error("sql exception occured when create table. sql = " + ParticipateRepository.SQL_CREATE_T_PARTICIPATE);
                         reject(err);
                     }
                     // resolve after all sql completed
@@ -54,27 +54,28 @@ class ParticipateRepository {
             });
             db.close();
         });
-    }
+    };
     /**
      * insert data
      * @param data
      * @returns
      */
-    insert_t_participate(data) {
+    ParticipateRepository.prototype.insert_t_participate = function (data) {
+        var _this = this;
         // return promise
-        return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(constants.SQLITE_FILE);
+        return new Promise(function (resolve, reject) {
+            var db = _this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${ParticipateRepository.SQL_INSERT_T_PARTICIPATE}`;
-                logger_1.logger.info(`sql = ${sql}, token = ${data.token}`);
-                const stmt = db.prepare(sql);
+                var sql = "" + ParticipateRepository.SQL_INSERT_T_PARTICIPATE;
+                logger_1.logger.info("sql = " + sql + ", token = " + data.token);
+                var stmt = db.prepare(sql);
                 stmt.run({
                     $token: data.token,
                     $status: data.status,
                     $user_id: data.user_id,
-                    $description: data.description,
-                }, (err) => {
+                    $description: data.description
+                }, function (err) {
                     if (err) {
                         logger_1.logger.error(err);
                         reject(err);
@@ -86,28 +87,29 @@ class ParticipateRepository {
             });
             db.close();
         });
-    }
+    };
     /**
      * update data
      * @param data key is [data.token] and [data.user_id]
      * @returns
      */
-    update_t_participate(data) {
+    ParticipateRepository.prototype.update_t_participate = function (data) {
+        var _this = this;
         // return promise
-        return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(constants.SQLITE_FILE);
+        return new Promise(function (resolve, reject) {
+            var db = _this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${ParticipateRepository.SQL_UPDATE_T_PARTICIPATE} where [id] = (select [id] from [m_recruitment] where [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\')) AND [user_id] = $user_id `;
-                logger_1.logger.info(`sql = ${sql}, token = ${data.token}`);
-                const stmt = db.prepare(sql);
+                var sql = ParticipateRepository.SQL_UPDATE_T_PARTICIPATE + " where [id] = (select [id] from [m_recruitment] where [token] = $token and [delete] = false and datetime([limit_time], 'localtime') >= datetime('now', 'localtime')) AND [user_id] = $user_id ";
+                logger_1.logger.info("sql = " + sql + ", token = " + data.token);
+                var stmt = db.prepare(sql);
                 stmt.run({
                     $token: data.token,
                     $user_id: data.user_id,
                     $status: data.status,
                     $description: data.description,
-                    $delete: data.delete,
-                }, (err) => {
+                    $delete: data["delete"]
+                }, function (err) {
                     if (err) {
                         logger_1.logger.error(err);
                         reject(err);
@@ -119,24 +121,25 @@ class ParticipateRepository {
             });
             db.close();
         });
-    }
+    };
     /**
      * delete data by token
      * @param token
      * @returns
      */
-    delete_t_participate(token) {
+    ParticipateRepository.prototype.delete_t_participate = function (token) {
+        var _this = this;
         // return promise
-        return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(constants.SQLITE_FILE);
+        return new Promise(function (resolve, reject) {
+            var db = _this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${ParticipateRepository.SQL_DELETE_T_PARTICIPATE} WHERE [id] = (SELECT [id] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\')) `;
-                logger_1.logger.info(`sql = ${sql}, token = ${token}`);
-                const stmt = db.prepare(sql);
+                var sql = ParticipateRepository.SQL_DELETE_T_PARTICIPATE + " WHERE [id] = (SELECT [id] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], 'localtime') >= datetime('now', 'localtime')) ";
+                logger_1.logger.info("sql = " + sql + ", token = " + token);
+                var stmt = db.prepare(sql);
                 stmt.run({
-                    $token: token,
-                }, (err) => {
+                    $token: token
+                }, function (err) {
                     if (err) {
                         logger_1.logger.error(err);
                         reject(err);
@@ -148,64 +151,65 @@ class ParticipateRepository {
             });
             db.close();
         });
-    }
+    };
     /**
      * select data list by token
      * @param token
      * @returns participate data list
      */
-    get_t_participate(token) {
+    ParticipateRepository.prototype.get_t_participate = function (token) {
+        var _this = this;
         // return promise
-        return new Promise((resolve, reject) => {
-            const db = this.get_db_instance(constants.SQLITE_FILE);
+        return new Promise(function (resolve, reject) {
+            var db = _this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // run serialize
-                const sql = `${ParticipateRepository.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and datetime(m1.[limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') order by t1.[update_time] `;
-                logger_1.logger.info(`sql = ${sql}, token = ${token}`);
-                db.all(sql, [token], ((err, rows) => {
+                var sql = ParticipateRepository.SQL_SELECT_T_PARTICIPATE + " inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and datetime(m1.[limit_time], 'localtime') >= datetime('now', 'localtime') order by t1.[update_time] ";
+                logger_1.logger.info("sql = " + sql + ", token = " + token);
+                db.all(sql, [token], (function (err, rows) {
                     if (err) {
-                        logger_1.logger.error(`select t_participate failed. sql = ${sql}, key = ${token}`);
+                        logger_1.logger.error("select t_participate failed. sql = " + sql + ", key = " + token);
                         reject(err);
                     }
                     else if (rows === undefined || rows === null || rows.length === 0) {
-                        logger_1.logger.info(`data not found on t_participate. sql = ${sql}, key = ${token}`);
+                        logger_1.logger.info("data not found on t_participate. sql = " + sql + ", key = " + token);
                         resolve([]);
                     }
                     else {
                         // return value list
-                        const participate_list = [];
-                        rows.forEach(v => {
-                            participate_list.push(participate_1.Participate.parse_from_db(v));
+                        var participate_list_1 = [];
+                        rows.forEach(function (v) {
+                            participate_list_1.push(participate_1.Participate.parse_from_db(v));
                         });
-                        logger_1.logger.info(`selected t_participate successed. : key = ${token}`);
+                        logger_1.logger.info("selected t_participate successed. : key = " + token);
                         logger_1.logger.trace(rows);
-                        resolve(participate_list);
+                        resolve(participate_list_1);
                     }
                 }));
             });
             db.close();
         });
-    }
-}
+    };
+    /**
+     * create SQL
+     */
+    ParticipateRepository.SQL_CREATE_T_PARTICIPATE = 'CREATE TABLE IF NOT EXISTS [t_participate] ( [id] INTEGER NOT NULL, [status] INTEGER NOT NULL, [user_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id],[user_id]) )';
+    /**
+     * select SQL
+     */
+    ParticipateRepository.SQL_SELECT_T_PARTICIPATE = 'SELECT t1.[id], t1.[status], t1.[user_id], t1.[description], t1.[regist_time], t1.[update_time], t1.[delete] FROM [t_participate] t1 ';
+    /**
+     * insert SQL
+     */
+    ParticipateRepository.SQL_INSERT_T_PARTICIPATE = 'INSERT INTO [t_participate] ([id], [status], [user_id], [description], [regist_time], [update_time], [delete]) SELECT [id], $status, $user_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') ';
+    /**
+     * update SQL
+     */
+    ParticipateRepository.SQL_UPDATE_T_PARTICIPATE = 'UPDATE [t_participate] SET [status] = $status, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
+    /**
+     * delete SQL
+     */
+    ParticipateRepository.SQL_DELETE_T_PARTICIPATE = 'DELETE FROM [t_participate] ';
+    return ParticipateRepository;
+}());
 exports.ParticipateRepository = ParticipateRepository;
-/**
- * create SQL
- */
-ParticipateRepository.SQL_CREATE_T_PARTICIPATE = 'CREATE TABLE IF NOT EXISTS [t_participate] ( [id] INTEGER NOT NULL, [status] INTEGER NOT NULL, [user_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id],[user_id]) )';
-/**
- * select SQL
- */
-ParticipateRepository.SQL_SELECT_T_PARTICIPATE = 'SELECT t1.[id], t1.[status], t1.[user_id], t1.[description], t1.[regist_time], t1.[update_time], t1.[delete] FROM [t_participate] t1 ';
-/**
- * insert SQL
- */
-ParticipateRepository.SQL_INSERT_T_PARTICIPATE = 'INSERT INTO [t_participate] ([id], [status], [user_id], [description], [regist_time], [update_time], [delete]) SELECT [id], $status, $user_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') ';
-/**
- * update SQL
- */
-ParticipateRepository.SQL_UPDATE_T_PARTICIPATE = 'UPDATE [t_participate] SET [status] = $status, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
-/**
- * delete SQL
- */
-ParticipateRepository.SQL_DELETE_T_PARTICIPATE = 'DELETE FROM [t_participate] ';
-//# sourceMappingURL=participate.js.map
