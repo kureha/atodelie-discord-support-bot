@@ -1,12 +1,12 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Constants = void 0;
-var Constants = /** @class */ (function () {
+class Constants {
     /**
      * constructor, set all value from process.env
      * @constructor
      */
-    function Constants() {
+    constructor() {
         // readed from env file
         require('dotenv').config();
         // common section
@@ -101,8 +101,8 @@ var Constants = /** @class */ (function () {
      * get default data for this system
      * @returns date instance of '2000-01-01 00:00:00'
      */
-    Constants.get_default_date = function () {
-        var temp_date = new Date();
+    static get_default_date() {
+        const temp_date = new Date();
         temp_date.setFullYear(2000);
         temp_date.setMonth(0);
         temp_date.setDate(1);
@@ -111,34 +111,34 @@ var Constants = /** @class */ (function () {
         temp_date.setSeconds(0);
         temp_date.setMilliseconds(0);
         return temp_date;
-    };
+    }
     /**
      * get escape string from env file
      * @param v non-escaped regexp string list
      * @param split_char list split char
      * @returns regexp escaped string (not list)
      */
-    Constants.get_escaped_regexp_string_from_env = function (v, split_char) {
+    static get_escaped_regexp_string_from_env(v, split_char) {
         if (v === undefined) {
             return '';
         }
         else {
-            v.split(split_char).forEach(function (e) {
+            v.split(split_char).forEach(e => {
                 e = Constants.escape_regexp(e);
             });
             return v.split(split_char).join('|');
         }
-    };
+    }
     /**
      * escape string for regexp (e.g. escape user input string)
      * @param v regexp string non-escaped
      * @returns escaped regexp string
      */
-    Constants.escape_regexp = function (v) {
+    static escape_regexp(v) {
         return v.replace(/[.*+?^=!:${}()|[\]\/\\]/g, '\\$&');
-    };
-    Constants.STRING_EMPTY = '';
-    return Constants;
-}());
+    }
+}
 exports.Constants = Constants;
+Constants.STRING_EMPTY = '';
 ;
+//# sourceMappingURL=constants.js.map

@@ -46,7 +46,6 @@ class DiscordMessageManager {
      * return recruitment thread's title
      * replacing:
      * %%TITLE%% -> recruitment name
-     * %%LIMIT_TIEM%% -> recruitment limit time with format
      * @param template title template (e.g. constants.DISCORD_RECRUITMENT_THREAD_TITLE)
      * @param recruitment
      * @returns
@@ -84,6 +83,9 @@ class DiscordMessageManager {
      * @returns Discord.MessageEmbed message
      */
     get_recruitment_embed_message(recruitment, recruitment_target_role, title, desription) {
+        // create title
+        let title_converted = this.enable_lf(title)
+            .replace('%%TITLE%%', recruitment.name);
         // create description
         let description_converted = this.enable_lf(desription)
             .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
@@ -109,7 +111,7 @@ class DiscordMessageManager {
             view_users = constants.DISCORD_MESSAGE_EMBED_NO_MEMBER;
         }
         return new Discord.MessageEmbed({
-            title: title,
+            title: title_converted,
             description: description_converted,
             timestamp: new Date(),
             fields: [

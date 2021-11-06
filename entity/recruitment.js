@@ -1,15 +1,15 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Recruitment = void 0;
 // import constants
-var constants_1 = require("../common/constants");
-var constants = new constants_1.Constants();
-var Recruitment = /** @class */ (function () {
+const constants_1 = require("../common/constants");
+const constants = new constants_1.Constants();
+class Recruitment {
     /**
      * constructor
      * @constructor
      */
-    function Recruitment() {
+    constructor() {
         this.id = constants.ID_INVALID;
         this.server_id = '';
         this.message_id = '';
@@ -20,7 +20,7 @@ var Recruitment = /** @class */ (function () {
         this.name = '';
         this.owner_id = '';
         this.description = '';
-        this["delete"] = false;
+        this.delete = false;
         // insert participate array
         this.user_list = [];
     }
@@ -29,8 +29,8 @@ var Recruitment = /** @class */ (function () {
      * @param row m_recruitment table single row
      * @returns recruitment's instance, return blank instance if error occured
      */
-    Recruitment.parse_from_db = function (row) {
-        var v = new Recruitment();
+    static parse_from_db(row) {
+        let v = new Recruitment();
         try {
             v.id = row.id;
             v.server_id = row.server_id;
@@ -48,14 +48,14 @@ var Recruitment = /** @class */ (function () {
             v.name = row.name;
             v.owner_id = row.owner_id;
             v.description = row.description;
-            v["delete"] = row["delete"];
+            v.delete = row.delete;
         }
         catch (e) {
             // if error, re-create new instance
             v = new Recruitment();
         }
         return v;
-    };
-    return Recruitment;
-}());
+    }
+}
 exports.Recruitment = Recruitment;
+//# sourceMappingURL=recruitment.js.map
