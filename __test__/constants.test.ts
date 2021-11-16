@@ -51,6 +51,7 @@ test("Test for constants", () => {
     expect(v.DISCORD_COMMAND_DELETE_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_LIST_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_REGIST_MASTER).not.toEqual('');
+    expect(v.DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME).not.toEqual('');
 
     expect(v.DISCORD_MESSAGE_EMBED_NO_MEMBER).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EMBED_TITLE).not.toEqual('');

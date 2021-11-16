@@ -41,4 +41,28 @@ test('test for times analyze', () => {
         }
     }
 });
+test('test for get time with expects', () => {
+    let result = discord_message_analyzer_1.DiscordMessageAnalyzer.get_recruitment_time("test 2048 1234 message", ["2048"]);
+    if (result) {
+        expect(result.getHours()).toEqual(12);
+        expect(result.getMinutes()).toEqual(34);
+        expect(result.getSeconds()).toEqual(0);
+    }
+});
+test('test for get time with expects', () => {
+    let result = discord_message_analyzer_1.DiscordMessageAnalyzer.get_recruitment_time("test 2048 1234 2345 message", ["2048", "1234"]);
+    if (result) {
+        expect(result.getHours()).toEqual(23);
+        expect(result.getMinutes()).toEqual(45);
+        expect(result.getSeconds()).toEqual(0);
+    }
+});
+test('test for get time with expects', () => {
+    let result = discord_message_analyzer_1.DiscordMessageAnalyzer.get_recruitment_time("test 2048 1234 message");
+    if (result) {
+        expect(result.getHours()).toEqual(20);
+        expect(result.getMinutes()).toEqual(48);
+        expect(result.getSeconds()).toEqual(0);
+    }
+});
 //# sourceMappingURL=logic.discord_analyzer.date_module.test.js.map

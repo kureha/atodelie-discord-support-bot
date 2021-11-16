@@ -118,7 +118,7 @@ export class DiscordMessageAnalyzer {
                 this.token = '';
 
                 // analyze limit_time and max_member
-                this.limit_time = DiscordMessageAnalyzer.get_recruitment_time(this.message) || this.default_date;
+                this.limit_time = DiscordMessageAnalyzer.get_recruitment_time(this.message, constants.DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME) || this.default_date;
                 logger.debug(`recruitment's target time : ${this.limit_time}`);
 
                 this.max_number = DiscordMessageAnalyzer.get_recruitment_numbers(this.message) || DiscordMessageAnalyzer.MAX_NUMBERS_DEFAULT;
@@ -153,7 +153,7 @@ export class DiscordMessageAnalyzer {
                         logger.debug(`recruitment's name, owner_id : name = ${this.name}, owner_id = ${message_user_id}`);
 
                         // set limit time
-                        this.limit_time = DiscordMessageAnalyzer.get_recruitment_time(this.message) || this.default_date;
+                        this.limit_time = DiscordMessageAnalyzer.get_recruitment_time(this.message, constants.DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME) || this.default_date;
                         logger.debug(`recruitment's target time : ${this.limit_time}`);
 
                         // max number
@@ -388,13 +388,19 @@ export class DiscordMessageAnalyzer {
 
     /**
      * extract date string and convert date object
-     * @param mes message
+     * @param raw_mes message
      * @returns recruitment's limit date
      */
-    static get_recruitment_time(mes: string): Date | undefined {
+    static get_recruitment_time(raw_mes: string, except_list: string[] = []): Date | undefined {
         // needed variables
         let hour = undefined;
         let minute = undefined;
+
+        // remove except words
+        let mes: string = raw_mes;
+        except_list.forEach(v => {
+            mes = mes.replace(v, '');
+        });
 
         // check1
         var re_result = mes.match(/(\d{2})[:]{0,1}(\d{2})/);

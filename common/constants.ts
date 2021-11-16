@@ -48,6 +48,7 @@ export class Constants {
     DISCORD_COMMAND_DELETE_RECRUITMENT: string;
     DISCORD_COMMAND_LIST_RECRUITMENT: string;
     DISCORD_COMMAND_REGIST_MASTER: string;
+    DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME: string[];
 
     // message static values section
     DISCORD_MESSAGE_EMBED_NO_MEMBER: string;
@@ -160,6 +161,7 @@ export class Constants {
         this.DISCORD_COMMAND_DELETE_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_DELETE_RECRUITMENT'], ',');
         this.DISCORD_COMMAND_LIST_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_LIST_RECRUITMENT'], ',');
         this.DISCORD_COMMAND_REGIST_MASTER = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_REGIST_MASTER'], ',');
+        this.DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME = process.env['DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME']?.split(',') || [];
 
         // message static values section
         this.DISCORD_MESSAGE_EMBED_NO_MEMBER = process.env['DISCORD_MESSAGE_EMBED_NO_MEMBER'] || Constants.STRING_EMPTY;
