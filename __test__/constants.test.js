@@ -11,6 +11,8 @@ test("Test for constants", () => {
     expect(v.DISCORD_FOLLOW_MINUTE).not.toEqual(NaN);
     expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toEqual('');
     expect(v.DISCORD_FOLLOW_CRON).not.toEqual('');
+    expect(v.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE).not.toEqual(NaN);
+    expect(v.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE_SQL).toEqual('-60 minutes');
     expect(v.SQLITE_FILE).not.toEqual('');
     expect(v.SQLITE_TEMPLATE_FILE).not.toEqual('');
     expect(v.DISCORD_ACTIVITY_NAME).not.toEqual('');

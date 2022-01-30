@@ -23,6 +23,13 @@ class Constants {
             this.DISCORD_FOLLOW_MINUTE = 30;
         }
         this.DISCORD_FOLLOW_CRON = process.env['DISCORD_FOLLOW_CRON'] || Constants.STRING_EMPTY;
+        this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE = parseInt(process.env['DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE'] || Constants.STRING_EMPTY);
+        if (isNaN(this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE)) {
+            // set default
+            this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE = 0;
+        }
+        // create sql strings
+        this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE_SQL = `-${this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE} minutes`;
         // sqlite section
         this.SQLITE_FILE = process.env['SQLITE_FILE'] || Constants.STRING_EMPTY;
         this.SQLITE_TEMPLATE_FILE = process.env['SQLITE_TEMPLATE_FILE'] || Constants.STRING_EMPTY;

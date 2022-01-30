@@ -22,7 +22,7 @@
     "nodemon": "^2.0.12",
     "ts-node": "^10.2.1",
     "ts-node-dev": "^1.1.8",
-    "typescript": "^4.3.5"
+    "typescript": "^4.5.5"
   },
   "scripts": {
     "start": "node index.js",
@@ -32,7 +32,9 @@
     "node": "16.x"
   },
   "jest": {
-    "moduleFileExtensions": ["js"],
+    "moduleFileExtensions": [
+      "js"
+    ],
     "verbose": true
   }
 }

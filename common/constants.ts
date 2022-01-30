@@ -5,6 +5,8 @@ export class Constants {
     DISCORD_LATEST_LIST_LENGTH: number;
     DISCORD_FOLLOW_MINUTE: number;
     DISCORD_FOLLOW_CRON: string;
+    DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE: number;
+    DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE_SQL: string;
 
     // sqlite section
     SQLITE_FILE: string;
@@ -117,6 +119,13 @@ export class Constants {
             this.DISCORD_FOLLOW_MINUTE = 30;
         }
         this.DISCORD_FOLLOW_CRON = process.env['DISCORD_FOLLOW_CRON'] || Constants.STRING_EMPTY;
+        this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE = parseInt(process.env['DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE'] || Constants.STRING_EMPTY);
+        if (isNaN(this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE)) {
+            // set default
+            this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE = 0;
+        }
+        // create sql strings
+        this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE_SQL = `-${this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE} minutes`;
 
         // sqlite section
         this.SQLITE_FILE = process.env['SQLITE_FILE'] || Constants.STRING_EMPTY;
