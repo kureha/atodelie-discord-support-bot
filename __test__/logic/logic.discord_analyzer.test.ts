@@ -1,9 +1,9 @@
-import { Constants } from '../common/constants';
+import { Constants } from '../../common/constants';
 const constants = new Constants();
 
-import { Reference } from '../entity/reference';
+import { Reference } from '../../entity/reference';
 
-import { DiscordMessageAnalyzer } from '../logic/discord_message_analyzer';
+import { DiscordMessageAnalyzer } from '../../logic/discord_message_analyzer';
 
 test("Test for CheckReqcruitement", () => {
     expect(DiscordMessageAnalyzer.check_recruitment("test")).toBe(false);

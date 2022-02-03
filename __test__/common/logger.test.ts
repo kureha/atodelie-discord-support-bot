@@ -1,4 +1,4 @@
-import { logger } from './../common/logger';
+import { logger } from './../../common/logger';
 
 test("test for loggers", () => {
     logger.trace("trace test");

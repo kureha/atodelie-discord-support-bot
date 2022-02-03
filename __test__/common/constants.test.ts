@@ -1,4 +1,4 @@
-import { Constants } from './../common/constants';
+import { Constants } from './../../common/constants';
 
 test("Test for constants", () => {
     let v = new Constants();

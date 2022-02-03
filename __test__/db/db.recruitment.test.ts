@@ -1,9 +1,9 @@
-import { RecruitmentRepository } from '../db/recruitement';
-import { ParticipateRepository } from '../db/participate';
-import { ServerInfoRepository } from '../db/server_info';
+import { RecruitmentRepository } from '../../db/recruitement';
+import { ParticipateRepository } from '../../db/participate';
+import { ServerInfoRepository } from '../../db/server_info';
 
-import { Recruitment } from '../entity/recruitment';
-import { Participate } from '../entity/participate';
+import { Recruitment } from '../../entity/recruitment';
+import { Participate } from '../../entity/participate';
 
 test("test for database initialize", () => {
     let recruitment_repo = new RecruitmentRepository();

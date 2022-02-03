@@ -1,7 +1,7 @@
-import { VersionRepository } from '../db/version';
-import { Version } from '../entity/version';
+import { VersionRepository } from '../../db/version';
+import { Version } from '../../entity/version';
 
-import { Version as CommonVersion } from '../common/version';
+import { Version as CommonVersion } from '../../common/version';
 
 test('test for version for c/r/d', () => {
     return new Promise<void>((resolve, reject) => {

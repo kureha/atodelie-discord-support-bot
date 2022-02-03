@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const constants_1 = require("./../common/constants");
+const constants_1 = require("./../../common/constants");
 test("Test for constants", () => {
     let v = new constants_1.Constants();
     expect(v.DISCORD_BOT_TOKEN).not.toEqual('');

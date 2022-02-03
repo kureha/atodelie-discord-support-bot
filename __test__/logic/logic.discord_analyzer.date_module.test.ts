@@ -1,4 +1,4 @@
-import { DiscordMessageAnalyzer } from '../logic/discord_message_analyzer';
+import { DiscordMessageAnalyzer } from '../../logic/discord_message_analyzer';
 
 test('test for times analyze', () => {
     let result = DiscordMessageAnalyzer.get_recruitment_date(0, 0);

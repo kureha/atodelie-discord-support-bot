@@ -1,6 +1,6 @@
-import { logger } from '../common/logger';
+import { logger } from '../../common/logger';
 
-import { RecruitmentRepository } from '../db/recruitement';
+import { RecruitmentRepository } from '../../db/recruitement';
 
 test("test for get token", () => {
     return new Promise<void>((resolve, reject) => {

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const version_1 = require("../db/version");
-const version_2 = require("../entity/version");
-const version_3 = require("../common/version");
+const version_1 = require("../../db/version");
+const version_2 = require("../../entity/version");
+const version_3 = require("../../common/version");
 test('test for version for c/r/d', () => {
     return new Promise((resolve, reject) => {
         // define version test object

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const logger_1 = require("./../common/logger");
+const logger_1 = require("./../../common/logger");
 test("test for loggers", () => {
     logger_1.logger.trace("trace test");
     logger_1.logger.debug("debug test");

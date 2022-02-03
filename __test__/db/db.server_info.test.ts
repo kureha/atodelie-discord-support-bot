@@ -1,7 +1,7 @@
-import { Constants } from '../common/constants';
+import { Constants } from '../../common/constants';
 const constants = new Constants();
 
-import { ServerInfoRepository } from '../db/server_info';
+import { ServerInfoRepository } from '../../db/server_info';
 
 test("test for database initialize", () => {
     let server_info_repo = new ServerInfoRepository();

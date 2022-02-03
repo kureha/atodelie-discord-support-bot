@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const discord_message_analyzer_1 = require("../logic/discord_message_analyzer");
+const discord_message_analyzer_1 = require("../../logic/discord_message_analyzer");
 test('test for times analyze', () => {
     let result = discord_message_analyzer_1.DiscordMessageAnalyzer.get_recruitment_date(0, 0);
     if (result) {

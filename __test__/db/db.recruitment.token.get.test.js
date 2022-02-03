@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const logger_1 = require("../common/logger");
-const recruitement_1 = require("../db/recruitement");
+const logger_1 = require("../../common/logger");
+const recruitement_1 = require("../../db/recruitement");
 test("test for get token", () => {
     return new Promise((resolve, reject) => {
         const recruitment = new recruitement_1.RecruitmentRepository();
@@ -18,4 +18,4 @@ test("test for get token", () => {
         });
     });
 });
-//# sourceMappingURL=recruitment.token.get.test.js.map
+//# sourceMappingURL=db.recruitment.token.get.test.js.map
