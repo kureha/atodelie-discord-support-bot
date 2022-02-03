@@ -5,10 +5,13 @@ import { logger } from '../common/logger';
 import { Constants } from '../common/constants';
 const constants = new Constants();
 
+// import utils
+import { SqliteUtils } from '../common/sqlite_utils';
+
 // import entities
 import { Recruitment } from '../entity/recruitment';
 
-// UUID有効化
+// import uuid modules
 import * as uuid from 'uuid';
 
 export class RecruitmentRepository {
@@ -26,12 +29,12 @@ export class RecruitmentRepository {
     /**
      * insert SQL
      */
-    static SQL_INSERT_M_RECRUITMENT = 'INSERT INTO [m_recruitment] ([id], [server_id], [message_id], [thread_id], [token], [status], [limit_time], [name], [owner_id], [description], [regist_time], [update_time], [delete]) values ($id, $server_id, $message_id, $thread_id, $token, $status, $limit_time, $name, $owner_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false) ';
+    static SQL_INSERT_M_RECRUITMENT = 'INSERT INTO [m_recruitment] ([id], [server_id], [message_id], [thread_id], [token], [status], [limit_time], [name], [owner_id], [description], [regist_time], [update_time], [delete]) values ($id, $server_id, $message_id, $thread_id, $token, $status, $limit_time, $name, $owner_id, $description, ' + SqliteUtils.get_now() + ', ' + SqliteUtils.get_now() + ', false) ';
 
     /**
      * update SQL
      */
-    static SQL_UPDATE_M_RECRUITMENT = 'UPDATE [m_recruitment] SET [server_id] = $server_id, [message_id] = $message_id, [thread_id] = $thread_id, [status] = $status, [limit_time] = $limit_time, [name] = $name, [owner_id] = $owner_id, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
+    static SQL_UPDATE_M_RECRUITMENT = 'UPDATE [m_recruitment] SET [server_id] = $server_id, [message_id] = $message_id, [thread_id] = $thread_id, [status] = $status, [limit_time] = $limit_time, [name] = $name, [owner_id] = $owner_id, [description] = $description, [update_time] = ' + SqliteUtils.get_now() + ', [delete] = $delete ';
 
     /**
      * delete SQL
@@ -46,7 +49,7 @@ export class RecruitmentRepository {
     /**
      * check token is exists SQL
      */
-    static SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT = 'SELECT COUNT(*) AS [count] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') ';
+    static SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT = 'SELECT COUNT(*) AS [count] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ' + SqliteUtils.get_now() + ' ';
 
     /**
      * constructor
@@ -158,7 +161,7 @@ export class RecruitmentRepository {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${RecruitmentRepository.SQL_UPDATE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_UPDATE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ${SqliteUtils.get_now()} `;
                 logger.info(`sql = ${sql}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -197,7 +200,7 @@ export class RecruitmentRepository {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${RecruitmentRepository.SQL_DELETE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_DELETE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ${SqliteUtils.get_now()} `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -337,7 +340,7 @@ export class RecruitmentRepository {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[token] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[token] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= ${SqliteUtils.get_now()} `;
                 logger.info(`sql = ${sql}, token = ${token}`);
                 db.get(sql, [token], ((err: any, row: any) => {
                     if (err) {
@@ -372,7 +375,7 @@ export class RecruitmentRepository {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[message_id] = ? and m1.[owner_id] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[message_id] = ? and m1.[owner_id] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= ${SqliteUtils.get_now()} `;
                 logger.info(`sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
                 db.get(sql, [message_id, owner_id], ((err: any, row: any) => {
                     if (err) {
@@ -406,7 +409,7 @@ export class RecruitmentRepository {
 
             db.serialize(function () {
                 // run serialize
-                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE [server_id] = ? AND datetime(m1.[limit_time], 'localtime') > datetime('now', 'localtime') ORDER BY m1.[limit_time], m1.[id] LIMIT ${count}`;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE [server_id] = ? AND datetime(m1.[limit_time], 'localtime') > ${SqliteUtils.get_now()} ORDER BY m1.[limit_time], m1.[id] LIMIT ${count}`;
                 logger.info(`sql = ${sql}, token = ${server_id}`);
                 db.all(sql, [server_id], ((err: any, rows: any[]) => {
                     if (err) {

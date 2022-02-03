@@ -6,6 +6,8 @@ const logger_1 = require("../common/logger");
 // import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
+// import utils
+const sqlite_utils_1 = require("../common/sqlite_utils");
 // import entities
 const participate_1 = require("../entity/participate");
 class ParticipateRepository {
@@ -98,7 +100,7 @@ class ParticipateRepository {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${ParticipateRepository.SQL_UPDATE_T_PARTICIPATE} where [id] = (select [id] from [m_recruitment] where [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\')) AND [user_id] = $user_id `;
+                const sql = `${ParticipateRepository.SQL_UPDATE_T_PARTICIPATE} where [id] = (select [id] from [m_recruitment] where [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ${sqlite_utils_1.SqliteUtils.get_now()}) AND [user_id] = $user_id `;
                 logger_1.logger.info(`sql = ${sql}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -131,7 +133,7 @@ class ParticipateRepository {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${ParticipateRepository.SQL_DELETE_T_PARTICIPATE} WHERE [id] = (SELECT [id] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\')) `;
+                const sql = `${ParticipateRepository.SQL_DELETE_T_PARTICIPATE} WHERE [id] = (SELECT [id] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ${sqlite_utils_1.SqliteUtils.get_now()}) `;
                 logger_1.logger.info(`sql = ${sql}, token = ${token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -160,7 +162,7 @@ class ParticipateRepository {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // run serialize
-                const sql = `${ParticipateRepository.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and datetime(m1.[limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') order by t1.[update_time] `;
+                const sql = `${ParticipateRepository.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and datetime(m1.[limit_time], \'localtime\') >= ${sqlite_utils_1.SqliteUtils.get_now()} order by t1.[update_time] `;
                 logger_1.logger.info(`sql = ${sql}, token = ${token}`);
                 db.all(sql, [token], ((err, rows) => {
                     if (err) {
@@ -199,11 +201,11 @@ ParticipateRepository.SQL_SELECT_T_PARTICIPATE = 'SELECT t1.[id], t1.[status], t
 /**
  * insert SQL
  */
-ParticipateRepository.SQL_INSERT_T_PARTICIPATE = 'INSERT INTO [t_participate] ([id], [status], [user_id], [description], [regist_time], [update_time], [delete]) SELECT [id], $status, $user_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') ';
+ParticipateRepository.SQL_INSERT_T_PARTICIPATE = 'INSERT INTO [t_participate] ([id], [status], [user_id], [description], [regist_time], [update_time], [delete]) SELECT [id], $status, $user_id, $description, ' + sqlite_utils_1.SqliteUtils.get_now() + ', ' + sqlite_utils_1.SqliteUtils.get_now() + ', false FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ' + sqlite_utils_1.SqliteUtils.get_now() + ' ';
 /**
  * update SQL
  */
-ParticipateRepository.SQL_UPDATE_T_PARTICIPATE = 'UPDATE [t_participate] SET [status] = $status, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
+ParticipateRepository.SQL_UPDATE_T_PARTICIPATE = 'UPDATE [t_participate] SET [status] = $status, [description] = $description, [update_time] = ' + sqlite_utils_1.SqliteUtils.get_now() + ', [delete] = $delete ';
 /**
  * delete SQL
  */

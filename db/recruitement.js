@@ -25,9 +25,11 @@ const logger_1 = require("../common/logger");
 // import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
+// import utils
+const sqlite_utils_1 = require("../common/sqlite_utils");
 // import entities
 const recruitment_1 = require("../entity/recruitment");
-// UUID有効化
+// import uuid modules
 const uuid = __importStar(require("uuid"));
 class RecruitmentRepository {
     /**
@@ -133,7 +135,7 @@ class RecruitmentRepository {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${RecruitmentRepository.SQL_UPDATE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_UPDATE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ${sqlite_utils_1.SqliteUtils.get_now()} `;
                 logger_1.logger.info(`sql = ${sql}, token = ${data.token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -171,7 +173,7 @@ class RecruitmentRepository {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // get prepared statement
-                const sql = `${RecruitmentRepository.SQL_DELETE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_DELETE_M_RECRUITMENT} WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ${sqlite_utils_1.SqliteUtils.get_now()} `;
                 logger_1.logger.info(`sql = ${sql}, token = ${token}`);
                 const stmt = db.prepare(sql);
                 stmt.run({
@@ -297,7 +299,7 @@ class RecruitmentRepository {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // run serialize
-                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[token] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[token] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= ${sqlite_utils_1.SqliteUtils.get_now()} `;
                 logger_1.logger.info(`sql = ${sql}, token = ${token}`);
                 db.get(sql, [token], ((err, row) => {
                     if (err) {
@@ -328,7 +330,7 @@ class RecruitmentRepository {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // run serialize
-                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[message_id] = ? and m1.[owner_id] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= datetime(\'now\', \'localtime\') `;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE m1.[message_id] = ? and m1.[owner_id] = ? and m1.[delete] = false and datetime(m1.[limit_time] , \'localtime\') >= ${sqlite_utils_1.SqliteUtils.get_now()} `;
                 logger_1.logger.info(`sql = ${sql}, message_id = ${message_id}, owner_id = ${owner_id}`);
                 db.get(sql, [message_id, owner_id], ((err, row) => {
                     if (err) {
@@ -358,7 +360,7 @@ class RecruitmentRepository {
             const db = this.get_db_instance(constants.SQLITE_FILE);
             db.serialize(function () {
                 // run serialize
-                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE [server_id] = ? AND datetime(m1.[limit_time], 'localtime') > datetime('now', 'localtime') ORDER BY m1.[limit_time], m1.[id] LIMIT ${count}`;
+                const sql = `${RecruitmentRepository.SQL_SELECT_M_RECRUITMENT} WHERE [server_id] = ? AND datetime(m1.[limit_time], 'localtime') > ${sqlite_utils_1.SqliteUtils.get_now()} ORDER BY m1.[limit_time], m1.[id] LIMIT ${count}`;
                 logger_1.logger.info(`sql = ${sql}, token = ${server_id}`);
                 db.all(sql, [server_id], ((err, rows) => {
                     if (err) {
@@ -397,11 +399,11 @@ RecruitmentRepository.SQL_SELECT_M_RECRUITMENT = 'SELECT m1.[id], m1.[server_id]
 /**
  * insert SQL
  */
-RecruitmentRepository.SQL_INSERT_M_RECRUITMENT = 'INSERT INTO [m_recruitment] ([id], [server_id], [message_id], [thread_id], [token], [status], [limit_time], [name], [owner_id], [description], [regist_time], [update_time], [delete]) values ($id, $server_id, $message_id, $thread_id, $token, $status, $limit_time, $name, $owner_id, $description, datetime(\'now\', \'localtime\'), datetime(\'now\', \'localtime\'), false) ';
+RecruitmentRepository.SQL_INSERT_M_RECRUITMENT = 'INSERT INTO [m_recruitment] ([id], [server_id], [message_id], [thread_id], [token], [status], [limit_time], [name], [owner_id], [description], [regist_time], [update_time], [delete]) values ($id, $server_id, $message_id, $thread_id, $token, $status, $limit_time, $name, $owner_id, $description, ' + sqlite_utils_1.SqliteUtils.get_now() + ', ' + sqlite_utils_1.SqliteUtils.get_now() + ', false) ';
 /**
  * update SQL
  */
-RecruitmentRepository.SQL_UPDATE_M_RECRUITMENT = 'UPDATE [m_recruitment] SET [server_id] = $server_id, [message_id] = $message_id, [thread_id] = $thread_id, [status] = $status, [limit_time] = $limit_time, [name] = $name, [owner_id] = $owner_id, [description] = $description, [update_time] = datetime(\'now\', \'localtime\'), [delete] = $delete ';
+RecruitmentRepository.SQL_UPDATE_M_RECRUITMENT = 'UPDATE [m_recruitment] SET [server_id] = $server_id, [message_id] = $message_id, [thread_id] = $thread_id, [status] = $status, [limit_time] = $limit_time, [name] = $name, [owner_id] = $owner_id, [description] = $description, [update_time] = ' + sqlite_utils_1.SqliteUtils.get_now() + ', [delete] = $delete ';
 /**
  * delete SQL
  */
@@ -413,5 +415,5 @@ RecruitmentRepository.SQL_SELECT_M_RECRUITMENT_MAX_ID = 'SELECT IFNULL(MAX(id) +
 /**
  * check token is exists SQL
  */
-RecruitmentRepository.SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT = 'SELECT COUNT(*) AS [count] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= datetime(\'now\', \'localtime\') ';
+RecruitmentRepository.SQL_SELECT_M_RECRUITMENT_TOKEN_COUNT = 'SELECT COUNT(*) AS [count] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ' + sqlite_utils_1.SqliteUtils.get_now() + ' ';
 //# sourceMappingURL=recruitement.js.map
