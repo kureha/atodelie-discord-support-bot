@@ -28,7 +28,7 @@ export class DiscordInteractionController {
      * @param client discord client
      * @param interaction discord interaction
      */
-    static recirve_controller(client: any, interaction: any) {
+    static recieve_controller(client: any, interaction: any) {
         logger.info(`recirved interaction. customId = ${interaction.customId}`);
         logger.trace(interaction);
 

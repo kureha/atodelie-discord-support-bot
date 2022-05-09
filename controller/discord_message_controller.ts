@@ -27,7 +27,7 @@ export class DiscordMessageController {
      * @param client discord client
      * @param message discord message
      */
-    static recirve_controller(client: any, message: any) {
+    static recieve_controller(client: any, message: any) {
         if (message.mentions.users.has(client.user.id)) {
             logger.info(`recieved message : ${message.content}`);
             logger.trace(message);

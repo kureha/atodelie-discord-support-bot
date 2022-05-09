@@ -25,18 +25,18 @@ client.on('ready', () => {
 import { DiscordMessageController } from './controller/discord_message_controller';
 client.on('messageCreate', (message: any) => {
   // call message recieve controller
-  DiscordMessageController.recirve_controller(client, message);
+  DiscordMessageController.recieve_controller(client, message);
 });
 
 // interaction event
 import { DiscordInteractionController } from './controller/discord_interaction_controller';
 client.on('interactionCreate', async (interaction: any) => {
   // call interaction recieve controller
-  DiscordInteractionController.recirve_controller(client, interaction);
+  DiscordInteractionController.recieve_controller(client, interaction);
 });
 
 // cron event
-import cron from 'node-cron';
+import * as cron from 'node-cron';
 logger.info(`follow cron setting : ${constants.DISCORD_FOLLOW_CRON}`);
 import { CronController } from './controller/cron_controller';
 cron.schedule(constants.DISCORD_FOLLOW_CRON, (() => {

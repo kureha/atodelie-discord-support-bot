@@ -1,14 +1,14 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.ServerInfo = void 0;
 // import constants
-const constants_1 = require("../common/constants");
-class ServerInfo {
+var constants_1 = require("../common/constants");
+var ServerInfo = /** @class */ (function () {
     /**
      * constructor
      * @constructor
      */
-    constructor() {
+    function ServerInfo() {
         this.server_id = '';
         this.channel_id = '';
         this.recruitment_target_role = '';
@@ -19,8 +19,8 @@ class ServerInfo {
      * @param row m_server_info table single row
      * @returns server info instance, return blank instance if error occuered
      */
-    static parse_from_db(row) {
-        let v = new ServerInfo();
+    ServerInfo.parse_from_db = function (row) {
+        var v = new ServerInfo();
         try {
             v.server_id = row.server_id;
             v.channel_id = row.channel_id;
@@ -37,7 +37,7 @@ class ServerInfo {
             v = new ServerInfo();
         }
         return v;
-    }
-}
+    };
+    return ServerInfo;
+}());
 exports.ServerInfo = ServerInfo;
-//# sourceMappingURL=server_info.js.map

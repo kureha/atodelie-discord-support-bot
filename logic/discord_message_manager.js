@@ -1,47 +1,30 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.DiscordMessageManager = void 0;
 // import constants
-const constants_1 = require("../common/constants");
-const constants = new constants_1.Constants();
+var constants_1 = require("../common/constants");
+var constants = new constants_1.Constants();
 // import discord modules
-const Discord = __importStar(require("discord.js"));
-class DiscordMessageManager {
+var Discord = require("discord.js");
+var DiscordMessageManager = /** @class */ (function () {
+    function DiscordMessageManager() {
+    }
     /**
      * convert escaped lf character
      * @param str string of lf is '\\n'
      * @returns string of lf is '\n'
      */
-    enable_lf(str) {
+    DiscordMessageManager.prototype.enable_lf = function (str) {
         return str.replace('\\n', '\n');
-    }
+    };
     /**
      * return date's readable locale string
      * @param date value
      * @returns date's readable string
      */
-    get_date_string(date) {
-        return `${date.toLocaleString()}`;
-    }
+    DiscordMessageManager.prototype.get_date_string = function (date) {
+        return "".concat(date.toLocaleString());
+    };
     /**
      * return recruitment thread's title
      * replacing:
@@ -50,11 +33,11 @@ class DiscordMessageManager {
      * @param recruitment
      * @returns
      */
-    get_recruitment_thread_title(template, recruitment) {
-        let title = template
+    DiscordMessageManager.prototype.get_recruitment_thread_title = function (template, recruitment) {
+        var title = template
             .replace('%%TITLE%%', recruitment.name);
         return title;
-    }
+    };
     /**
      * return recruitment annouce message
      * replaceing:
@@ -65,12 +48,12 @@ class DiscordMessageManager {
      * @param recruitment
      * @returns Discord.MessageEmbed message
      */
-    get_recruitment_announcement_message(template, recruitment_target_role, recruitment) {
-        let message = this.enable_lf(template)
+    DiscordMessageManager.prototype.get_recruitment_announcement_message = function (template, recruitment_target_role, recruitment) {
+        var message = this.enable_lf(template)
             .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
             .replace('%%TOKEN%%', recruitment.token);
         return message;
-    }
+    };
     /**
      * return recruitment embed message
      * replaceing:
@@ -82,29 +65,29 @@ class DiscordMessageManager {
      * @param desription
      * @returns Discord.MessageEmbed message
      */
-    get_recruitment_embed_message(recruitment, recruitment_target_role, title, desription) {
+    DiscordMessageManager.prototype.get_recruitment_embed_message = function (recruitment, recruitment_target_role, title, desription) {
         // create title
-        let title_converted = this.enable_lf(title)
+        var title_converted = this.enable_lf(title)
             .replace('%%TITLE%%', recruitment.name);
         // create description
-        let description_converted = this.enable_lf(desription)
+        var description_converted = this.enable_lf(desription)
             .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
             .replace('%%TOKEN%%', recruitment.token);
         // create user list string
-        let join_users = '';
-        recruitment.user_list.forEach((v) => {
+        var join_users = '';
+        recruitment.user_list.forEach(function (v) {
             if (v.status === constants.STATUS_ENABLED) {
-                join_users = `${join_users}<@!${v.user_id}> `;
+                join_users = "".concat(join_users, "<@!").concat(v.user_id, "> ");
             }
         });
         if (join_users.length === 0) {
             join_users = constants.DISCORD_MESSAGE_EMBED_NO_MEMBER;
         }
         // create view user list string
-        let view_users = '';
-        recruitment.user_list.forEach((v) => {
+        var view_users = '';
+        recruitment.user_list.forEach(function (v) {
             if (v.status === constants.STATUS_VIEW) {
-                view_users = `${view_users}<@!${v.user_id}> `;
+                view_users = "".concat(view_users, "<@!").concat(v.user_id, "> ");
             }
         });
         if (view_users.length === 0) {
@@ -117,120 +100,120 @@ class DiscordMessageManager {
             fields: [
                 {
                     name: constants.DISCORD_MESSAGE_EMBED_TITLE,
-                    value: `${recruitment.name}`,
+                    value: "".concat(recruitment.name)
                 },
                 {
                     name: constants.DISCORD_MESSAGE_EMBED_START_TIME,
-                    value: `${this.get_date_string(recruitment.limit_time)}`
+                    value: "".concat(this.get_date_string(recruitment.limit_time))
                 },
                 {
                     name: constants.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS,
-                    value: `${join_users}`
+                    value: "".concat(join_users)
                 },
                 {
                     name: constants.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS,
-                    value: `${view_users}`
+                    value: "".concat(view_users)
                 }
-            ],
+            ]
         });
-    }
+    };
     /**
      * return new recruitment message
      * @param recruitment
      * @param recruitment_target_role
      * @returns Discord.MessageEmbed message
      */
-    get_new_recruitment_message(recruitment, recruitment_target_role) {
+    DiscordMessageManager.prototype.get_new_recruitment_message = function (recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_NEW_RECRUITMENT, constants.DISCORD_MESSAGE_NEW_RECRUITMENT);
-    }
+    };
     /**
      * return edit recruitment message
      * @param recruitment
      * @param recruitment_target_role
      * @returns Discord.MessageEmbed message
      */
-    get_edit_recruitment_message(recruitment, recruitment_target_role) {
+    DiscordMessageManager.prototype.get_edit_recruitment_message = function (recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_EDIT_RECRUITMENT, constants.DISCORD_MESSAGE_EDIT_RECRUITMENT);
-    }
+    };
     /**
      * return cancel recruitment message
      * @param recruitment
      * @param recruitment_target_role
      * @returns Discord.MessageEmbed message
      */
-    get_delete_recruitment_message(recruitment, recruitment_target_role) {
+    DiscordMessageManager.prototype.get_delete_recruitment_message = function (recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_DELETE_RECRUITMENT, constants.DISCORD_MESSAGE_DELETE_RECRUITMENT);
-    }
+    };
     /**
      * return join recruitment message
      * @param recruitment
      * @param recruitment_target_role
      * @returns Discord.MessageEmbed message
      */
-    get_join_recruitment(recruitment, recruitment_target_role) {
+    DiscordMessageManager.prototype.get_join_recruitment = function (recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_SUCCESS_JOIN, constants.DISCORD_MESSAGE_SUCCESS_JOIN);
-    }
+    };
     /**
      * return decline recruitment message
      * @param recruitment
      * @param recruitment_target_role
      * @returns Discord.MessageEmbed message
      */
-    get_decline_recruitment(recruitment, recruitment_target_role) {
+    DiscordMessageManager.prototype.get_decline_recruitment = function (recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_SUCCESS_DECLINE, constants.DISCORD_MESSAGE_SUCCESS_DECLINE);
-    }
+    };
     /**
      * return view recruitment message
      * @param recruitment
      * @param recruitment_target_role
      * @returns Discord.MessageEmbed message
      */
-    get_view_recruitment(recruitment, recruitment_target_role) {
+    DiscordMessageManager.prototype.get_view_recruitment = function (recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_SUCCESS_VIEW, constants.DISCORD_MESSAGE_SUCCESS_VIEW);
-    }
+    };
     /**
      * return follow recruitment message
      * @param recruitment
      * @param recruitment_target_role
      * @returns Discord.MessageEmbed message
      */
-    get_join_recruitment_follow_message(recruitment, recruitment_target_role) {
+    DiscordMessageManager.prototype.get_join_recruitment_follow_message = function (recruitment, recruitment_target_role) {
         // call interanal function
         return this.get_recruitment_embed_message(recruitment, recruitment_target_role, constants.DISCORD_MESSAGE_TITLE_FOLLOW_RECRUITMENT, constants.DISCORD_MESSAGE_FOLLOW_RECRUITMENT);
-    }
+    };
     /**
      * return recruitment is not found message
      * @returns message
      */
-    get_no_recruitment() {
-        let result = constants.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT;
+    DiscordMessageManager.prototype.get_no_recruitment = function () {
+        var result = constants.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT;
         return result;
-    }
+    };
     /**
      * return regist server info message
      * @returns message
      */
-    get_regist_server_info(recruitment_target_role) {
-        let result = this.enable_lf(constants.DISCORD_MESSAGE_REGIST_SERVER_INFO)
+    DiscordMessageManager.prototype.get_regist_server_info = function (recruitment_target_role) {
+        var result = this.enable_lf(constants.DISCORD_MESSAGE_REGIST_SERVER_INFO)
             .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role);
         return result;
-    }
+    };
     /**
      * return setting is not ready message
      * @returns message
      */
-    get_setting_is_not_ready(admin_user_id) {
-        let result = this.enable_lf(constants.DISCORD_MESSAGE_SETTING_IS_NOT_READY)
+    DiscordMessageManager.prototype.get_setting_is_not_ready = function (admin_user_id) {
+        var result = this.enable_lf(constants.DISCORD_MESSAGE_SETTING_IS_NOT_READY)
             .replace('%%DISCORD_BOT_ADMIN_USER_ID%%', admin_user_id);
         return result;
-    }
-}
+    };
+    return DiscordMessageManager;
+}());
 exports.DiscordMessageManager = DiscordMessageManager;
 ;
-//# sourceMappingURL=discord_message_manager.js.map
