@@ -16,6 +16,7 @@ var discord_message_manager_1 = require("./../logic/discord_message_manager");
 // import entities
 var server_info_2 = require("../entity/server_info");
 var reference_1 = require("../entity/reference");
+var user_info_1 = require("../entity/user_info");
 // import discord modules
 var Discord = require('discord.js');
 var DiscordMessageController = /** @class */ (function () {
@@ -52,6 +53,10 @@ var DiscordMessageController = /** @class */ (function () {
                     case constants.TYPE_REGIST_MAETER:
                         // regist master
                         DiscordMessageController.regist_master(client, message, analyzer_1);
+                        break;
+                    case constants.TYPE_USER_INFO_LIST_GET:
+                        // user info list gert
+                        DiscordMessageController.user_info_list_get(client, message, analyzer_1);
                         break;
                     default:
                         // send error message
@@ -283,6 +288,47 @@ var DiscordMessageController = /** @class */ (function () {
             logger_1.logger.trace(server_info_data);
             // send success message
             return client.channels.cache.get(server_info.channel_id).send(message_manager.get_regist_server_info(server_info.recruitment_target_role));
+        })["catch"](function (err) {
+            // send error message
+            message.channel.send("".concat(constants.DISCORD_MESSAGE_EXCEPTION, " (Error : ").concat(err, ")"));
+            logger_1.logger.error(err);
+        });
+    };
+    /**
+     * user info list get
+     * @param client
+     * @param message
+     * @param analyzer
+     */
+    DiscordMessageController.user_info_list_get = function (client, message, analyzer) {
+        // create db instances
+        var server_info_repo = new server_info_1.ServerInfoRepository();
+        // create message manager instance
+        var message_manager = new discord_message_manager_1.DiscordMessageManager();
+        // user info list
+        var user_info_list = new Array(0);
+        // get server info
+        server_info_repo.get_m_server_info(message.guild.id).then(function (server_info_data) {
+            // get guild's member info
+            return client.channels.cache.get(server_info_data.channel_id).members;
+        }).then(function (member_info_list) {
+            // loop member list
+            member_info_list.forEach(function (user_info, user_id) {
+                // create user info temp valiable
+                var user_info_temp = user_info_1.UserInfo.parse_from_discordjs(user_info);
+                // loop role list
+                user_info.roles.cache.forEach(function (role_info, role_id) {
+                    var role_info_temp = user_info_1.RoleInfo.parse_from_discordjs(role_info);
+                    // add role info to result list
+                    user_info_temp.add(role_info_temp);
+                });
+                // add user info to result list
+                user_info_list.push(user_info_temp);
+            });
+            // result
+            var result_string = message_manager.get_user_info_list(user_info_list);
+            // send message
+            return message.channel.send(result_string);
         })["catch"](function (err) {
             // send error message
             message.channel.send("".concat(constants.DISCORD_MESSAGE_EXCEPTION, " (Error : ").concat(err, ")"));

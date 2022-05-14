@@ -20,6 +20,7 @@ test("Test for constants", () => {
     expect(v.DISCORD_ACTIVITY_NAME).not.toEqual('');
     expect(v.DISCORD_MESSAGE_IS_INVALID).not.toEqual('');
     expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EXCEPTION).not.toEqual('');
     expect(v.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED).not.toEqual('');
     expect(v.DISCORD_MESSAGE_NO_PERMISSION).not.toEqual('');
@@ -48,11 +49,17 @@ test("Test for constants", () => {
     expect(v.DISCORD_BUTTON_DECLINE).not.toEqual('');
     expect(v.DISCORD_BUTTON_VIEW).not.toEqual('');
 
+    expect(v.DISCORD_EXPORT_USER_INFO_SPLIT_CHAR).not.toEqual('');
+    expect(v.DISCORD_EXPORT_USER_INFO_NAME_ITEM_NAME).not.toEqual('');
+    expect(v.DISCORD_EXPORT_USER_INFO_HAS_ROLE).not.toEqual('');
+    expect(v.DISCORD_EXPORT_USER_INFO_NO_ROLE).toEqual('');
+
     expect(v.DISCORD_COMMAND_NEW_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_EDIT_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_DELETE_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_LIST_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_REGIST_MASTER).not.toEqual('');
+    expect(v.DISCORD_COMMAND_USER_INFO_LIST_GET).not.toEqual('');
     expect(v.DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME).not.toEqual('');
 
     expect(v.DISCORD_MESSAGE_EMBED_NO_MEMBER).not.toEqual('');

@@ -78,3 +78,11 @@ test("Test for List", () => {
     expect(DiscordMessageAnalyzer.check_type_list("一覧ください")).toEqual(true);
     expect(DiscordMessageAnalyzer.check_type_list("募集　やります")).toEqual(false);
 });
+
+test("Test for user info get list", () => {
+    expect(DiscordMessageAnalyzer.check_user_info_list_get("ユーザ情報取得")).toEqual(true);
+    expect(DiscordMessageAnalyzer.check_user_info_list_get("ユーザ情報取得します")).toEqual(true);
+    expect(DiscordMessageAnalyzer.check_user_info_list_get("ユーザ情報取得 ")).toEqual(true);
+    expect(DiscordMessageAnalyzer.check_user_info_list_get("ユーザ情報取得 a")).toEqual(true);
+    expect(DiscordMessageAnalyzer.check_user_info_list_get("ユーザ情報です")).toEqual(false);
+});

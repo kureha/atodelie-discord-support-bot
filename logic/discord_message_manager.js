@@ -213,6 +213,78 @@ var DiscordMessageManager = /** @class */ (function () {
             .replace('%%DISCORD_BOT_ADMIN_USER_ID%%', admin_user_id);
         return result;
     };
+    /**
+     * get user info list message
+     * @returns
+     */
+    DiscordMessageManager.prototype.get_user_info_list = function (user_info_list) {
+        // result
+        var result = '';
+        // variables
+        var header_message = constants.DISCORD_MESSAGE_EXPORT_USER_INFO;
+        var split_char = constants.DISCORD_EXPORT_USER_INFO_SPLIT_CHAR;
+        var line_separator = "\r\n";
+        var name_item_name = constants.DISCORD_EXPORT_USER_INFO_NAME_ITEM_NAME;
+        var has_role_char = constants.DISCORD_EXPORT_USER_INFO_HAS_ROLE;
+        var not_has_role_char = constants.DISCORD_EXPORT_USER_INFO_NO_ROLE;
+        // write initial header
+        result = "".concat(header_message).concat(line_separator).concat(line_separator);
+        // create all role list from user info
+        var role_info_list = this.get_role_info_list(user_info_list);
+        // create role info list
+        var role_info_name_list = [];
+        role_info_list.forEach(function (r) {
+            role_info_name_list.push(r.name);
+        });
+        // write header
+        result = "".concat(result).concat(name_item_name).concat(split_char).concat(role_info_name_list.join(split_char)).concat(line_separator);
+        // create strings
+        user_info_list.forEach(function (user_info) {
+            // let role list
+            var role_check_list = [];
+            // write role lists
+            role_info_list.forEach(function (role_info) {
+                // check role existance
+                var exist_check = user_info.roles.some(function (r) {
+                    return r.id === role_info.id;
+                });
+                if (exist_check == true) {
+                    // role exists -> set character
+                    role_check_list.push(has_role_char);
+                }
+                else {
+                    // role not exists -> set blank
+                    role_check_list.push(not_has_role_char);
+                }
+            });
+            // write end of line
+            result = "".concat(result).concat(user_info.name).concat(split_char).concat(role_check_list.join(split_char)).concat(line_separator);
+        });
+        // return result
+        return result;
+    };
+    /**
+     * get role info list from user info list
+     * @returns
+     */
+    DiscordMessageManager.prototype.get_role_info_list = function (user_info_list) {
+        var role_info_list = [];
+        // build user info list
+        user_info_list.forEach(function (user_info) {
+            user_info.roles.forEach(function (role_info) {
+                // check exists
+                var exist_check = role_info_list.some(function (r) {
+                    return r.id === role_info.id;
+                });
+                // if not exists, add to list
+                if (exist_check == false && role_info.name != "@everyone") {
+                    role_info_list.push(role_info);
+                }
+            });
+        });
+        // return result
+        return role_info_list;
+    };
     return DiscordMessageManager;
 }());
 exports.DiscordMessageManager = DiscordMessageManager;

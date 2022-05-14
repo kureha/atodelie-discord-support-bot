@@ -17,6 +17,7 @@ export class Constants {
     DISCORD_MESSAGE_IS_INVALID: string;
     DISCORD_MESSAGE_TYPE_INVALID: string;
     DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT: string;
+    DISCORD_MESSAGE_EXPORT_USER_INFO: string;
     DISCORD_MESSAGE_EXCEPTION: string;
     DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED: string;
     DISCORD_MESSAGE_NO_PERMISSION: string;
@@ -45,11 +46,17 @@ export class Constants {
     DISCORD_BUTTON_DECLINE: string;
     DISCORD_BUTTON_VIEW: string;
 
+    DISCORD_EXPORT_USER_INFO_SPLIT_CHAR: string;
+    DISCORD_EXPORT_USER_INFO_NAME_ITEM_NAME: string;
+    DISCORD_EXPORT_USER_INFO_HAS_ROLE: string;
+    DISCORD_EXPORT_USER_INFO_NO_ROLE: string;
+
     DISCORD_COMMAND_NEW_RECRUITMENT: string;
     DISCORD_COMMAND_EDIT_RECRUITMENT: string;
     DISCORD_COMMAND_DELETE_RECRUITMENT: string;
     DISCORD_COMMAND_LIST_RECRUITMENT: string;
     DISCORD_COMMAND_REGIST_MASTER: string;
+    DISCORD_COMMAND_USER_INFO_LIST_GET: string;
     DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME: string[];
 
     // message static values section
@@ -69,6 +76,7 @@ export class Constants {
     TYPE_DECLINE: number;
     TYPE_LIST: number;
     TYPE_REGIST_MAETER: number;
+    TYPE_USER_INFO_LIST_GET: number;
     TYPE_VIEW: number;
     TYPE_EDIT: number;
     TYPE_DELETE: number;
@@ -136,6 +144,7 @@ export class Constants {
         this.DISCORD_MESSAGE_IS_INVALID = process.env['DISCORD_MESSAGE_IS_INVALID'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_TYPE_INVALID = process.env['DISCORD_MESSAGE_TYPE_INVALID'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT = process.env['DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT'] || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_EXPORT_USER_INFO = process.env['DISCORD_MESSAGE_EXPORT_USER_INFO'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_EXCEPTION = process.env['DISCORD_MESSAGE_EXCEPTION'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED = process.env['DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_NO_PERMISSION = process.env['DISCORD_MESSAGE_NO_PERMISSION'] || Constants.STRING_EMPTY;
@@ -165,11 +174,17 @@ export class Constants {
         this.DISCORD_BUTTON_DECLINE = process.env['DISCORD_BUTTON_DECLINE'] || Constants.STRING_EMPTY;
         this.DISCORD_BUTTON_VIEW = process.env['DISCORD_BUTTON_VIEW'] || Constants.STRING_EMPTY;
 
+        this.DISCORD_EXPORT_USER_INFO_SPLIT_CHAR = process.env['DISCORD_EXPORT_USER_INFO_SPLIT_CHAR'] || Constants.STRING_EMPTY;
+        this.DISCORD_EXPORT_USER_INFO_NAME_ITEM_NAME = process.env['DISCORD_EXPORT_USER_INFO_NAME_ITEM_NAME'] || Constants.STRING_EMPTY;
+        this.DISCORD_EXPORT_USER_INFO_HAS_ROLE = process.env['DISCORD_EXPORT_USER_INFO_HAS_ROLE'] || Constants.STRING_EMPTY;
+        this.DISCORD_EXPORT_USER_INFO_NO_ROLE = process.env['DISCORD_EXPORT_USER_INFO_NO_ROLE'] || Constants.STRING_EMPTY;
+
         this.DISCORD_COMMAND_NEW_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_NEW_RECRUITMENT'], ',');
         this.DISCORD_COMMAND_EDIT_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_EDIT_RECRUITMENT'], ',');
         this.DISCORD_COMMAND_DELETE_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_DELETE_RECRUITMENT'], ',');
         this.DISCORD_COMMAND_LIST_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_LIST_RECRUITMENT'], ',');
         this.DISCORD_COMMAND_REGIST_MASTER = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_REGIST_MASTER'], ',');
+        this.DISCORD_COMMAND_USER_INFO_LIST_GET = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_USER_INFO_LIST_GET'], ',');
         this.DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME = process.env['DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME']?.split(',') || [];
 
         // message static values section
@@ -189,6 +204,7 @@ export class Constants {
         this.TYPE_DECLINE = 3;
         this.TYPE_LIST = 4;
         this.TYPE_REGIST_MAETER = 21;
+        this.TYPE_USER_INFO_LIST_GET = 31;
         this.TYPE_VIEW = 5;
         this.TYPE_EDIT = 6;
         this.TYPE_DELETE = 7;

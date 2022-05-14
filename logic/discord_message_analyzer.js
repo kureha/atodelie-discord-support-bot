@@ -181,6 +181,13 @@ var DiscordMessageAnalyzer = /** @class */ (function () {
                     reject();
                 }
             }
+            else if (DiscordMessageAnalyzer.check_user_info_list_get(_this.message) == true) {
+                // user info list get command
+                logger_1.logger.info("target message is user info get. : mes = ".concat(_this.message));
+                _this.type = constants.TYPE_USER_INFO_LIST_GET;
+                // ok
+                resolve();
+            }
             else {
                 // this is not valid message
                 logger_1.logger.info("target message is not valid. : mes = ".concat(_this.message));
@@ -468,6 +475,19 @@ var DiscordMessageAnalyzer = /** @class */ (function () {
      */
     DiscordMessageAnalyzer.check_regist_master = function (mes) {
         if (this.extract_by_regexp(mes.replace(/[\r\n|\r|\n]+/g, ' '), "^[ \u3000]*(".concat(constants.DISCORD_COMMAND_REGIST_MASTER, ")[^ \u3000]*[ \u3000]")) === undefined) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    };
+    /**
+     * check message is user info list get
+     * @param mes message
+     * @returns
+     */
+    DiscordMessageAnalyzer.check_user_info_list_get = function (mes) {
+        if (this.extract_by_regexp(mes.replace(/[\r\n|\r|\n]+/g, ' '), "^[ \u3000]*(".concat(constants.DISCORD_COMMAND_USER_INFO_LIST_GET, ")")) === undefined) {
             return false;
         }
         else {

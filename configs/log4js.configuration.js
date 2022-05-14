@@ -24,7 +24,7 @@ exports.configuration = {
             // console and file
             appenders: ["console", "error"],
             // output level over info
-            level: "info"
+            level: "trace"
         }
     }
 };

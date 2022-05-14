@@ -1,8 +1,8 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const constants_1 = require("./../../common/constants");
-test("Test for constants", () => {
-    let v = new constants_1.Constants();
+exports.__esModule = true;
+var constants_1 = require("./../../common/constants");
+test("Test for constants", function () {
+    var v = new constants_1.Constants();
     expect(v.DISCORD_BOT_TOKEN).not.toEqual('');
     expect(v.DISCORD_BOT_ADMIN_USER_ID).not.toEqual('');
     expect(v.DISCORD_LATEST_LIST_LENGTH).not.toEqual('');
@@ -18,6 +18,7 @@ test("Test for constants", () => {
     expect(v.DISCORD_ACTIVITY_NAME).not.toEqual('');
     expect(v.DISCORD_MESSAGE_IS_INVALID).not.toEqual('');
     expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EXCEPTION).not.toEqual('');
     expect(v.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED).not.toEqual('');
     expect(v.DISCORD_MESSAGE_NO_PERMISSION).not.toEqual('');
@@ -43,11 +44,16 @@ test("Test for constants", () => {
     expect(v.DISCORD_BUTTUN_JOIN).not.toEqual('');
     expect(v.DISCORD_BUTTON_DECLINE).not.toEqual('');
     expect(v.DISCORD_BUTTON_VIEW).not.toEqual('');
+    expect(v.DISCORD_EXPORT_USER_INFO_SPLIT_CHAR).not.toEqual('');
+    expect(v.DISCORD_EXPORT_USER_INFO_NAME_ITEM_NAME).not.toEqual('');
+    expect(v.DISCORD_EXPORT_USER_INFO_HAS_ROLE).not.toEqual('');
+    expect(v.DISCORD_EXPORT_USER_INFO_NO_ROLE).toEqual('');
     expect(v.DISCORD_COMMAND_NEW_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_EDIT_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_DELETE_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_LIST_RECRUITMENT).not.toEqual('');
     expect(v.DISCORD_COMMAND_REGIST_MASTER).not.toEqual('');
+    expect(v.DISCORD_COMMAND_USER_INFO_LIST_GET).not.toEqual('');
     expect(v.DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EMBED_NO_MEMBER).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EMBED_TITLE).not.toEqual('');
@@ -56,4 +62,3 @@ test("Test for constants", () => {
     expect(v.DISCORD_MESSAGE_EMBED_JOIN_MEMBERS).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EMBED_VIEW_MEMBERS).not.toEqual('');
 });
-//# sourceMappingURL=constants.test.js.map
