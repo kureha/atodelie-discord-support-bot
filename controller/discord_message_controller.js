@@ -310,7 +310,7 @@ class DiscordMessageController {
         // user info list
         let user_info_list = [];
         // get server info
-        message.guild.members.list()
+        message.guild.members.list({ limit: 1000, cache: false })
             .then((member_info_list) => {
             // loop member list
             member_info_list.forEach((user_info, user_id) => {

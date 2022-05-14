@@ -362,7 +362,7 @@ export class DiscordMessageController {
         let user_info_list: UserInfo[] = [];
 
         // get server info
-        message.guild.members.list()
+        message.guild.members.list({ limit: 1000, cache: false })
             .then((member_info_list: any) => {
                 // loop member list
                 member_info_list.forEach((user_info: any, user_id: string) => {
