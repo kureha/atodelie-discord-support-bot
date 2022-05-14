@@ -1,16 +1,16 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoleInfo = exports.UserInfo = void 0;
 // import constants
-var constants_1 = require("../common/constants");
-var logger_1 = require("../common/logger");
-var constants = new constants_1.Constants();
-var UserInfo = /** @class */ (function () {
+const constants_1 = require("../common/constants");
+const logger_1 = require("../common/logger");
+const constants = new constants_1.Constants();
+class UserInfo {
     /**
      * constructor
      * @constructor
      */
-    function UserInfo() {
+    constructor() {
         this.id = constants.ID_INVALID;
         this.name = '';
         // role is blank
@@ -20,16 +20,16 @@ var UserInfo = /** @class */ (function () {
      * add role
      * @param role_info
      */
-    UserInfo.prototype.add = function (role_info) {
+    add(role_info) {
         this.roles.push(role_info);
-    };
+    }
     /**
      * convert user info data to instance
      * @param data User from discord js
      * @returns user info instance, return blank instance if error occuered
      */
-    UserInfo.parse_from_discordjs = function (data) {
-        var v = new UserInfo();
+    static parse_from_discordjs(data) {
+        let v = new UserInfo();
         try {
             v.id = data.user.id;
             v.name = data.user.username;
@@ -39,16 +39,15 @@ var UserInfo = /** @class */ (function () {
             v = new UserInfo();
         }
         return v;
-    };
-    return UserInfo;
-}());
+    }
+}
 exports.UserInfo = UserInfo;
-var RoleInfo = /** @class */ (function () {
+class RoleInfo {
     /**
      * constructor
      * @constructor
      */
-    function RoleInfo() {
+    constructor() {
         this.id = constants.ID_INVALID;
         this.name = '';
     }
@@ -57,8 +56,8 @@ var RoleInfo = /** @class */ (function () {
      * @param data User from discord js
      * @returns user info instance, return blank instance if error occuered
      */
-    RoleInfo.parse_from_discordjs = function (data) {
-        var v = new RoleInfo();
+    static parse_from_discordjs(data) {
+        let v = new RoleInfo();
         try {
             v.id = data.id;
             v.name = data.name;
@@ -68,7 +67,7 @@ var RoleInfo = /** @class */ (function () {
             v = new RoleInfo();
         }
         return v;
-    };
-    return RoleInfo;
-}());
+    }
+}
 exports.RoleInfo = RoleInfo;
+//# sourceMappingURL=user_info.js.map

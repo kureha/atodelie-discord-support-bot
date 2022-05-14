@@ -355,46 +355,41 @@ export class DiscordMessageController {
      * @param analyzer 
      */
     static user_info_list_get(client: any, message: any, analyzer: DiscordMessageAnalyzer) {
-        // create db instances
-        const server_info_repo = new ServerInfoRepository();
-
         // create message manager instance
         const message_manager = new DiscordMessageManager();
 
         // user info list
-        let user_info_list: UserInfo[] = new Array(0);
+        let user_info_list: UserInfo[] = [];
 
         // get server info
-        server_info_repo.get_m_server_info(message.guild.id).then((server_info_data: ServerInfo) => {
-            // get guild's member info
-            return client.channels.cache.get(server_info_data.channel_id).members;
-        }).then((member_info_list: any) => {
-            // loop member list
-            member_info_list.forEach((user_info: any, user_id: string) => {
-                // create user info temp valiable
-                const user_info_temp: UserInfo = UserInfo.parse_from_discordjs(user_info);
+        message.guild.members.list()
+            .then((member_info_list: any) => {
+                // loop member list
+                member_info_list.forEach((user_info: any, user_id: string) => {
+                    // create user info temp valiable
+                    const user_info_temp: UserInfo = UserInfo.parse_from_discordjs(user_info);
 
-                // loop role list
-                user_info.roles.cache.forEach((role_info: any, role_id: string) => {
-                    const role_info_temp: RoleInfo = RoleInfo.parse_from_discordjs(role_info);
+                    // loop role list
+                    user_info.roles.cache.forEach((role_info: any, role_id: string) => {
+                        const role_info_temp: RoleInfo = RoleInfo.parse_from_discordjs(role_info);
 
-                    // add role info to result list
-                    user_info_temp.add(role_info_temp);
+                        // add role info to result list
+                        user_info_temp.add(role_info_temp);
+                    });
+
+                    // add user info to result list
+                    user_info_list.push(user_info_temp);
                 });
 
-                // add user info to result list
-                user_info_list.push(user_info_temp);
+                // result
+                let result_string: string = message_manager.get_user_info_list(user_info_list);
+
+                // send message
+                return message.channel.send(result_string);
+            }).catch((err: any) => {
+                // send error message
+                message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+                logger.error(err);
             });
-
-            // result
-            let result_string: string = message_manager.get_user_info_list(user_info_list);
-
-            // send message
-            return message.channel.send(result_string);
-        }).catch((err: any) => {
-            // send error message
-            message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
-            logger.error(err);
-        });
     }
 }

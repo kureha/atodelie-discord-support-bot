@@ -8,7 +8,6 @@ import { UserInfo, RoleInfo } from '../entity/user_info';
 
 // import discord modules
 import * as Discord from 'discord.js';
-import { logger } from '../common/logger';
 
 export class DiscordMessageManager {
 
