@@ -13,6 +13,7 @@ const server_info_1 = require("../db/server_info");
 // create message modules
 const discord_message_analyzer_1 = require("./../logic/discord_message_analyzer");
 const discord_message_manager_1 = require("./../logic/discord_message_manager");
+const export_user_info_1 = require("./../logic/export_user_info");
 // import entities
 const server_info_2 = require("../entity/server_info");
 const reference_1 = require("../entity/reference");
@@ -54,7 +55,7 @@ class DiscordMessageController {
                         break;
                     case constants.TYPE_USER_INFO_LIST_GET:
                         // user info list gert
-                        DiscordMessageController.user_info_list_get(client, message, analyzer);
+                        DiscordMessageController.export_user_info(client, message, analyzer);
                         break;
                     default:
                         // send error message
@@ -304,9 +305,10 @@ class DiscordMessageController {
      * @param message
      * @param analyzer
      */
-    static user_info_list_get(client, message, analyzer) {
+    static export_user_info(client, message, analyzer) {
         // create message manager instance
-        const message_manager = new discord_message_manager_1.DiscordMessageManager();
+        const message_manager = new discord_message_manager_1.DiscordMessageManager;
+        const export_user_info = new export_user_info_1.ExportUserInfo();
         // user info list
         let user_info_list = [];
         // check member count is exceeded limit
@@ -331,7 +333,7 @@ class DiscordMessageController {
                 user_info_list.push(user_info_temp);
             });
             // write user info list to file and get message
-            message_manager.get_user_info_list(user_info_list, constants.EXPORT_USER_INFO_PATH);
+            export_user_info.get_user_info_list(user_info_list, constants.EXPORT_USER_INFO_PATH);
             // create message
             let message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO;
             if (exceeded_limit == true) {
@@ -340,15 +342,7 @@ class DiscordMessageController {
             // send message
             return message.channel.send({
                 embeds: [
-                    new Discord.MessageEmbed({
-                        timestamp: new Date(),
-                        fields: [
-                            {
-                                name: constants.DISCORD_MESSAGE_EXPORT_TITLE,
-                                value: `${message_string}`,
-                            }
-                        ]
-                    })
+                    message_manager.get_export_user_info_embed_message(message_string)
                 ],
                 files: [constants.EXPORT_USER_INFO_PATH]
             });
