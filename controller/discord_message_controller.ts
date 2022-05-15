@@ -357,7 +357,7 @@ export class DiscordMessageController {
      */
     static export_user_info(client: any, message: any, analyzer: DiscordMessageAnalyzer) {
         // create message manager instance
-        const message_manager = new DiscordMessageManager;
+        const message_manager = new DiscordMessageManager();
         const export_user_info = new ExportUserInfo();
 
         // get export file path from .env file
