@@ -363,12 +363,6 @@ export class DiscordMessageController {
         // get export file path from .env file
         const export_file_path = constants.EXPORT_USER_INFO_PATH;
 
-        // check member count is exceeded limit
-        let exceeded_limit: boolean = false;
-        if (message.guild.memberCount > constants.USER_INFO_LIST_LIMIT_NUMBER) {
-            exceeded_limit = true;
-        }
-
         // get server info
         message.guild.members.list({ limit: constants.USER_INFO_LIST_LIMIT_NUMBER, cache: false })
             .then((member_info_list: any) => {
@@ -377,6 +371,12 @@ export class DiscordMessageController {
 
                 // write user info list to file and get message
                 export_user_info.output_user_info_to_file(user_info_list, export_file_path);
+
+                // check member count is exceeded limit
+                let exceeded_limit: boolean = false;
+                if (message.guild.memberCount > constants.USER_INFO_LIST_LIMIT_NUMBER) {
+                    exceeded_limit = true;
+                }
 
                 // create message
                 let message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO;
