@@ -12,12 +12,17 @@ export class Constants {
     SQLITE_FILE: string;
     SQLITE_TEMPLATE_FILE: string;
 
+    // export file section
+    EXPORT_USER_INFO_PATH: string;
+
     // message section
     DISCORD_ACTIVITY_NAME: string;
     DISCORD_MESSAGE_IS_INVALID: string;
     DISCORD_MESSAGE_TYPE_INVALID: string;
     DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT: string;
+    DISCORD_MESSAGE_EXPORT_TITLE: string;
     DISCORD_MESSAGE_EXPORT_USER_INFO: string;
+    DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED: string;
     DISCORD_MESSAGE_EXCEPTION: string;
     DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED: string;
     DISCORD_MESSAGE_NO_PERMISSION: string;
@@ -85,6 +90,8 @@ export class Constants {
     STATUS_ENABLED: number;
     STATUS_VIEW: number;
 
+    USER_INFO_LIST_LIMIT_NUMBER: number;
+
     RECRUITMENT_DEFAULT_LIMIT_HOURS: number;
     RECRUITMENT_DEFAULT_MAX_NUMBERS: number;
     RECRUITMENT_INVALID_CHANNEL_ID: string;
@@ -139,12 +146,17 @@ export class Constants {
         this.SQLITE_FILE = process.env['SQLITE_FILE'] || Constants.STRING_EMPTY;
         this.SQLITE_TEMPLATE_FILE = process.env['SQLITE_TEMPLATE_FILE'] || Constants.STRING_EMPTY;
 
+        // export file section
+        this.EXPORT_USER_INFO_PATH = process.env['EXPORT_USER_INFO_PATH'] || Constants.STRING_EMPTY;
+
         // message section
         this.DISCORD_ACTIVITY_NAME = process.env['DISCORD_ACTIVITY_NAME'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_IS_INVALID = process.env['DISCORD_MESSAGE_IS_INVALID'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_TYPE_INVALID = process.env['DISCORD_MESSAGE_TYPE_INVALID'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT = process.env['DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT'] || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_EXPORT_TITLE = process.env['DISCORD_MESSAGE_EXPORT_TITLE'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_EXPORT_USER_INFO = process.env['DISCORD_MESSAGE_EXPORT_USER_INFO'] || Constants.STRING_EMPTY;
+        this.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED = process.env['DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_EXCEPTION = process.env['DISCORD_MESSAGE_EXCEPTION'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED = process.env['DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_NO_PERMISSION = process.env['DISCORD_MESSAGE_NO_PERMISSION'] || Constants.STRING_EMPTY;
@@ -212,6 +224,8 @@ export class Constants {
         this.STATUS_DISABLED = 0;
         this.STATUS_ENABLED = 1;
         this.STATUS_VIEW = 2;
+
+        this.USER_INFO_LIST_LIMIT_NUMBER = 1000;
 
         this.RECRUITMENT_DEFAULT_LIMIT_HOURS = 8;
         this.RECRUITMENT_DEFAULT_MAX_NUMBERS = 6;

@@ -21,6 +21,9 @@ test("Test for constants", () => {
     expect(v.DISCORD_MESSAGE_IS_INVALID).not.toEqual('');
     expect(v.DISCORD_MESSAGE_TYPE_INVALID).not.toEqual('');
     expect(v.DISCORD_MESSAGE_NOT_FOUND_RECRUITMENT).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_EXPORT_TITLE).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_EXPORT_USER_INFO).not.toEqual('');
+    expect(v.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED).not.toEqual('');
     expect(v.DISCORD_MESSAGE_EXCEPTION).not.toEqual('');
     expect(v.DISCORD_MESSAGE_TOKEN_GENERATE_LIMIT_EXCEEDED).not.toEqual('');
     expect(v.DISCORD_MESSAGE_NO_PERMISSION).not.toEqual('');

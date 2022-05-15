@@ -309,8 +309,13 @@ class DiscordMessageController {
         const message_manager = new discord_message_manager_1.DiscordMessageManager();
         // user info list
         let user_info_list = [];
+        // check member count is exceeded limit
+        let exceeded_limit = false;
+        if (message.guild.memberCount > constants.USER_INFO_LIST_LIMIT_NUMBER) {
+            exceeded_limit = true;
+        }
         // get server info
-        message.guild.members.list({ limit: 1000, cache: false })
+        message.guild.members.list({ limit: constants.USER_INFO_LIST_LIMIT_NUMBER, cache: false })
             .then((member_info_list) => {
             // loop member list
             member_info_list.forEach((user_info, user_id) => {
@@ -325,10 +330,28 @@ class DiscordMessageController {
                 // add user info to result list
                 user_info_list.push(user_info_temp);
             });
-            // result
-            let result_string = message_manager.get_user_info_list(user_info_list);
+            // write user info list to file and get message
+            message_manager.get_user_info_list(user_info_list, constants.EXPORT_USER_INFO_PATH);
+            // create message
+            let message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO;
+            if (exceeded_limit == true) {
+                message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED;
+            }
             // send message
-            return message.channel.send(result_string);
+            return message.channel.send({
+                embeds: [
+                    new Discord.MessageEmbed({
+                        timestamp: new Date(),
+                        fields: [
+                            {
+                                name: constants.DISCORD_MESSAGE_EXPORT_TITLE,
+                                value: `${message_string}`,
+                            }
+                        ]
+                    })
+                ],
+                files: [constants.EXPORT_USER_INFO_PATH]
+            });
         }).catch((err) => {
             // send error message
             message.channel.send(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
