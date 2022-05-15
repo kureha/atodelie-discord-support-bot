@@ -325,10 +325,8 @@ export class DiscordMessageManager {
         });
 
         // write buffer to file
-        logger.info(`write output buffer to file : path = ${output_file_path}`);
-        const ws: fs.WriteStream = fs.createWriteStream(output_file_path);
-        ws.write(output_buffer);
-        ws.end();
+        logger.info(`write output buffer to file. : path = ${output_file_path}`);
+        fs.writeFileSync(output_file_path, output_buffer);
         logger.info(`write output buffer complete.`);
     }
 

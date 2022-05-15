@@ -284,10 +284,8 @@ class DiscordMessageManager {
             output_buffer = `${output_buffer}${user_info.name}${split_char}${role_check_list.join(split_char)}${line_separator}`;
         });
         // write buffer to file
-        logger_1.logger.info(`write output buffer to file : path = ${output_file_path}`);
-        const ws = fs.createWriteStream(output_file_path);
-        ws.write(output_buffer);
-        ws.end();
+        logger_1.logger.info(`write output buffer to file. : path = ${output_file_path}`);
+        fs.writeFileSync(output_file_path, output_buffer);
         logger_1.logger.info(`write output buffer complete.`);
     }
     /**
