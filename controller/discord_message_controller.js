@@ -17,7 +17,6 @@ const export_user_info_1 = require("./../logic/export_user_info");
 // import entities
 const server_info_2 = require("../entity/server_info");
 const reference_1 = require("../entity/reference");
-const user_info_1 = require("../entity/user_info");
 // import discord modules
 const Discord = require('discord.js');
 class DiscordMessageController {
@@ -309,8 +308,8 @@ class DiscordMessageController {
         // create message manager instance
         const message_manager = new discord_message_manager_1.DiscordMessageManager;
         const export_user_info = new export_user_info_1.ExportUserInfo();
-        // user info list
-        let user_info_list = [];
+        // get export file path from .env file
+        const export_file_path = constants.EXPORT_USER_INFO_PATH;
         // check member count is exceeded limit
         let exceeded_limit = false;
         if (message.guild.memberCount > constants.USER_INFO_LIST_LIMIT_NUMBER) {
@@ -319,21 +318,10 @@ class DiscordMessageController {
         // get server info
         message.guild.members.list({ limit: constants.USER_INFO_LIST_LIMIT_NUMBER, cache: false })
             .then((member_info_list) => {
-            // loop member list
-            member_info_list.forEach((user_info, user_id) => {
-                // create user info temp valiable
-                const user_info_temp = user_info_1.UserInfo.parse_from_discordjs(user_info);
-                // loop role list
-                user_info.roles.cache.forEach((role_info, role_id) => {
-                    const role_info_temp = user_info_1.RoleInfo.parse_from_discordjs(role_info);
-                    // add role info to result list
-                    user_info_temp.add(role_info_temp);
-                });
-                // add user info to result list
-                user_info_list.push(user_info_temp);
-            });
+            // parse discord's data to internal object
+            const user_info_list = export_user_info.parse_user_info(member_info_list);
             // write user info list to file and get message
-            export_user_info.get_user_info_list(user_info_list, constants.EXPORT_USER_INFO_PATH);
+            export_user_info.output_user_info_to_file(user_info_list, export_file_path);
             // create message
             let message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO;
             if (exceeded_limit == true) {
@@ -344,7 +332,7 @@ class DiscordMessageController {
                 embeds: [
                     message_manager.get_export_user_info_embed_message(message_string)
                 ],
-                files: [constants.EXPORT_USER_INFO_PATH]
+                files: [export_file_path]
             });
         }).catch((err) => {
             // send error message

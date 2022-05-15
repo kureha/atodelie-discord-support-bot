@@ -10,13 +10,44 @@ import * as fs from "fs";
 import { logger } from '../common/logger';
 
 export class ExportUserInfo {
+
+    /**
+     * parse user info list from discord returned values
+     * @param member_info_list Discord's GuildMember Collection (Map) object
+     * @returns UserInfo[] parsed object
+     */
+    parse_user_info(member_info_list: any): UserInfo[] {
+        // result
+        let user_info_list: UserInfo[] = [];
+
+        // loop member list
+        member_info_list.forEach((user_info: any, user_id: string) => {
+            // create user info temp valiable
+            const user_info_temp: UserInfo = UserInfo.parse_from_discordjs(user_info);
+
+            // loop role list
+            user_info.roles.cache.forEach((role_info: any, role_id: string) => {
+                const role_info_temp: RoleInfo = RoleInfo.parse_from_discordjs(role_info);
+
+                // add role info to result list
+                user_info_temp.add(role_info_temp);
+            });
+
+            // add user info to result list
+            user_info_list.push(user_info_temp);
+        });
+
+        // return result
+        return user_info_list;
+    }
+
     /**
      * get user info list message
      * @param user_info_list
-     * @param exceeded_limit is 1000 over?
+     * @param output_file_path output file paths
      * @returns 
      */
-    get_user_info_list(user_info_list: UserInfo[], output_file_path: string) {
+    output_user_info_to_file(user_info_list: UserInfo[], output_file_path: string) {
         // output file buffer
         let output_buffer: string = '';
 

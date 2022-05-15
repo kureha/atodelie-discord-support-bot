@@ -27,17 +27,43 @@ exports.ExportUserInfo = void 0;
 // import constants
 const constants_1 = require("../common/constants");
 const constants = new constants_1.Constants();
+// import entities
+const user_info_1 = require("../entity/user_info");
 // import fs module
 const fs = __importStar(require("fs"));
 const logger_1 = require("../common/logger");
 class ExportUserInfo {
     /**
+     * parse user info list from discord returned values
+     * @param member_info_list Discord's GuildMember Collection (Map) object
+     * @returns UserInfo[] parsed object
+     */
+    parse_user_info(member_info_list) {
+        // result
+        let user_info_list = [];
+        // loop member list
+        member_info_list.forEach((user_info, user_id) => {
+            // create user info temp valiable
+            const user_info_temp = user_info_1.UserInfo.parse_from_discordjs(user_info);
+            // loop role list
+            user_info.roles.cache.forEach((role_info, role_id) => {
+                const role_info_temp = user_info_1.RoleInfo.parse_from_discordjs(role_info);
+                // add role info to result list
+                user_info_temp.add(role_info_temp);
+            });
+            // add user info to result list
+            user_info_list.push(user_info_temp);
+        });
+        // return result
+        return user_info_list;
+    }
+    /**
      * get user info list message
      * @param user_info_list
-     * @param exceeded_limit is 1000 over?
+     * @param output_file_path output file paths
      * @returns
      */
-    get_user_info_list(user_info_list, output_file_path) {
+    output_user_info_to_file(user_info_list, output_file_path) {
         // output file buffer
         let output_buffer = '';
         // variables
