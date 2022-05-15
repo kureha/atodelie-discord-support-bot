@@ -366,25 +366,25 @@ export class DiscordMessageController {
         // get server info
         message.guild.members.list({ limit: constants.USER_INFO_LIST_LIMIT_NUMBER, cache: false })
             .then((member_info_list: any) => {
+                logger.info(`get user info from server completed.`);
+
                 // parse discord's data to internal object
                 const user_info_list: UserInfo[] = export_user_info.parse_user_info(member_info_list);
+                logger.info(`parsed user info data. count = ${user_info_list.length}`);
 
                 // write user info list to file and get message
                 export_user_info.output_user_info_to_file(user_info_list, export_file_path);
+                logger.info(`output user info to file completed. path = ${export_file_path}`);
 
                 // check member count is exceeded limit
-                let exceeded_limit: boolean = false;
-                if (message.guild.memberCount > constants.USER_INFO_LIST_LIMIT_NUMBER) {
-                    exceeded_limit = true;
-                }
-
-                // create message
                 let message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO;
-                if (exceeded_limit == true) {
+                if (message.guild.memberCount > constants.USER_INFO_LIST_LIMIT_NUMBER) {
+                    logger.info(`user info list count is exceeded discord's limit number ${constants.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED}.`);
                     message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED;
                 }
 
                 // send message
+                logger.info(`ready to sending message.`);
                 return message.channel.send({
                     embeds: [
                         message_manager.get_export_user_info_embed_message(message_string)
