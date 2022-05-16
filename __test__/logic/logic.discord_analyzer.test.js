@@ -68,4 +68,11 @@ test("Test for List", () => {
     expect(discord_message_analyzer_1.DiscordMessageAnalyzer.check_type_list("一覧ください")).toEqual(true);
     expect(discord_message_analyzer_1.DiscordMessageAnalyzer.check_type_list("募集　やります")).toEqual(false);
 });
+test("Test for user info get list", () => {
+    expect(discord_message_analyzer_1.DiscordMessageAnalyzer.check_user_info_list_get("ユーザ情報取得")).toEqual(true);
+    expect(discord_message_analyzer_1.DiscordMessageAnalyzer.check_user_info_list_get("ユーザ情報取得します")).toEqual(true);
+    expect(discord_message_analyzer_1.DiscordMessageAnalyzer.check_user_info_list_get("ユーザ情報取得 ")).toEqual(true);
+    expect(discord_message_analyzer_1.DiscordMessageAnalyzer.check_user_info_list_get("ユーザ情報取得 a")).toEqual(true);
+    expect(discord_message_analyzer_1.DiscordMessageAnalyzer.check_user_info_list_get("ユーザ情報です")).toEqual(false);
+});
 //# sourceMappingURL=logic.discord_analyzer.test.js.map

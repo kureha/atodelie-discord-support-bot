@@ -7,6 +7,7 @@ class Constants {
      * @constructor
      */
     constructor() {
+        var _a;
         // readed from env file
         require('dotenv').config();
         // common section
@@ -80,7 +81,7 @@ class Constants {
         this.DISCORD_COMMAND_LIST_RECRUITMENT = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_LIST_RECRUITMENT'], ',');
         this.DISCORD_COMMAND_REGIST_MASTER = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_REGIST_MASTER'], ',');
         this.DISCORD_COMMAND_USER_INFO_LIST_GET = Constants.get_escaped_regexp_string_from_env(process.env['DISCORD_COMMAND_USER_INFO_LIST_GET'], ',');
-        this.DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME = process.env['DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME']?.split(',') || [];
+        this.DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME = ((_a = process.env['DISCORD_COMMAND_EXCEPT_WORDS_OF_TIME']) === null || _a === void 0 ? void 0 : _a.split(',')) || [];
         // message static values section
         this.DISCORD_MESSAGE_EMBED_NO_MEMBER = process.env['DISCORD_MESSAGE_EMBED_NO_MEMBER'] || Constants.STRING_EMPTY;
         this.DISCORD_MESSAGE_EMBED_TITLE = process.env['DISCORD_MESSAGE_EMBED_TITLE'] || Constants.STRING_EMPTY;

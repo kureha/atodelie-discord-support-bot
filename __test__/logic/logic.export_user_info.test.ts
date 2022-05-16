@@ -1,6 +1,3 @@
-import { Constants } from '../../common/constants';
-const constants = new Constants();
-
 import { ExportUserInfo } from '../../logic/export_user_info';
 
 test("test for get non-escaped characters", () => {

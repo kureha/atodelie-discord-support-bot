@@ -22,6 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // define logger
 const logger_1 = require("./common/logger");
@@ -47,10 +56,10 @@ client.on('messageCreate', (message) => {
 });
 // interaction event
 const discord_interaction_controller_1 = require("./controller/discord_interaction_controller");
-client.on('interactionCreate', async (interaction) => {
+client.on('interactionCreate', (interaction) => __awaiter(void 0, void 0, void 0, function* () {
     // call interaction recieve controller
     discord_interaction_controller_1.DiscordInteractionController.recieve_controller(client, interaction);
-});
+}));
 // cron event
 const cron = __importStar(require("node-cron"));
 logger_1.logger.info(`follow cron setting : ${constants.DISCORD_FOLLOW_CRON}`);
