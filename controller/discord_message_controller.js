@@ -13,7 +13,7 @@ const server_info_1 = require("../db/server_info");
 // create message modules
 const discord_message_analyzer_1 = require("./../logic/discord_message_analyzer");
 const discord_message_manager_1 = require("./../logic/discord_message_manager");
-const export_user_info_1 = require("./../logic/export_user_info");
+const export_user_info_1 = require("../logic/export_user_info");
 // import entities
 const server_info_2 = require("../entity/server_info");
 const reference_1 = require("../entity/reference");

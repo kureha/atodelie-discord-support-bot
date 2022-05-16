@@ -13,7 +13,7 @@ import { ServerInfoRepository } from '../db/server_info';
 // create message modules
 import { DiscordMessageAnalyzer } from './../logic/discord_message_analyzer';
 import { DiscordMessageManager } from './../logic/discord_message_manager';
-import { ExportUserInfo } from './../logic/export_user_info';
+import { ExportUserInfo } from '../logic/export_user_info';
 
 // import entities
 import { ServerInfo } from '../entity/server_info';

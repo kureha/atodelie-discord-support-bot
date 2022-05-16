@@ -53,6 +53,7 @@ test("Test for constants", () => {
     expect(v.DISCORD_BUTTON_VIEW).not.toEqual('');
 
     expect(v.DISCORD_EXPORT_USER_INFO_SPLIT_CHAR).not.toEqual('');
+    expect(v.DISCORD_EXPORT_USER_INFO_LINE_SEPARATOR).not.toEqual('');
     expect(v.DISCORD_EXPORT_USER_INFO_NAME_ITEM_NAME).not.toEqual('');
     expect(v.DISCORD_EXPORT_USER_INFO_HAS_ROLE).not.toEqual('');
     expect(v.DISCORD_EXPORT_USER_INFO_NO_ROLE).toEqual('');

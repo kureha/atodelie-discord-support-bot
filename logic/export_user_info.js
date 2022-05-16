@@ -67,8 +67,8 @@ class ExportUserInfo {
         // output file buffer
         let output_buffer = '';
         // variables
-        const split_char = constants.DISCORD_EXPORT_USER_INFO_SPLIT_CHAR;
-        const line_separator = "\r\n";
+        const split_char = this.parse_escaped_characters(constants.DISCORD_EXPORT_USER_INFO_SPLIT_CHAR);
+        const line_separator = this.parse_escaped_characters(constants.DISCORD_EXPORT_USER_INFO_LINE_SEPARATOR);
         const name_item_name = constants.DISCORD_EXPORT_USER_INFO_NAME_ITEM_NAME;
         const has_role_char = constants.DISCORD_EXPORT_USER_INFO_HAS_ROLE;
         const not_has_role_char = constants.DISCORD_EXPORT_USER_INFO_NO_ROLE;
@@ -80,7 +80,45 @@ class ExportUserInfo {
             role_info_name_list.push(r.name);
         });
         // write header
-        output_buffer = `${name_item_name}${split_char}${role_info_name_list.join(split_char)}${line_separator}`;
+        const header_string = `${name_item_name}${split_char}${role_info_name_list.join(split_char)}${line_separator}`;
+        // create strings
+        output_buffer = header_string + this.get_output_body_string(user_info_list, role_info_list, split_char, line_separator, has_role_char, not_has_role_char);
+        // write buffer to file
+        logger_1.logger.info(`write output buffer to file. : path = ${output_file_path}`);
+        fs.writeFileSync(output_file_path, output_buffer);
+        logger_1.logger.info(`write output buffer complete.`);
+    }
+    /**
+     * get non-escaped characters for \t \r \n
+     * @param v escapec characters like \\t \\r \\n
+     * @returns non-escaped characters
+     */
+    parse_escaped_characters(v) {
+        let r = v;
+        // for tab
+        let regex = /\\t/i;
+        r = r.replace(regex, "\t");
+        // for r
+        regex = /\\r/i;
+        r = r.replace(regex, "\r");
+        // for n
+        regex = /\\n/i;
+        r = r.replace(regex, "\n");
+        return r;
+    }
+    /**
+     * get output string
+     * @param user_info_list user info list
+     * @param role_info_list role info list
+     * @param split_char split char no needs escaped
+     * @param line_separator line separator char which like \r\n
+     * @param has_role_char output character who has role
+     * @param not_has_role_char output character who has not role
+     * @returns output string body
+     */
+    get_output_body_string(user_info_list, role_info_list, split_char, line_separator, has_role_char, not_has_role_char) {
+        // output buffer
+        let output_buffer = '';
         // create strings
         user_info_list.forEach((user_info) => {
             // let role list
@@ -103,10 +141,7 @@ class ExportUserInfo {
             // write end of line
             output_buffer = `${output_buffer}${user_info.name}${split_char}${role_check_list.join(split_char)}${line_separator}`;
         });
-        // write buffer to file
-        logger_1.logger.info(`write output buffer to file. : path = ${output_file_path}`);
-        fs.writeFileSync(output_file_path, output_buffer);
-        logger_1.logger.info(`write output buffer complete.`);
+        return output_buffer;
     }
     /**
      * get role info list from user info list
