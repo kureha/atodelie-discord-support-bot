@@ -38,15 +38,20 @@ const logger_1 = require("./common/logger");
 const constants_1 = require("./common/constants");
 const constants = new constants_1.Constants();
 // import discord modules
-const Discord = require('discord.js');
+const Discord = __importStar(require("discord.js"));
 const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES] });
 // check db and init
 const initialize_1 = require("./db/initialize");
 initialize_1.InitializeRepository.initialize_database_if_not_exists();
 // ready event
 client.on('ready', () => {
-    client.user.setPresence({ activity: { name: constants.DISCORD_ACTIVITY_NAME }, status: 'online' });
-    logger_1.logger.info(`logged on discord server.`);
+    if (client.user != null) {
+        client.user.setPresence({ activities: [{ name: constants.DISCORD_ACTIVITY_NAME }], status: 'online' });
+        logger_1.logger.info(`logged on discord server.`);
+    }
+    else {
+        logger_1.logger.error(`client is not logined.`);
+    }
 });
 // message is sended event
 const discord_message_controller_1 = require("./controller/discord_message_controller");

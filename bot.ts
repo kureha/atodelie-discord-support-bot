@@ -6,7 +6,7 @@ import { Constants } from './common/constants';
 const constants = new Constants();
 
 // import discord modules
-const Discord = require('discord.js');
+import * as Discord from 'discord.js';
 const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES] });
 
 // check db and init
@@ -15,10 +15,14 @@ InitializeRepository.initialize_database_if_not_exists();
 
 // ready event
 client.on('ready', () => {
-  client.user.setPresence(
-    { activity: { name: constants.DISCORD_ACTIVITY_NAME }, status: 'online' }
-  );
-  logger.info(`logged on discord server.`);
+  if (client.user != null) {
+    client.user.setPresence(
+      { activities: [{ name: constants.DISCORD_ACTIVITY_NAME }], status: 'online' }
+    );
+    logger.info(`logged on discord server.`);
+  } else {
+    logger.error(`client is not logined.`);
+  }
 })
 
 // message is sended event

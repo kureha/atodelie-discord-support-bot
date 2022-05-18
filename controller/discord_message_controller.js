@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscordMessageController = void 0;
 // define logger
@@ -18,7 +41,7 @@ const export_user_info_1 = require("../logic/export_user_info");
 const server_info_2 = require("../entity/server_info");
 const reference_1 = require("../entity/reference");
 // import discord modules
-const Discord = require('discord.js');
+const Discord = __importStar(require("discord.js"));
 class DiscordMessageController {
     /**
      * analyze discord message and send result message
@@ -120,17 +143,17 @@ class DiscordMessageController {
             // create join button
             let join_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(constants.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT)
+                .setStyle(1 /* PRIMARY */)
                 .setLabel(constants.DISCORD_BUTTUN_JOIN);
             // create decline button
             let decline_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(constants.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT)
+                .setStyle(4 /* DANGER */)
                 .setLabel(constants.DISCORD_BUTTON_DECLINE);
             // create view button
             let view_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(constants.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT)
+                .setStyle(3 /* SUCCESS */)
                 .setLabel(constants.DISCORD_BUTTON_VIEW);
             // send success message
             return client.channels.cache.get(server_info.channel_id).send({
@@ -184,17 +207,17 @@ class DiscordMessageController {
             // create join button
             let join_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(constants.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT)
+                .setStyle(1 /* PRIMARY */)
                 .setLabel(constants.DISCORD_BUTTUN_JOIN);
             // create decline button
             let decline_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(constants.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT)
+                .setStyle(4 /* DANGER */)
                 .setLabel(constants.DISCORD_BUTTON_DECLINE);
             // create view button
             let view_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(constants.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT)
+                .setStyle(3 /* SUCCESS */)
                 .setLabel(constants.DISCORD_BUTTON_VIEW);
             // send success message
             return client.channels.cache.get(server_info.channel_id).send({

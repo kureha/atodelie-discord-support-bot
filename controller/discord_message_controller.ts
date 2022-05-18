@@ -21,7 +21,8 @@ import { Reference } from '../entity/reference';
 import { UserInfo } from '../entity/user_info';
 
 // import discord modules
-const Discord = require('discord.js');
+import * as Discord from 'discord.js';
+import { MessageButtonStyles } from 'discord.js/typings/enums';
 
 export class DiscordMessageController {
     /**
@@ -142,19 +143,19 @@ export class DiscordMessageController {
                 // create join button
                 let join_button = new Discord.MessageButton()
                     .setCustomId(`${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}${analyzer.token}`)
-                    .setStyle(constants.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT)
+                    .setStyle(MessageButtonStyles.PRIMARY)
                     .setLabel(constants.DISCORD_BUTTUN_JOIN);
 
                 // create decline button
                 let decline_button = new Discord.MessageButton()
                     .setCustomId(`${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}${analyzer.token}`)
-                    .setStyle(constants.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT)
+                    .setStyle(MessageButtonStyles.DANGER)
                     .setLabel(constants.DISCORD_BUTTON_DECLINE);
 
                 // create view button
                 let view_button = new Discord.MessageButton()
                     .setCustomId(`${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}${analyzer.token}`)
-                    .setStyle(constants.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT)
+                    .setStyle(MessageButtonStyles.SUCCESS)
                     .setLabel(constants.DISCORD_BUTTON_VIEW);
 
                 // send success message
@@ -216,19 +217,19 @@ export class DiscordMessageController {
                 // create join button
                 let join_button = new Discord.MessageButton()
                     .setCustomId(`${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}${analyzer.token}`)
-                    .setStyle(constants.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT)
+                    .setStyle(MessageButtonStyles.PRIMARY)
                     .setLabel(constants.DISCORD_BUTTUN_JOIN);
 
                 // create decline button
                 let decline_button = new Discord.MessageButton()
                     .setCustomId(`${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}${analyzer.token}`)
-                    .setStyle(constants.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT)
+                    .setStyle(MessageButtonStyles.DANGER)
                     .setLabel(constants.DISCORD_BUTTON_DECLINE);
 
                 // create view button
                 let view_button = new Discord.MessageButton()
                     .setCustomId(`${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}${analyzer.token}`)
-                    .setStyle(constants.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT)
+                    .setStyle(MessageButtonStyles.SUCCESS)
                     .setLabel(constants.DISCORD_BUTTON_VIEW);
 
                 // send success message

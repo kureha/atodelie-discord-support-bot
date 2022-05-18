@@ -20,7 +20,7 @@ import { Participate } from '../entity/participate';
 import { ServerInfo } from '../entity/server_info';
 
 // import discord modules
-const Discord = require('discord.js');
+import * as Discord from 'discord.js';
 
 export class DiscordInteractionController {
     /**
