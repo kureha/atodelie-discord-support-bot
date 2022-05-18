@@ -113,9 +113,6 @@ class Constants {
         this.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX = 'join-recruite-token=';
         this.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX = 'decline-recruite-token=';
         this.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX = 'view-recruite-token=';
-        this.DISCORD_BUTTON_STYLE_JOIN_RECRUITMENT = 'PRIMARY';
-        this.DISCORD_BUTTON_STYLE_DECLINE_RECRUITMENT = 'DANGER';
-        this.DISCORD_BUTTON_STYLE_VIEW_RECRUITMENT = 'SUCCESS';
         this.ERROR_RECRUITMENT_TOKEN = 'ERROR_TOKEN';
         this.REQUIRE_NAME_SQLITE3 = 'sqlite3';
     }
