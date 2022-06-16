@@ -4,12 +4,17 @@ import { logger } from './common/logger';
 // read .env file
 require('dotenv').config();
 
+// Get default port
+const DEFAULT_PORT: number = 3000;
+let port: number = parseInt(process.env['DISCORD_BOT_PORT'] || `${DEFAULT_PORT}`);
+logger.info(`Discord bot port = ${port}`);
+
 // Response for Uptime Robot
 import * as http from 'http'
 http.createServer(function (request: any, response: any) {
     response.writeHead(200, { 'Content-Type': 'text/plain' })
     response.end('Discord bot is active now \n')
-}).listen(3000)
+}).listen(port)
 
 // check required params
 if (process.env['DISCORD_BOT_TOKEN'] == undefined) {
