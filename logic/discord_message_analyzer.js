@@ -304,6 +304,21 @@ class DiscordMessageAnalyzer {
         return result;
     }
     /**
+     * replace full-width digit character to half-width digit character
+     * @param str target str
+     * @returns replaced string
+     */
+    static remove_full_wide_digits(str) {
+        // define replace 2-byte digit chars to 1-byte digit chars
+        const replace_digits = { '０': '0', '１': '1', '２': '2', '３': '3', '４': '4', '５': '5', '６': '6', '７': '7', '８': '8', '９': '9' };
+        // define regexp
+        const replace_regexp = new RegExp('(' + Object.keys(replace_digits).join('|') + ')', 'g');
+        // return values
+        return str.replace(replace_regexp, (match, args) => {
+            return replace_digits[match] || constants_1.Constants.STRING_EMPTY;
+        });
+    }
+    /**
      * extract date string and convert date object
      * @param raw_mes message
      * @returns recruitment's limit date
@@ -312,8 +327,9 @@ class DiscordMessageAnalyzer {
         // needed variables
         let hour = undefined;
         let minute = undefined;
+        // replace full-width digits
+        let mes = this.remove_full_wide_digits(raw_mes);
         // remove except words
-        let mes = raw_mes;
         except_list.forEach(v => {
             mes = mes.replace(v, '');
         });

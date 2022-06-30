@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -139,17 +143,17 @@ class DiscordMessageController {
             // create join button
             let join_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(1 /* PRIMARY */)
+                .setStyle(1 /* MessageButtonStyles.PRIMARY */)
                 .setLabel(constants.DISCORD_BUTTUN_JOIN);
             // create decline button
             let decline_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(4 /* DANGER */)
+                .setStyle(4 /* MessageButtonStyles.DANGER */)
                 .setLabel(constants.DISCORD_BUTTON_DECLINE);
             // create view button
             let view_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(3 /* SUCCESS */)
+                .setStyle(3 /* MessageButtonStyles.SUCCESS */)
                 .setLabel(constants.DISCORD_BUTTON_VIEW);
             // send success message
             return client.channels.cache.get(server_info.channel_id).send({
@@ -203,17 +207,17 @@ class DiscordMessageController {
             // create join button
             let join_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(1 /* PRIMARY */)
+                .setStyle(1 /* MessageButtonStyles.PRIMARY */)
                 .setLabel(constants.DISCORD_BUTTUN_JOIN);
             // create decline button
             let decline_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(4 /* DANGER */)
+                .setStyle(4 /* MessageButtonStyles.DANGER */)
                 .setLabel(constants.DISCORD_BUTTON_DECLINE);
             // create view button
             let view_button = new Discord.MessageButton()
                 .setCustomId(`${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}${analyzer.token}`)
-                .setStyle(3 /* SUCCESS */)
+                .setStyle(3 /* MessageButtonStyles.SUCCESS */)
                 .setLabel(constants.DISCORD_BUTTON_VIEW);
             // send success message
             return client.channels.cache.get(server_info.channel_id).send({
