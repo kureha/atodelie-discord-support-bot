@@ -6,50 +6,47 @@ import { Reference } from '../../entity/reference';
 import { DiscordMessageAnalyzer } from '../../logic/discord_message_analyzer';
 
 test.each(
-    [["test", false],
-    ["5", false],
-    ["ゲームのぼしゅうです！！！！！", false],
+    [["", false],
+    ["test", false],
+    ["12345", false],
+    ["ぼしゅうです", false],
     ["ゲームのぼしゅう", false],
     ["ぼしゅう", false],
     ["ゲーム募集します", false],
     ["ゲーム募集", false],
     ["募集", false],
-    ["ぼしゅうします 今晩やります", true],
-    ["ぼしゅうする　今晩やります", true],
-    ["ぼしゅう　今晩やります", true],
-    ["募集します やります", true],
-    ["募集します　やります", true],
-    ["募集 やります", true],
-    ["募集　やります", true],
+    ["ぼしゅうします 今晩です", true],
+    ["ぼしゅうします　今晩です", true],
+    ["ぼしゅう　今晩です", true],
+    ["募集します 今晩です", true],
+    ["募集します　今晩です", true],
+    ["募集 今晩です", true],
+    ["募集　今晩です", true],
     ]
 )("Test for CheckReqcruitement, %s -> %s", (mes: string, result: boolean) => {
     expect(DiscordMessageAnalyzer.check_recruitment(mes)).toBe(result);
 });
 
 test.each(
-    [["ぼしゅうします 今晩やります", "今晩やります"], ["募集　やります", "やります"]]
+    [["ぼしゅうします 今晩です", "今晩です"], ["募集　今晩です", "今晩です"]]
 )("Test for get_recruitment_text, %s -> %s", (mes: string, res: string) => {
     expect(DiscordMessageAnalyzer.get_recruitment_text(mes)).toEqual(res);
 });
 
 test.each(
-    [["募集します @3", 3], ["募集します @99", 99]]
-)("Test for get numbers, %s -> %i", (mes: string, num: number) => {
+    [["募集します @0", 0], ["募集します @3", 3], ["募集します @99", 99], ["募集します @a", undefined], ["募集します", undefined], ["", undefined]]
+)("Test for get numbers, %s -> %i", (mes: string, num: number | undefined) => {
     expect(DiscordMessageAnalyzer.get_recruitment_numbers(mes)).toEqual(num);
 });
 
-test("Test for get invalid numbers", () => {
-    expect(DiscordMessageAnalyzer.get_recruitment_numbers("募集します @a")).toEqual(undefined);
-})
-
 test.each(
-    [["リストください", true], ["一覧ください", true], ["募集　やります", false]]
+    [["リストを下さい", true], ["一覧を下さい", true], ["募集　今晩です", false], ["", false]]
 )("Test for List, %s -> %s", (mes: string, result: boolean) => {
     expect(DiscordMessageAnalyzer.check_type_list(mes)).toEqual(result);
 });
 
 test.each(
-    [["ユーザ情報取得", true], ["ユーザ情報取得します", true], ["ユーザ情報取得 ", true], ["ユーザ情報取得 a", true], ["ユーザ情報です", false]]
+    [["ユーザ情報取得", true], ["ユーザ情報取得します", true], ["ユーザ情報取得 ", true], ["ユーザ情報取得 a", true], ["ユーザ情報します", false], ["", false]]
 )("Test for user info get list, %s -> %s", (mes: string, result: boolean) => {
     expect(DiscordMessageAnalyzer.check_user_info_list_get(mes)).toEqual(result);
 });

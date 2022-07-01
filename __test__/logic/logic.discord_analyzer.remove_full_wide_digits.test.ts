@@ -1,6 +1,7 @@
 import { DiscordMessageAnalyzer } from '../../logic/discord_message_analyzer';
 
 test.each([
+    ["", ""],
     ["１２３４５６７８９０", "1234567890"],
     [" １２３４５６７８９０", " 1234567890"],
     ["１２３４５６７８９０ ", "1234567890 "],

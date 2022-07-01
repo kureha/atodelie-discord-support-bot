@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_message_analyzer_1 = require("../../logic/discord_message_analyzer");
 test.each([
+    ["", ""],
     ["１２３４５６７８９０", "1234567890"],
     [" １２３４５６７８９０", " 1234567890"],
     ["１２３４５６７８９０ ", "1234567890 "],
