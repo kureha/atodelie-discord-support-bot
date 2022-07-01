@@ -27,14 +27,14 @@ client.on('ready', () => {
 
 // message is sended event
 import { DiscordMessageController } from './controller/discord_message_controller';
-client.on('messageCreate', (message: any) => {
+client.on('messageCreate', (message: Discord.Message<boolean>) => {
   // call message recieve controller
   DiscordMessageController.recieve_controller(client, message);
 });
 
 // interaction event
 import { DiscordInteractionController } from './controller/discord_interaction_controller';
-client.on('interactionCreate', async (interaction: any) => {
+client.on('interactionCreate', async (interaction: Discord.Interaction<Discord.CacheType>) => {
   // call interaction recieve controller
   DiscordInteractionController.recieve_controller(client, interaction);
 });
