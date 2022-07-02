@@ -15,6 +15,25 @@ const discord_message_manager_1 = require("./../logic/discord_message_manager");
 const server_info_2 = require("../entity/server_info");
 class CronController {
     /**
+     * Get Text Channel from Discord
+     * @param client
+     * @param channel_id
+     * @returns discord channel. if error, throw error
+     */
+    static get_text_channel(client, channel_id) {
+        var _a;
+        if (client.channels.cache.get(channel_id) == undefined) {
+            // check channel exists
+            throw new Error(`Target channel is not exists.`);
+        }
+        else if (((_a = client.channels.cache.get(channel_id)) === null || _a === void 0 ? void 0 : _a.isText()) != false) {
+            // check target channel is text channel
+            throw new Error(`Target channel is not text channel.`);
+        }
+        // return values
+        return client.channels.cache.get(channel_id);
+    }
+    /**
      * check follow recruitment and send message
      * @param client discord client
      */
@@ -54,7 +73,8 @@ class CronController {
                         // if user more than 0 member, followup executed.
                         if (recruitment_data.user_list.length > 0) {
                             // search channel
-                            client.channels.cache.get(server_info_data.channel_id).send({
+                            const text_channel = CronController.get_text_channel(client, server_info_data.channel_id);
+                            text_channel.send({
                                 embeds: [
                                     messageManager.get_join_recruitment_follow_message(recruitment_data, server_info_data.recruitment_target_role),
                                 ]

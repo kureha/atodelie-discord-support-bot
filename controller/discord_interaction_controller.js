@@ -69,6 +69,9 @@ class DiscordInteractionController {
                 return participate_repo.update_t_participate(analyzer.get_join_participate());
             })
                 .then(() => {
+                if (interaction.guildId == undefined) {
+                    throw new Error(`Interaction's guild id is undefined.`);
+                }
                 // get target role
                 return server_info_repo.get_m_server_info(interaction.guildId);
             })

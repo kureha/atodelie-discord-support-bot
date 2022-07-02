@@ -26,18 +26,67 @@ import { MessageButtonStyles } from 'discord.js/typings/enums';
 
 export class DiscordMessageController {
     /**
+     * Get ClientUser from Discord
+     * @param client 
+     * @returns discord client user. if error, throw error.
+     */
+    static get_client_user(client: Discord.Client): Discord.ClientUser {
+        if (client != undefined && client.user != undefined) {
+            return client.user;
+        } else {
+            throw new Error(`Discord client is undefined.`);
+        }
+    }
+
+    /**
+     * Get Guild from Discord
+     * @param message 
+     * @returns discord guild. if error, throw error
+     */
+    static get_guild(message: Discord.Message): Discord.Guild {
+        if (message != undefined && message.guild != undefined) {
+            return message.guild;
+        } else {
+            throw new Error(`Discord message guild is undefined.`);
+        }
+    }
+
+    /**
+     * Get Text Channel from Discord
+     * @param client 
+     * @param channel_id 
+     * @returns discord channel. if error, throw error
+     */
+    static get_text_channel(client: Discord.Client, channel_id: string): Discord.TextChannel {
+        if (client.channels.cache.get(channel_id) == undefined) {
+            // check channel exists
+            throw new Error(`Target channel is not exists.`);
+        } else if (client.channels.cache.get(channel_id)?.isText() != false) {
+            // check target channel is text channel
+            throw new Error(`Target channel is not text channel.`);
+        }
+
+        // return values
+        return client.channels.cache.get(channel_id) as Discord.TextChannel;
+    }
+
+    /**
      * analyze discord message and send result message
      * @param client discord client
      * @param message discord message
      */
-    static recieve_controller(client: any, message: any) {
-        if (message.mentions.users.has(client.user.id)) {
+    static recieve_controller(client: Discord.Client, message: Discord.Message) {
+        // get objects from discord.
+        const client_user: Discord.ClientUser = DiscordMessageController.get_client_user(client);
+        const guild: Discord.Guild = DiscordMessageController.get_guild(message);
+
+        if (message.mentions.users.has(client_user.id)) {
             logger.info(`recieved message : ${message.content}`);
             logger.trace(message);
 
             // analyze message
             const analyzer = new DiscordMessageAnalyzer();
-            analyzer.analyze(message.content, message.guild.id, message.author.id, client.user.id, new Reference(message.reference))
+            analyzer.analyze(message.content, guild.id, message.author.id, client_user.id, new Reference(message.reference))
                 .then(() => {
                     logger.trace(analyzer);
 
@@ -87,7 +136,10 @@ export class DiscordMessageController {
      * @param message 
      * @param analyzer 
      */
-    static create_new_recruitment(client: any, message: any, analyzer: DiscordMessageAnalyzer) {
+    static create_new_recruitment(client: Discord.Client, message: Discord.Message, analyzer: DiscordMessageAnalyzer) {
+        // get objects from discord.
+        const guild: Discord.Guild = DiscordMessageController.get_guild(message);
+
         // create db instances
         const recruitment_repo = new RecruitmentRepository();
         const participate_repo = new ParticipateRepository();
@@ -117,7 +169,7 @@ export class DiscordMessageController {
             })
             .then(() => {
                 // get target role
-                return server_info_repo.get_m_server_info(message.guild.id);
+                return server_info_repo.get_m_server_info(guild.id);
             })
             .then((server_info_data: ServerInfo) => {
                 // get server info data
@@ -131,8 +183,8 @@ export class DiscordMessageController {
                     );
 
                     // input temprary values to server info
-                    server_info.server_id = message.guildId;
-                    server_info.channel_id = message.channelId;
+                    server_info.server_id = message.guildId || Constants.STRING_EMPTY;
+                    server_info.channel_id = message.channelId || Constants.STRING_EMPTY;
                 }
 
                 // compete all tasks
@@ -159,7 +211,8 @@ export class DiscordMessageController {
                     .setLabel(constants.DISCORD_BUTTON_VIEW);
 
                 // send success message
-                return client.channels.cache.get(server_info.channel_id).send({
+                const text_channel: Discord.TextChannel = DiscordMessageController.get_text_channel(client, server_info.channel_id);
+                return text_channel.send({
                     embeds: [
                         message_manager.get_new_recruitment_message(analyzer.get_recruitment(), server_info.recruitment_target_role)
                     ],
@@ -168,7 +221,7 @@ export class DiscordMessageController {
                     ],
                 });
             })
-            .then((sended_message: any) => {
+            .then((sended_message: Discord.Message) => {
                 // set recirve message id
                 logger.info(`send message completed. update message id to recruitment. : message_id = ${sended_message.id}`);
                 analyzer.set_message_id(sended_message.id);
@@ -188,7 +241,10 @@ export class DiscordMessageController {
      * @param message 
      * @param analyzer 
      */
-    static update_recruitment(client: any, message: any, analyzer: DiscordMessageAnalyzer) {
+    static update_recruitment(client: Discord.Client, message: Discord.Message, analyzer: DiscordMessageAnalyzer) {
+        // get objects from discord.
+        const guild: Discord.Guild = DiscordMessageController.get_guild(message);
+
         // create db instances
         const recruitment_repo = new RecruitmentRepository();
         const server_info_repo = new ServerInfoRepository();
@@ -203,7 +259,7 @@ export class DiscordMessageController {
         recruitment_repo.update_m_recruitment(analyzer.get_recruitment())
             .then(() => {
                 // get target role
-                return server_info_repo.get_m_server_info(message.guild.id);
+                return server_info_repo.get_m_server_info(guild.id);
             })
             .then((server_info_data: ServerInfo) => {
                 // get target role
@@ -233,7 +289,8 @@ export class DiscordMessageController {
                     .setLabel(constants.DISCORD_BUTTON_VIEW);
 
                 // send success message
-                return client.channels.cache.get(server_info.channel_id).send({
+                const text_channel: Discord.TextChannel = DiscordMessageController.get_text_channel(client, server_info.channel_id);
+                return text_channel.send({
                     embeds: [
                         message_manager.get_edit_recruitment_message(analyzer.get_recruitment(), server_info.recruitment_target_role)
                     ],
@@ -262,7 +319,10 @@ export class DiscordMessageController {
      * @param message 
      * @param analyzer 
      */
-    static delete_recruitment(client: any, message: any, analyzer: DiscordMessageAnalyzer) {
+    static delete_recruitment(client: Discord.Client, message: Discord.Message, analyzer: DiscordMessageAnalyzer) {
+        // get objects from discord.
+        const guild: Discord.Guild = DiscordMessageController.get_guild(message);
+
         // create db instances
         const recruitment_repo = new RecruitmentRepository();
         const server_info_repo = new ServerInfoRepository();
@@ -276,7 +336,7 @@ export class DiscordMessageController {
         recruitment_repo.update_m_recruitment(analyzer.get_recruitment())
             .then(() => {
                 // get target role
-                return server_info_repo.get_m_server_info(message.guild.id);
+                return server_info_repo.get_m_server_info(guild.id);
             })
             .then((server_info_data: ServerInfo) => {
                 // get target role
@@ -288,7 +348,8 @@ export class DiscordMessageController {
                 logger.trace(analyzer.get_owner_participate());
 
                 // send success message
-                return client.channels.cache.get(server_info.channel_id).send({
+                const text_channel: Discord.TextChannel = DiscordMessageController.get_text_channel(client, server_info.channel_id);
+                return text_channel.send({
                     embeds: [
                         message_manager.get_delete_recruitment_message(analyzer.get_recruitment(), server_info.recruitment_target_role)
                     ]
@@ -306,7 +367,10 @@ export class DiscordMessageController {
      * @param message 
      * @param analyzer 
      */
-    static regist_master(client: any, message: any, analyzer: DiscordMessageAnalyzer) {
+    static regist_master(client: Discord.Client, message: Discord.Message, analyzer: DiscordMessageAnalyzer) {
+        // get objects from discord.
+        const guild: Discord.Guild = DiscordMessageController.get_guild(message);
+
         // create db instances
         const server_info_repo = new ServerInfoRepository();
 
@@ -317,7 +381,7 @@ export class DiscordMessageController {
         let server_info: ServerInfo = new ServerInfo();
 
         // create server info instance
-        server_info.server_id = message.guildId;
+        server_info.server_id = message.guildId || Constants.STRING_EMPTY;
         server_info.channel_id = message.channelId;
         server_info.recruitment_target_role = analyzer.owner_id;
         server_info.follow_time = Constants.get_default_date();
@@ -331,7 +395,7 @@ export class DiscordMessageController {
             })
             .then(() => {
                 // get date for confirm
-                return server_info_repo.get_m_server_info(message.guild.id);
+                return server_info_repo.get_m_server_info(guild.id);
             })
             .then((server_info_data) => {
                 // send success message
@@ -339,7 +403,8 @@ export class DiscordMessageController {
                 logger.trace(server_info_data);
 
                 // send success message
-                return client.channels.cache.get(server_info.channel_id).send(
+                const text_channel: Discord.TextChannel = DiscordMessageController.get_text_channel(client, server_info.channel_id);
+                return text_channel.send(
                     message_manager.get_regist_server_info(server_info.recruitment_target_role)
                 );
             })
@@ -356,7 +421,10 @@ export class DiscordMessageController {
      * @param message 
      * @param analyzer 
      */
-    static export_user_info(client: any, message: any, analyzer: DiscordMessageAnalyzer) {
+    static export_user_info(client: Discord.Client, message: Discord.Message, analyzer: DiscordMessageAnalyzer) {
+        // get objects from discord.
+        const guild: Discord.Guild = DiscordMessageController.get_guild(message);
+
         // create message manager instance
         const message_manager = new DiscordMessageManager();
         const export_user_info = new ExportUserInfo();
@@ -365,7 +433,7 @@ export class DiscordMessageController {
         const export_file_path = constants.EXPORT_USER_INFO_PATH;
 
         // get server info
-        message.guild.members.list({ limit: constants.USER_INFO_LIST_LIMIT_NUMBER, cache: false })
+        guild.members.list({ limit: constants.USER_INFO_LIST_LIMIT_NUMBER, cache: false })
             .then((member_info_list: any) => {
                 logger.info(`get user info from server completed.`);
 
@@ -379,7 +447,7 @@ export class DiscordMessageController {
 
                 // check member count is exceeded limit
                 let message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO;
-                if (message.guild.memberCount > constants.USER_INFO_LIST_LIMIT_NUMBER) {
+                if (guild.memberCount > constants.USER_INFO_LIST_LIMIT_NUMBER) {
                     logger.info(`user info list count is exceeded discord's limit number ${constants.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED}.`);
                     message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED;
                 }

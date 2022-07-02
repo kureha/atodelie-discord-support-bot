@@ -62,8 +62,10 @@ client.on('messageCreate', (message) => {
 // interaction event
 const discord_interaction_controller_1 = require("./controller/discord_interaction_controller");
 client.on('interactionCreate', (interaction) => __awaiter(void 0, void 0, void 0, function* () {
-    // call interaction recieve controller
-    discord_interaction_controller_1.DiscordInteractionController.recieve_controller(client, interaction);
+    if (interaction.isButton() == true) {
+        // call interaction recieve controller
+        discord_interaction_controller_1.DiscordInteractionController.recieve_controller(client, interaction);
+    }
 }));
 // cron event
 const cron = __importStar(require("node-cron"));

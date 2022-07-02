@@ -35,8 +35,10 @@ client.on('messageCreate', (message: Discord.Message<boolean>) => {
 // interaction event
 import { DiscordInteractionController } from './controller/discord_interaction_controller';
 client.on('interactionCreate', async (interaction: Discord.Interaction<Discord.CacheType>) => {
-  // call interaction recieve controller
-  DiscordInteractionController.recieve_controller(client, interaction);
+  if (interaction.isButton() == true) {
+    // call interaction recieve controller
+    DiscordInteractionController.recieve_controller(client, interaction as Discord.ButtonInteraction);
+  }
 });
 
 // cron event

@@ -18,12 +18,34 @@ import { Recruitment } from '../entity/recruitment';
 import { Participate } from '../entity/participate';
 import { ServerInfo } from '../entity/server_info';
 
+// import discord modules
+import * as Discord from 'discord.js';
+
 export class CronController {
+    /**
+     * Get Text Channel from Discord
+     * @param client 
+     * @param channel_id 
+     * @returns discord channel. if error, throw error
+     */
+    static get_text_channel(client: Discord.Client, channel_id: string): Discord.TextChannel {
+        if (client.channels.cache.get(channel_id) == undefined) {
+            // check channel exists
+            throw new Error(`Target channel is not exists.`);
+        } else if (client.channels.cache.get(channel_id)?.isText() != false) {
+            // check target channel is text channel
+            throw new Error(`Target channel is not text channel.`);
+        }
+
+        // return values
+        return client.channels.cache.get(channel_id) as Discord.TextChannel;
+    }
+
     /**
      * check follow recruitment and send message
      * @param client discord client
      */
-    static follow_recruitment_member(client: any) {
+    static follow_recruitment_member(client: Discord.Client) {
         // follow to date
         const to_datetime = new Date();
         to_datetime.setMinutes(to_datetime.getMinutes() + constants.DISCORD_FOLLOW_MINUTE);
@@ -38,7 +60,7 @@ export class CronController {
         const messageManager = new DiscordMessageManager();
 
         // loop for guild id
-        client.guilds.cache.forEach((guild: any) => {
+        client.guilds.cache.forEach((guild: Discord.Guild) => {
             let server_info_data = new ServerInfo();
 
             // get server info (send target channel, get latest follow_time)
@@ -65,7 +87,8 @@ export class CronController {
                                 // if user more than 0 member, followup executed.
                                 if (recruitment_data.user_list.length > 0) {
                                     // search channel
-                                    client.channels.cache.get(server_info_data.channel_id).send({
+                                    const text_channel: Discord.TextChannel = CronController.get_text_channel(client, server_info_data.channel_id);
+                                    text_channel.send({
                                         embeds: [
                                             messageManager.get_join_recruitment_follow_message(recruitment_data, server_info_data.recruitment_target_role),
                                         ]
