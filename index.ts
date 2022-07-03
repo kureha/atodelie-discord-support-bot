@@ -11,7 +11,7 @@ logger.info(`Discord bot port = ${port}`);
 
 // Response for Uptime Robot
 import * as http from 'http'
-http.createServer(function (request: any, response: any) {
+http.createServer((request: any, response: any) => {
     response.writeHead(200, { 'Content-Type': 'text/plain' })
     response.end('Discord bot is active now \n')
 }).listen(port)

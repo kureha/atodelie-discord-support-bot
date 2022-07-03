@@ -33,7 +33,7 @@ let port = parseInt(process.env['DISCORD_BOT_PORT'] || `${DEFAULT_PORT}`);
 logger_1.logger.info(`Discord bot port = ${port}`);
 // Response for Uptime Robot
 const http = __importStar(require("http"));
-http.createServer(function (request, response) {
+http.createServer((request, response) => {
     response.writeHead(200, { 'Content-Type': 'text/plain' });
     response.end('Discord bot is active now \n');
 }).listen(port);

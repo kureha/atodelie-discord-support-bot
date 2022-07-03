@@ -60,10 +60,10 @@ export class DiscordMessageController {
     static get_text_channel(client: Discord.Client, channel_id: string): Discord.TextChannel {
         if (client.channels.cache.get(channel_id) == undefined) {
             // check channel exists
-            throw new Error(`Target channel is not exists.`);
-        } else if (client.channels.cache.get(channel_id)?.isText() != false) {
+            throw new Error(`Target channel is not exists. channel_id = ${channel_id}`);
+        } else if (client.channels.cache.get(channel_id)?.isText() == false) {
             // check target channel is text channel
-            throw new Error(`Target channel is not text channel.`);
+            throw new Error(`Target channel is not text channel. channel_id = ${channel_id}`);
         }
 
         // return values
@@ -299,7 +299,7 @@ export class DiscordMessageController {
                     ],
                 });
             })
-            .then((sended_message: any) => {
+            .then((sended_message: Discord.Message) => {
                 // recirve message id
                 logger.info(`send message completed. update message id to recruitment. : message_id = ${sended_message.id}`);
                 analyzer.set_message_id(sended_message.id);
@@ -434,7 +434,7 @@ export class DiscordMessageController {
 
         // get server info
         guild.members.list({ limit: constants.USER_INFO_LIST_LIMIT_NUMBER, cache: false })
-            .then((member_info_list: any) => {
+            .then((member_info_list: Discord.Collection<string, Discord.GuildMember>) => {
                 logger.info(`get user info from server completed.`);
 
                 // parse discord's data to internal object

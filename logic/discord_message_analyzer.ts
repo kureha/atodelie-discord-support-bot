@@ -407,7 +407,7 @@ export class DiscordMessageAnalyzer {
         const replace_regexp = new RegExp('(' + Object.keys(replace_digits).join('|') + ')', 'g');
 
         // return values
-        return str.replace(replace_regexp, (match: string, args: any) => {
+        return str.replace(replace_regexp, (match: string, args: any[]) => {
             return replace_digits[match] || Constants.STRING_EMPTY;
         });
     }

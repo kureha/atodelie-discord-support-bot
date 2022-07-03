@@ -9,6 +9,9 @@ import { UserInfo, RoleInfo } from '../entity/user_info';
 import * as fs from "fs";
 import { logger } from '../common/logger';
 
+// import discord modules
+import * as Discord from 'discord.js';
+
 export class ExportUserInfo {
 
     /**
@@ -16,17 +19,17 @@ export class ExportUserInfo {
      * @param member_info_list Discord's GuildMember Collection (Map) object
      * @returns UserInfo[] parsed object
      */
-    parse_user_info(member_info_list: any): UserInfo[] {
+    parse_user_info(member_info_list: Discord.Collection<string, Discord.GuildMember>): UserInfo[] {
         // result
         let user_info_list: UserInfo[] = [];
 
         // loop member list
-        member_info_list.forEach((user_info: any, user_id: string) => {
+        member_info_list.forEach((user_info: Discord.GuildMember, user_id: string) => {
             // create user info temp valiable
             const user_info_temp: UserInfo = UserInfo.parse_from_discordjs(user_info);
 
             // loop role list
-            user_info.roles.cache.forEach((role_info: any, role_id: string) => {
+            user_info.roles.cache.forEach((role_info: Discord.Role, role_id: string) => {
                 const role_info_temp: RoleInfo = RoleInfo.parse_from_discordjs(role_info);
 
                 // add role info to result list

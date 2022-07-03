@@ -79,11 +79,11 @@ class DiscordMessageController {
         var _a;
         if (client.channels.cache.get(channel_id) == undefined) {
             // check channel exists
-            throw new Error(`Target channel is not exists.`);
+            throw new Error(`Target channel is not exists. channel_id = ${channel_id}`);
         }
-        else if (((_a = client.channels.cache.get(channel_id)) === null || _a === void 0 ? void 0 : _a.isText()) != false) {
+        else if (((_a = client.channels.cache.get(channel_id)) === null || _a === void 0 ? void 0 : _a.isText()) == false) {
             // check target channel is text channel
-            throw new Error(`Target channel is not text channel.`);
+            throw new Error(`Target channel is not text channel. channel_id = ${channel_id}`);
         }
         // return values
         return client.channels.cache.get(channel_id);

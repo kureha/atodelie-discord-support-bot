@@ -4,15 +4,14 @@ exports.RoleInfo = exports.UserInfo = void 0;
 // import constants
 const constants_1 = require("../common/constants");
 const logger_1 = require("../common/logger");
-const constants = new constants_1.Constants();
 class UserInfo {
     /**
      * constructor
      * @constructor
      */
     constructor() {
-        this.id = constants.ID_INVALID;
-        this.name = '';
+        this.id = constants_1.Constants.STRING_EMPTY;
+        this.name = constants_1.Constants.STRING_EMPTY;
         // role is blank
         this.roles = [];
     }
@@ -48,8 +47,8 @@ class RoleInfo {
      * @constructor
      */
     constructor() {
-        this.id = constants.ID_INVALID;
-        this.name = '';
+        this.id = constants_1.Constants.STRING_EMPTY;
+        this.name = constants_1.Constants.STRING_EMPTY;
     }
     /**
      * convert user info data to instance
