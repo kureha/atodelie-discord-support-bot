@@ -68,4 +68,4 @@ test("Test for constructor", () => {
         expect(v.max_number).toEqual(3);
     }).catch((err) => { console.log(err); });
 });
-//# sourceMappingURL=logic.discord_analyzer.test.js.map
+//# sourceMappingURL=logic.discord_analyzer.parse.test.js.map
