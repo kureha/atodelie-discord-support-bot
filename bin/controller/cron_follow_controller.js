@@ -42,7 +42,7 @@ class CronFollowController {
                 logger_1.logger.info(`follow recruitment cron start. : to_datetime = ${to_datetime.toISOString()}`);
                 // loop for guild id
                 const server_info_list = yield this.server_info_repo.get_m_server_info_all();
-                logger_1.logger.info(`follow server length = ${server_info_list}`);
+                logger_1.logger.info(`follow server length = ${server_info_list.length}`);
                 // if length is 0, return
                 if (server_info_list.length == 0) {
                     // resolve

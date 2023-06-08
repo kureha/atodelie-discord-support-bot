@@ -32,6 +32,11 @@ class Constants {
             // set default
             this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE = 0;
         }
+        this.DISCORD_AUTO_RE_ANNOUNCEMENT_COUNT_THRESHOLD = parseInt(this.v(process.env.DISCORD_AUTO_RE_ANNOUNCEMENT_COUNT_THRESHOLD));
+        if (isNaN(this.DISCORD_AUTO_RE_ANNOUNCEMENT_COUNT_THRESHOLD)) {
+            // set default
+            this.DISCORD_AUTO_RE_ANNOUNCEMENT_COUNT_THRESHOLD = 24 * 60;
+        }
         this.DISCORD_AUTO_ANNOUNCEMENT_MEMBER_THRESHOLD = parseInt(this.v(process.env.DISCORD_AUTO_ANNOUNCEMENT_MEMBER_THRESHOLD));
         if (isNaN(this.DISCORD_AUTO_ANNOUNCEMENT_MEMBER_THRESHOLD)) {
             // set default

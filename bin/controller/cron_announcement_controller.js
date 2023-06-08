@@ -100,11 +100,11 @@ class CronAnnouncementController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 logger_1.logger.info(`check need announcet start. voice channel id = ${channel_id}`);
-                // get activity history
-                const activity_list = yield this.activity_history_rep.get_t_activity_history(guild.id, channel_id, 6 * 24);
-                logger_1.logger.info(`get activity history list completed. result count = ${activity_list.length}`);
-                // get announcement history
-                const announcement_history = yield this.announcement_rep.get_t_announcement(guild.id, channel_id, 100);
+                // get activity history (constants length select)
+                const activity_list = yield this.activity_history_rep.get_t_activity_history(guild.id, channel_id, constants.DISCORD_AUTO_RE_ANNOUNCEMENT_COUNT_THRESHOLD);
+                logger_1.logger.info(`get activity history list completed. result count = ${activity_list.length}, thresould = ${constants.DISCORD_AUTO_RE_ANNOUNCEMENT_COUNT_THRESHOLD}`);
+                // get announcement history (single select)
+                const announcement_history = yield this.announcement_rep.get_t_announcement(guild.id, channel_id, 1);
                 logger_1.logger.info(`get announcement history list completed. result count = ${announcement_history.length}`);
                 // extract announcement information
                 const announcement_info = this.extract_announcement(activity_list);

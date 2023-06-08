@@ -12,6 +12,7 @@ declare namespace NodeJS {
         readonly DISCORD_AUTO_ANNOUNCE_CRON: string;
         readonly DISCORD_UPDATE_CHANNEL_NAME_CRON: string;
         readonly DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE: string;
+        readonly DISCORD_AUTO_RE_ANNOUNCEMENT_COUNT_THRESHOLD: string;
         readonly DISCORD_AUTO_ANNOUNCEMENT_MEMBER_THRESHOLD: string;
         readonly DISCORD_ACTIVITY_HISTORY_SAVE_LIMIT_MONTH: string;
 
