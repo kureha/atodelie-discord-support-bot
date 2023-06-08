@@ -17,34 +17,6 @@ const game_master_1 = require("../../db/game_master");
 const activity_history_1 = require("../../db/activity_history");
 const controller = new cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController();
 /**
- * mockup test function
- * @param user_id
- * @param channel_id
- * @returns
- */
-function get_test_member(user_id, channel_id) {
-    return {
-        id: user_id,
-        voice: {
-            channel: {
-                id: channel_id,
-            },
-        },
-    };
-}
-/**
- * mockup test function
- * @param input_type
- * @param input_name
- * @returns
- */
-function get_activity(input_type, input_name) {
-    return {
-        type: input_type,
-        name: input_name
-    };
-}
-/**
  * mockup create function for update_voice_channel_name
  */
 function setup_update_voice_channel_name_mock(server_info_list) {

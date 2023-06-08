@@ -14,36 +14,6 @@ import { ActivityHistory } from "../../entity/activity_history";
 const controller = new CronVoiceChannelRenameController();
 
 /**
- * mockup test function
- * @param user_id 
- * @param channel_id 
- * @returns 
- */
-function get_test_member(user_id: string, channel_id: string | null): any {
-    return {
-        id: user_id,
-        voice: {
-            channel: {
-                id: channel_id,
-            },
-        },
-    };
-}
-
-/**
- * mockup test function
- * @param input_type 
- * @param input_name 
- * @returns 
- */
-function get_activity(input_type: number, input_name: string): any {
-    return {
-        type: input_type,
-        name: input_name
-    };
-}
-
-/**
  * mockup create function for update_voice_channel_name
  */
 function setup_update_voice_channel_name_mock(server_info_list: ServerInfo[]) {
