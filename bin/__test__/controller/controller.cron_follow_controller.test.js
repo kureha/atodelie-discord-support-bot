@@ -16,6 +16,7 @@ const test_entity_1 = require("../common/test_entity");
 const participate_1 = require("../../db/participate");
 const server_info_1 = require("../../db/server_info");
 const discord_common_1 = require("../../logic/discord_common");
+const controller = new cron_follow_controller_1.CronFollowController();
 describe('cron follow test.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -57,7 +58,7 @@ describe('cron follow test.', () => {
                 },
             };
         });
-        let result = yield cron_follow_controller_1.CronFollowController.follow_recruitment_member(client);
+        let result = yield controller.follow_recruitment_member(client);
         expect(result).toEqual(expected);
     }));
 });

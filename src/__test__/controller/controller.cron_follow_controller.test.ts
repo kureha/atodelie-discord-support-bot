@@ -13,6 +13,8 @@ import { ServerInfoRepository } from "../../db/server_info";
 import { DiscordCommon } from "../../logic/discord_common";
 import { ServerInfo } from "../../entity/server_info";
 
+const controller = new CronFollowController();
+
 describe('cron follow test.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -57,7 +59,7 @@ describe('cron follow test.', () => {
             };
         });
 
-        let result = await CronFollowController.follow_recruitment_member(client);
+        let result = await controller.follow_recruitment_member(client);
         expect(result).toEqual(expected);
     });
 });

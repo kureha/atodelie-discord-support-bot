@@ -9,108 +9,64 @@ const constants = new Constants();
 import { Participate } from '../entity/participate';
 
 // import utils
-import { SqliteUtils } from '../logic/sqlite_utils';
+import { PrismaClient, m_recruitment, t_participate } from '@prisma/client';
+import { Recruitment } from '../entity/recruitment';
+import { Common } from './common';
 
 export class ParticipateRepository {
+    /**
+     * Prisma client
+     */
+    public client: PrismaClient = Common.get_prisma_client();
 
     /**
-     * create SQL
+     * exclude user list element object (shallow copy)
+     * @param recruitment 
+     * @param keys 
+     * @returns 
      */
-    static SQL_CREATE_T_PARTICIPATE = 'CREATE TABLE IF NOT EXISTS [t_participate] ( [id] INTEGER NOT NULL, [status] INTEGER NOT NULL, [user_id] TEXT NOT NULL, [description] TEXT, [regist_time] DATETIME NOT NULL, [update_time] DATETIME NOT NULL, [delete] BOOLEAN NOT NULL, PRIMARY KEY([id],[user_id]) )';
-
-    /**
-     * select SQL
-     */
-    static SQL_SELECT_T_PARTICIPATE = 'SELECT t1.[id], t1.[status], t1.[user_id], t1.[description], t1.[regist_time], t1.[update_time], t1.[delete] FROM [t_participate] t1 ';
-
-    /**
-     * insert SQL
-     */
-    static SQL_INSERT_T_PARTICIPATE = 'INSERT INTO [t_participate] ([id], [status], [user_id], [description], [regist_time], [update_time], [delete]) SELECT [id], $status, $user_id, $description, ' + SqliteUtils.get_now() + ', ' + SqliteUtils.get_now() + ', false FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ' + SqliteUtils.get_now_with_extend(constants.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE_SQL) + ' ';
-
-    /**
-     * update SQL
-     */
-    static SQL_UPDATE_T_PARTICIPATE = 'UPDATE [t_participate] SET [status] = $status, [description] = $description, [update_time] = ' + SqliteUtils.get_now() + ', [delete] = $delete ';
-
-    /**
-     * delete SQL
-     */
-    static SQL_DELETE_T_PARTICIPATE = 'DELETE FROM [t_participate] ';
-
-    /**
-     * SQLITE FILE PATH
-     */
-    private sqlite_file_path: string = Constants.STRING_EMPTY;
-
-    /**
-     * constructor
-     */
-    constructor(file_path: string = constants.SQLITE_FILE) {
-        // check database file path / memory
-        if (SqliteUtils.check_open_database(file_path) == false) {
-            logger.error(`database file is not found. file_path = ${file_path}`);
-            throw new Error(`database file is not found. file_path = ${file_path}`);
+    exclude<Participate, Key extends keyof Participate>(
+        recruitment: Participate,
+        keys: Key[]
+    ): Omit<Participate, Key> {
+        let result: Participate = { ...recruitment };
+        for (let key of keys) {
+            delete result[key];
         }
-
-        // try to open
-        const db = this.get_db_instance(file_path);
-        logger.info(`database open successed. db = ${db}`);
-
-        // set file path to instance
-        this.sqlite_file_path = file_path;
-        logger.info(`database file path is set to ${this.sqlite_file_path}. `);
+        return result;
     }
 
     /**
-     * get using sqlite file path for this instance.
-     * @returns sqlite file path
+     * returns condition limit date
+     * @returns 
      */
-    get_sqlite_file_path(): string {
-        return this.sqlite_file_path;
+    get_condition_limit_date(): Date {
+        let target_date: Date = new Date();
+        target_date.setMinutes(target_date.getMinutes() - constants.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE);
+        return target_date;
     }
 
     /**
-     * get sqlite3 database instance
-     * @param file_path sqlite3 file path
-     * @returns sqlite3 database instance
+     * select m_recruitment by token.
+     * @param token 
+     * @returns 
      */
-    get_db_instance(file_path: string) {
-        // initialize SQLite instance
-        const sqlite = require(constants.REQUIRE_NAME_SQLITE3).verbose();
-        var db = new sqlite.Database(file_path);
-
-        // detect SQLite error from instance
-        if (db === undefined || db === null) {
-            logger.error(`database instance is undefined or null.`);
-            throw `database instance is undefined or null.`;
-        } else {
-            // return SQLite instance if status is good
-            return db;
-        }
-    }
-
-    /**
-     * create table
-     * @param db sqlite3 database instance
-     */
-    create_all_database(db: any): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            db.serialize(function () {
-                // run serialize
-                db.run(ParticipateRepository.SQL_CREATE_T_PARTICIPATE, [], ((err: any) => {
-                    if (err) {
-                        logger.error(`sql exception occured when create table. sql = ${ParticipateRepository.SQL_CREATE_T_PARTICIPATE}`);
-                        reject(err);
-                    }
-
-                    // resolve after all sql completed
-                    resolve();
-                }));
-            });
-
-            db.close();
+    async select_m_recruitment_by_token(token: string): Promise<Recruitment | null> {
+        const data: m_recruitment | null = await this.client.m_recruitment.findFirst({
+            where: {
+                token: token,
+                limit_time: {
+                    gte: this.get_condition_limit_date()
+                },
+                delete: false,
+            }
         });
+
+        if (data == null) {
+            return null;
+        } else {
+            return Recruitment.parse_from_db(data);
+        }
     }
 
     /**
@@ -118,38 +74,31 @@ export class ParticipateRepository {
      * @param data 
      * @returns 
      */
-    insert_t_participate(data: Participate): Promise<number> {
-        // return promise
-        return new Promise<number>((resolve, reject) => {
-            const db = this.get_db_instance(this.sqlite_file_path);
-            db.serialize(function () {
-                // get prepared statement
-                const sql = `${ParticipateRepository.SQL_INSERT_T_PARTICIPATE}`;
-                logger.info(`sql = ${sql}, token = ${data.token}`);
-                const stmt = db.prepare(sql);
-                stmt.run({
-                    $token: data.token,
-                    $status: data.status,
-                    $user_id: data.user_id,
-                    $description: data.description,
-                }, (err: any) => {
-                    if (err) {
-                        logger.error(err);
-                        reject(err);
-                    }
-                    // affected row numbers
-                    let changes: number = 0;
-                    // get affected row numbers from db object
-                    if (stmt.changes != undefined) {
-                        changes = stmt.changes as number;
-                    }
-                    // resolve ended this sql
-                    resolve(changes);
-                });
-                stmt.finalize();
+    async insert_t_participate(data: Participate): Promise<number> {
+        logger.info(`insert into t_participate. data(exclude id) = ${JSON.stringify(data)}`);
+
+        // select recruitment by token
+        let recruitment = await this.select_m_recruitment_by_token(data.token);
+
+        if (recruitment == null) {
+            logger.error(`insert failed. id = ${data.id}, token = ${data.token}`);
+            return 0;
+        } else {
+            // set id
+            logger.info(`target t_participate's id = ${recruitment.id}`);
+            data.id = recruitment.id;
+            // update date
+            const exeute_date: Date = new Date();
+            data.regist_time = exeute_date;
+            data.update_time = exeute_date;
+
+            const result = await this.client.t_participate.create({
+                data: this.exclude(data, ['token']),
             });
-            db.close();
-        });
+            logger.info(`insert succeeded. result data = ${JSON.stringify(result)}`);
+
+            return 1;
+        }
     }
 
     /**
@@ -157,84 +106,55 @@ export class ParticipateRepository {
      * @param data_list 
      * @returns 
      */
-    insert_t_participate_list(data_list: Participate[]): Promise<number> {
-        // return promise
-        return new Promise<number>((resolve, reject) => {
-            const db = this.get_db_instance(this.sqlite_file_path);
-            db.serialize(function () {
-                // affected row numbers
-                let changes: number = 0;
+    async insert_t_participate_list(data_list: Participate[]): Promise<number> {
+        // define return
+        let ret: number = 0;
 
-                // loop for all data
-                data_list.forEach((data, idx) => {
-                    // get prepared statement
-                    const sql = `${ParticipateRepository.SQL_INSERT_T_PARTICIPATE}`;
-                    logger.info(`sql = ${sql}, token = ${data.token}`);
-                    const stmt = db.prepare(sql);
-                    stmt.run({
-                        $token: data.token,
-                        $status: data.status,
-                        $user_id: data.user_id,
-                        $description: data.description,
-                    }, (err: any) => {
-                        if (err) {
-                            logger.error(err);
-                            reject(err);
-                        }
-                        // get affected row numbers from db object
-                        if (stmt.changes != undefined) {
-                            changes = changes + stmt.changes as number;
-                        }
-                        // if list is ended, resolve
-                        if (idx + 1 == data_list.length) {
-                            resolve(changes);
-                        }
-                    });
-                    stmt.finalize();
-                });
-            });
-            db.close();
-        });
+        logger.info(`insert into t_participate lsit. list = ${JSON.stringify(data_list)}`);
+        // loop insert
+        for (let v of data_list) {
+            ret = ret + await this.insert_t_participate(v);
+        }
+
+        logger.info(`insert succeeded. result count = ${ret}`);
+        return ret;
     }
 
     /**
      * update data
-     * @param data key is [data.token] and [data.user_id]
+     * @param data key is [data.id] and [data.user_id]
      * @returns 
      */
-    update_t_participate(data: Participate): Promise<number> {
-        // return promise
-        return new Promise<number>((resolve, reject) => {
-            const db = this.get_db_instance(this.sqlite_file_path);
-            db.serialize(function () {
-                // get prepared statement
-                const sql = `${ParticipateRepository.SQL_UPDATE_T_PARTICIPATE} where [id] = (select [id] from [m_recruitment] where [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ${SqliteUtils.get_now_with_extend(constants.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE_SQL)}) AND [user_id] = $user_id `;
-                logger.info(`sql = ${sql}, token = ${data.token}`);
-                const stmt = db.prepare(sql);
-                stmt.run({
-                    $token: data.token,
-                    $user_id: data.user_id,
-                    $status: data.status,
-                    $description: data.description,
-                    $delete: data.delete,
-                }, (err: any) => {
-                    if (err) {
-                        logger.error(`update t_participate error. detail = ${err}`);
-                        reject(`update t_participate error. detail = ${err}`);
+    async update_t_participate(data: Participate): Promise<number> {
+        logger.info(`update t_participate. data = ${JSON.stringify(data)}, key = { id: ${data.id} }`);
+
+        // select recruitment by token
+        let recruitment = await this.select_m_recruitment_by_token(data.token);
+
+        if (recruitment == null) {
+            logger.error(`update failed. id = ${data.id}, token = ${data.token}`);
+            return 0;
+        } else {
+            // set id
+            logger.info(`target t_participate's id = ${recruitment.id}`);
+            data.id = recruitment.id;
+            // update date
+            const exeute_date: Date = new Date();
+            data.update_time = exeute_date;
+
+            const result = await this.client.t_participate.update({
+                where: {
+                    id_user_id: {
+                        id: data.id,
+                        user_id: data.user_id,
                     }
-                    // affected row numbers
-                    let changes: number = 0;
-                    // get affected row numbers from db object
-                    if (stmt.changes != undefined) {
-                        changes = stmt.changes as number;
-                    }
-                    // resolve ended this sql
-                    resolve(changes);
-                });
-                stmt.finalize();
+                },
+                data: this.exclude(data, ['token']),
             });
-            db.close();
-        });
+
+            logger.info(`insert succeeded. result data = ${JSON.stringify(result)}`);
+            return 1;
+        }
     }
 
     /**
@@ -242,35 +162,36 @@ export class ParticipateRepository {
      * @param token 
      * @returns 
      */
-    delete_t_participate(token: string): Promise<number> {
-        // return promise
-        return new Promise<number>((resolve, reject) => {
-            const db = this.get_db_instance(this.sqlite_file_path);
-            db.serialize(function () {
-                // get prepared statement
-                const sql = `${ParticipateRepository.SQL_DELETE_T_PARTICIPATE} WHERE [id] = (SELECT [id] FROM [m_recruitment] WHERE [token] = $token and [delete] = false and datetime([limit_time], \'localtime\') >= ${SqliteUtils.get_now_with_extend(constants.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE_SQL)}) `;
-                logger.info(`sql = ${sql}, token = ${token}`);
-                const stmt = db.prepare(sql);
-                stmt.run({
-                    $token: token,
-                }, (err: any) => {
-                    if (err) {
-                        logger.error(`delete t_participate error. detail = ${err}`);
-                        reject(`delete t_participate error. detail = ${err}`);
-                    }
-                    // affected row numbers
-                    let changes: number = 0;
-                    // get affected row numbers from db object
-                    if (stmt.changes != undefined) {
-                        changes = stmt.changes as number;
-                    }
-                    // resolve ended this sql
-                    resolve(changes);
-                });
-                stmt.finalize();
+    async delete_t_participate(token: string): Promise<number> {
+        logger.info(`delete t_participate. token = ${token}`);
+        let recruitment = await this.select_m_recruitment_by_token(token);
+
+        if (recruitment == null) {
+            logger.error(`target token data not found on m_recruitment. token = ${token}`)
+            return 0;
+        } else {
+            logger.info(`target token select successded. token = ${token}, id = ${recruitment.id}`);
+            const delete_payload = await this.client.t_participate.deleteMany({
+                where: {
+                    id: recruitment.id,
+                }
             });
-            db.close();
-        });
+            logger.info(`delete t_participate succeeeded. count = ${delete_payload}`);
+            return delete_payload.count;
+        }
+    }
+
+    /**
+     * delete all data
+     * @param token 
+     * @returns 
+     */
+    async delete_t_participate_all(): Promise<number> {
+        logger.info(`delete all t_participate.`);
+
+        const delete_payload = await this.client.t_participate.deleteMany();
+        logger.info(`delete t_participate succeeeded. count = ${delete_payload}`);
+        return delete_payload.count;
     }
 
     /**
@@ -278,39 +199,32 @@ export class ParticipateRepository {
      * @param token 
      * @returns participate data list
      */
-    get_t_participate(token: string): Promise<Participate[]> {
-        // return promise
-        return new Promise<Participate[]>((resolve, reject) => {
-            const db = this.get_db_instance(this.sqlite_file_path);
+    async get_t_participate(token: string): Promise<Participate[]> {
+        logger.info(`get t_participate. token = ${token}`);
+        let recruitment = await this.select_m_recruitment_by_token(token);
 
-            db.serialize(function () {
-                // run serialize
-                const sql = `${ParticipateRepository.SQL_SELECT_T_PARTICIPATE} inner join [m_recruitment] m1 on t1.[id] = m1.[id] where m1.[token] = $token and m1.[delete] = false and t1.[delete] = false and datetime(m1.[limit_time], \'localtime\') >= ${SqliteUtils.get_now_with_extend(constants.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE_SQL)} order by t1.[update_time] `;
-                logger.info(`sql = ${sql}, token = ${token}`);
-
-                db.all(sql, [token], ((err: any, rows: any[]) => {
-                    if (err) {
-                        logger.error(`select t_participate failed. sql = ${sql}, key = ${token}`);
-                        reject(err);
-                    }
-                    else if (rows === undefined || rows === null || rows.length === 0) {
-                        logger.info(`data not found on t_participate. sql = ${sql}, key = ${token}`);
-                        resolve([]);
-                    } else {
-                        // return value list
-                        const participate_list: Participate[] = [];
-                        rows.forEach(v => {
-                            participate_list.push(Participate.parse_from_db(v, token));
-                        });
-
-                        logger.info(`selected t_participate successed. : key = ${token}`);
-                        logger.trace(rows);
-                        resolve(participate_list);
-                    }
-                }));
+        if (recruitment == null) {
+            logger.info(`target token data not found on m_recruitment. token = ${token}`)
+            return [];
+        } else {
+            logger.info(`target token select successded. token = ${token}, id = ${recruitment.id}`);
+            const ret: Participate[] = [];
+            await this.client.t_participate.findMany({
+                where: {
+                    id: recruitment.id,
+                    delete: false,
+                },
+                orderBy: {
+                    regist_time: 'desc',
+                }
+            }).then((list: t_participate[]) => {
+                list.forEach((v) => {
+                    ret.push(Participate.parse_from_db(v, token));
+                });
             });
 
-            db.close();
-        });
+            logger.info(`select successed. result count = ${ret.length}`);
+            return ret;
+        }
     }
 }

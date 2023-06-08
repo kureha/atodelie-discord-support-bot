@@ -8,9 +8,6 @@ const constants = new Constants();
 // import controllers
 import { ButtonInteractionRecruitmentController } from './button_interaction_recruitment_controller';
 
-// create message modules
-import { DiscordMessage } from '../logic/discord_message';
-
 // import discord modules
 import * as Discord from 'discord.js';
 
@@ -19,20 +16,13 @@ export class ButtonInteractionController {
      * analyze discord interaction and send result message
      * @param interaction discord interaction
      */
-    static recieve(interaction: Discord.ButtonInteraction) {
-        try {
-            if (this.check_recruitment_interaction(interaction.customId)) {
-                ButtonInteractionRecruitmentController.recruitment_interaction(interaction);
-            } else {
-                logger.error(`Interaction recieved, but custom_id is invalid. custom_id = ${interaction.customId}`);
-                interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION}`);
-            }
-        } catch (err) {
-            // send error message
-            interaction.reply({
-                content: `${DiscordMessage.get_no_recruitment()} (Error: ${err})`,
-                ephemeral: true,
-            });
+    static async recieve(interaction: Discord.ButtonInteraction) {
+        if (this.check_recruitment_interaction(interaction.customId)) {
+            const controller = new ButtonInteractionRecruitmentController();
+            await controller.recruitment_interaction(interaction);
+        } else {
+            logger.error(`Interaction recieved, but custom_id is invalid. custom_id = ${interaction.customId}`);
+            await interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION}`);
         }
     }
 

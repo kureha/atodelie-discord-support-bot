@@ -44,63 +44,64 @@ const server_info_1 = require("../db/server_info");
 // import logger
 const logger_1 = require("../common/logger");
 class DiscordRegisterCommand {
+    constructor() {
+        this.server_info_repo = new server_info_1.ServerInfoRepository();
+    }
     /**
      * Regist slash command.
      * @param client_id
      */
-    static regist_command(client_id) {
+    regist_command(client_id) {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.logger.info(`regist command start.`);
             // get server info from database
-            const server_info_list = yield new server_info_1.ServerInfoRepository().get_m_server_info_all();
+            const server_info_list = yield this.server_info_repo.get_m_server_info_all();
             logger_1.logger.info(`load server info completed. server info count = ${server_info_list.length}`);
-            // main logic start.
-            return new Promise((resolve, reject) => {
-                // error server info list
-                const error_server_info_list = [];
-                // loop server info
-                server_info_list.forEach((server_info) => {
-                    // get guild id
-                    const guild_id = server_info.server_id;
-                    logger_1.logger.info(`command registration target client_id = ${client_id}, guild_id = ${guild_id}`);
-                    // create rest logic
-                    const rest = new rest_1.REST({ version: DiscordRegisterCommand.DISCORD_REST_VERSION }).setToken(process.env['DISCORD_BOT_TOKEN'] || '');
-                    // delete for guild-based commands
-                    rest.put(DiscordRegisterCommand.get_url_for_guild_based_command(client_id, guild_id), { body: [] }).then(() => {
-                        logger_1.logger.info(`successfully deleted all guild commands. client_id = ${client_id}, guild_id = ${guild_id}`);
-                    }).catch((err) => {
-                        logger_1.logger.error(err);
-                        error_server_info_list.push(server_info);
-                    });
-                    // create command
-                    const commands = DiscordRegisterCommand.get_regist_slash_command_body([
-                        DiscordRegisterCommand.get_slash_command(constants.DISCORD_COMMAND_NEW_RECRUITMENT, constants.DISCORD_COMMAND_DESCRIPTION_NEW_RECRUITMENT),
-                        DiscordRegisterCommand.get_slash_command(constants.DISCORD_COMMAND_EDIT_RECRUITMENT, constants.DISCORD_COMMAND_DESCRIPTION_EDIT_RECRUITMENT),
-                        DiscordRegisterCommand.get_slash_command(constants.DISCORD_COMMAND_DELETE_RECRUITMENT, constants.DISCORD_COMMAND_DESCRIPTION_DELETE_RECRUITMENT),
-                        DiscordRegisterCommand.get_slash_command(constants.DISCORD_COMMAND_REGIST_MASTER, constants.DISCORD_COMMAND_DESCRIPTION_REGIST_MASTER),
-                        DiscordRegisterCommand.get_slash_command(constants.DISCORD_COMMAND_USER_INFO_LIST_GET, constants.DISCORD_COMMAND_DESCRIPTION_USER_INFO_LIST_GET),
-                        DiscordRegisterCommand.get_slash_command(constants.DISCORD_COMMAND_SEARCH_FRIEND_CODE, constants.DISCORD_COMMAND_DESCRIPTION_SEARCH_FRIEND_CODE),
-                        DiscordRegisterCommand.get_slash_command(constants.DISCORD_COMMAND_REGIST_FRIEND_CODE, constants.DISCORD_COMMAND_DESCRIPTION_REGIST_FRIEND_CODE),
-                        DiscordRegisterCommand.get_slash_command(constants.DISCORD_COMMAND_DELETE_FRIEND_CODE, constants.DISCORD_COMMAND_DESCRIPTION_DELETE_RECRUITMENT),
-                    ]);
-                    // regist command
-                    rest.put(DiscordRegisterCommand.get_url_for_guild_based_command(client_id, guild_id), { body: commands }).then((data) => {
-                        logger_1.logger.info(`successfully registered ${data.length} application commands.`);
-                    }).catch((err) => {
-                        logger_1.logger.error(err);
-                        error_server_info_list.push(server_info);
-                    });
+            // error server info list
+            const error_server_info_list = [];
+            // loop server info
+            server_info_list.forEach((server_info) => {
+                // get guild id
+                const guild_id = server_info.server_id;
+                logger_1.logger.info(`command registration target client_id = ${client_id}, guild_id = ${guild_id}`);
+                // create rest logic
+                const rest = new rest_1.REST({ version: DiscordRegisterCommand.DISCORD_REST_VERSION }).setToken(process.env['DISCORD_BOT_TOKEN'] || '');
+                // delete for guild-based commands
+                rest.put(this.get_url_for_guild_based_command(client_id, guild_id), { body: [] }).then(() => {
+                    logger_1.logger.info(`successfully deleted all guild commands. client_id = ${client_id}, guild_id = ${guild_id}`);
+                }).catch((err) => {
+                    logger_1.logger.error(err);
+                    error_server_info_list.push(server_info);
                 });
-                // check error list
-                if (error_server_info_list.length == 0) {
-                    logger_1.logger.info(`registed command to all server completed. server info count  ${server_info_list.length}`);
-                    resolve(server_info_list);
-                }
-                else {
-                    logger_1.logger.error(`registed command error to any server. error server info = `, error_server_info_list);
-                    reject(`registed command error to any server`);
-                }
+                // create command
+                const commands = this.get_regist_slash_command_body([
+                    this.get_slash_command(constants.DISCORD_COMMAND_NEW_RECRUITMENT, constants.DISCORD_COMMAND_DESCRIPTION_NEW_RECRUITMENT),
+                    this.get_slash_command(constants.DISCORD_COMMAND_EDIT_RECRUITMENT, constants.DISCORD_COMMAND_DESCRIPTION_EDIT_RECRUITMENT),
+                    this.get_slash_command(constants.DISCORD_COMMAND_DELETE_RECRUITMENT, constants.DISCORD_COMMAND_DESCRIPTION_DELETE_RECRUITMENT),
+                    this.get_slash_command(constants.DISCORD_COMMAND_REGIST_MASTER, constants.DISCORD_COMMAND_DESCRIPTION_REGIST_MASTER),
+                    this.get_slash_command(constants.DISCORD_COMMAND_USER_INFO_LIST_GET, constants.DISCORD_COMMAND_DESCRIPTION_USER_INFO_LIST_GET),
+                    this.get_slash_command(constants.DISCORD_COMMAND_SEARCH_FRIEND_CODE, constants.DISCORD_COMMAND_DESCRIPTION_SEARCH_FRIEND_CODE),
+                    this.get_slash_command(constants.DISCORD_COMMAND_REGIST_FRIEND_CODE, constants.DISCORD_COMMAND_DESCRIPTION_REGIST_FRIEND_CODE),
+                    this.get_slash_command(constants.DISCORD_COMMAND_DELETE_FRIEND_CODE, constants.DISCORD_COMMAND_DESCRIPTION_DELETE_RECRUITMENT),
+                    this.get_slash_command(constants.DISCORD_COMMAND_EDIT_GAME_MASTER, constants.DISCORD_COMMAND_DESCRIPTION_EDIT_GAME_MASTER),
+                ]);
+                // regist command
+                rest.put(this.get_url_for_guild_based_command(client_id, guild_id), { body: commands }).then((data) => {
+                    logger_1.logger.info(`successfully registered ${data.length} application commands.`);
+                }).catch((err) => {
+                    logger_1.logger.error(err);
+                    error_server_info_list.push(server_info);
+                });
             });
+            // check error list
+            if (error_server_info_list.length == 0) {
+                logger_1.logger.info(`registed command to all server completed. server info count  ${server_info_list.length}`);
+                return server_info_list;
+            }
+            else {
+                logger_1.logger.error(`registed command error to any server. error server info = `, error_server_info_list);
+                throw `registed command error to any server`;
+            }
         });
     }
     /**
@@ -109,7 +110,7 @@ class DiscordRegisterCommand {
      * @param guild_id
      * @returns
      */
-    static get_url_for_guild_based_command(client_id, guild_id) {
+    get_url_for_guild_based_command(client_id, guild_id) {
         return Discord.Routes.applicationGuildCommands(client_id, guild_id);
     }
     /**
@@ -117,7 +118,7 @@ class DiscordRegisterCommand {
      * @param command_list
      * @returns
      */
-    static get_regist_slash_command_body(command_list) {
+    get_regist_slash_command_body(command_list) {
         return command_list.map(command => command.toJSON());
     }
     /**
@@ -126,13 +127,13 @@ class DiscordRegisterCommand {
      * @param description
      * @returns
      */
-    static get_slash_command(name, description) {
+    get_slash_command(name, description) {
         return new Discord.SlashCommandBuilder().setName(name).setDescription(description);
     }
 }
-exports.DiscordRegisterCommand = DiscordRegisterCommand;
 /**
  * Discord REST API Version
  */
 DiscordRegisterCommand.DISCORD_REST_VERSION = '10';
+exports.DiscordRegisterCommand = DiscordRegisterCommand;
 //# sourceMappingURL=discord_register_command.js.map

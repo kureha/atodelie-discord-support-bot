@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,44 +11,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const recruitement_1 = require("../../db/recruitement");
 const participate_1 = require("../../db/participate");
-// import constants
-const constants_1 = require("../../common/constants");
-const constants = new constants_1.Constants();
 // import test entities
 const test_entity_1 = require("../common/test_entity");
-const fs = __importStar(require("fs"));
-const sqlite_file = './.data/db.participate.test.sqlite';
-describe("db.participate intialize test", () => {
-    test("test for initialize", () => __awaiter(void 0, void 0, void 0, function* () {
-        const rep = new participate_1.ParticipateRepository(":memory:");
-        yield expect(rep.create_all_database(rep.get_db_instance(":memory:"))).resolves;
-    }));
-});
+// create rep
+const rec_rep = new recruitement_1.RecruitmentRepository();
+const par_rep = new participate_1.ParticipateRepository();
 describe("db.participate test.", () => {
-    // copy test file for test
-    beforeEach(() => {
-        // delete file if exists
-        if (fs.existsSync(sqlite_file)) {
-            fs.rmSync(sqlite_file);
-        }
-        // copy file
-        fs.copyFileSync(constants.SQLITE_TEMPLATE_FILE, sqlite_file);
-    });
-    // delete test file alter all
-    afterAll(() => {
-        // delete file if exists
-        if (fs.existsSync(sqlite_file)) {
-            fs.rmSync(sqlite_file);
-        }
-    });
-    test("constructor test", () => {
-        const rep = new participate_1.ParticipateRepository(sqlite_file);
-        expect(fs.existsSync(rep.get_sqlite_file_path())).toBeTruthy();
-        expect(fs.existsSync(rep.get_sqlite_file_path() + ".notfound")).toBeFalsy();
-    });
+    beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield rec_rep.delete_m_recruitment_all();
+        yield par_rep.delete_t_participate_all();
+    }));
     test("select participate test: empty result", () => __awaiter(void 0, void 0, void 0, function* () {
-        const rec_rep = new recruitement_1.RecruitmentRepository(sqlite_file);
-        const par_rep = new participate_1.ParticipateRepository(sqlite_file);
         // select empty
         let result = yield par_rep.get_t_participate('');
         expect(result.length).toEqual(0);
@@ -83,8 +33,6 @@ describe("db.participate test.", () => {
         expect(result.length).toEqual(0);
     }));
     test("select participate test: insert(multi) -> select(multi) -> insert(single) -> select(single)", () => __awaiter(void 0, void 0, void 0, function* () {
-        const rec_rep = new recruitement_1.RecruitmentRepository(sqlite_file);
-        const par_rep = new participate_1.ParticipateRepository(sqlite_file);
         // create recruitment
         let test_rec = test_entity_1.TestEntity.get_test_recruitment();
         yield rec_rep.insert_m_recruitment(test_rec);
@@ -118,8 +66,6 @@ describe("db.participate test.", () => {
         expect(result).toContainEqual(test_par_another);
     }));
     test("select participate test: expire select result", () => __awaiter(void 0, void 0, void 0, function* () {
-        const rec_rep = new recruitement_1.RecruitmentRepository(sqlite_file);
-        const par_rep = new participate_1.ParticipateRepository(sqlite_file);
         // create expire recruitment
         let test_rec = test_entity_1.TestEntity.get_test_recruitment();
         test_rec.limit_time = new Date("2000-12-31T11:59:59.000Z");
@@ -136,8 +82,6 @@ describe("db.participate test.", () => {
         expect(result.length).toEqual(0);
     }));
     test("update and delete test: insert -> select -> update -> select -> delete -> select", () => __awaiter(void 0, void 0, void 0, function* () {
-        const rec_rep = new recruitement_1.RecruitmentRepository(sqlite_file);
-        const par_rep = new participate_1.ParticipateRepository(sqlite_file);
         // create recruitment
         let test_rec = test_entity_1.TestEntity.get_test_recruitment();
         yield rec_rep.insert_m_recruitment(test_rec);
@@ -186,7 +130,6 @@ describe("db.participate test.", () => {
         expect(result.length).toEqual(0);
     }));
     test("update or delete non-found participate test", () => __awaiter(void 0, void 0, void 0, function* () {
-        const par_rep = new participate_1.ParticipateRepository(sqlite_file);
         let cnt = yield par_rep.insert_t_participate(test_entity_1.TestEntity.get_test_participate());
         expect(cnt).toEqual(0);
         cnt = yield par_rep.update_t_participate(test_entity_1.TestEntity.get_test_participate());

@@ -48,64 +48,60 @@ export class DiscordInteractionAnalyzer {
      * @param custom_id recruitment id
      * @param user_id discord bot's id
      */
-    analyze(custom_id: string, user_id: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            // check custom id for recruitment join
-            if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}`))) {
-                logger.debug(`interaction is valid. type = ${constants.TYPE_JOIN}`);
-                this.type = constants.TYPE_JOIN;
-                this.delete = false;
+    async analyze(custom_id: string, user_id: string): Promise<void> {
+        // check custom id for recruitment join
+        if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}`))) {
+            logger.debug(`interaction is valid. type = ${constants.TYPE_JOIN}`);
+            this.type = constants.TYPE_JOIN;
+            this.delete = false;
 
-                // status
-                this.status = constants.STATUS_ENABLED;
+            // status
+            this.status = constants.STATUS_ENABLED;
 
-                // get token from custom id
-                this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX);
-            } else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}`))) {
-                logger.debug(`interaction is valid. type = ${constants.TYPE_VIEW}`);
-                this.type = constants.TYPE_VIEW;
-                this.delete = false;
+            // get token from custom id
+            this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX);
+        } else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX}`))) {
+            logger.debug(`interaction is valid. type = ${constants.TYPE_VIEW}`);
+            this.type = constants.TYPE_VIEW;
+            this.delete = false;
 
-                // change status
-                this.status = constants.STATUS_VIEW;
+            // change status
+            this.status = constants.STATUS_VIEW;
 
-                // get token from custom id
-                this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX);
-            } else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}`))) {
-                logger.debug(`interaction is valid. type = ${constants.TYPE_DECLINE}`);
-                this.type = constants.TYPE_DECLINE;
-                this.delete = true;
+            // get token from custom id
+            this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_VIEW_RECRUITMENT_PREFIX);
+        } else if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX}`))) {
+            logger.debug(`interaction is valid. type = ${constants.TYPE_DECLINE}`);
+            this.type = constants.TYPE_DECLINE;
+            this.delete = true;
 
-                // status
-                this.status = constants.STATUS_DISABLED;
+            // status
+            this.status = constants.STATUS_DISABLED;
 
-                // get token from custom id
-                this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX);
-            } else {
-                // error
-                logger.warn(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
-                this.error_messages.push(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
+            // get token from custom id
+            this.token = this.get_token(custom_id, constants.DISCORD_BUTTON_ID_DECLINE_RECRUITMENT_PREFIX);
+        } else {
+            // error
+            logger.error(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
+            this.error_messages.push(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
 
-                // this is not valid interaction.
-                this.valid = false;
+            // this is not valid interaction.
+            this.valid = false;
 
-                // ng
-                reject();
+            // analyze result is ng, reject
+            throw new Error(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
+        }
 
-                return;
-            }
+        // this is valid interaction.
+        this.valid = true;
+        logger.info(`this is valid interaction. token = ${this.token}`);
 
-            // this is valid interaction.
-            this.valid = true;
-            logger.info(`this is valid interaction. token = ${this.token}`);
+        // set valiables
+        this.user_id = user_id;
+        this.description = constants.RECRUITMENT_DEFAULT_DESCRIPTION;
 
-            // set valiables
-            this.user_id = user_id;
-            this.description = constants.RECRUITMENT_DEFAULT_DESCRIPTION;
-
-            // ok
-            resolve();
-        });
+        // resolve
+        return;
     }
 
     /**

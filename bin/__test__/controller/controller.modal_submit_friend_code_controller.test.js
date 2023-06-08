@@ -15,6 +15,7 @@ const test_entity_1 = require("../common/test_entity");
 const friend_code_1 = require("../../db/friend_code");
 const friend_code_history_1 = require("../../db/friend_code_history");
 const discord_common_1 = require("../../logic/discord_common");
+const controller = new modal_submit_friend_code_controller_1.ModalSubmitFriendCodeController();
 describe('modal submit friend codetest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -49,7 +50,7 @@ describe('modal submit friend codetest.', () => {
             return test_entity_1.TestEntity.get_test_game_master_info();
         });
         // expect
-        let result = yield modal_submit_friend_code_controller_1.ModalSubmitFriendCodeController.regist(interaction);
+        let result = yield controller.regist(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -82,7 +83,7 @@ describe('modal submit friend codetest.', () => {
             return test_entity_1.TestEntity.get_test_game_master_info();
         });
         // expect
-        let result = yield modal_submit_friend_code_controller_1.ModalSubmitFriendCodeController.regist(interaction);
+        let result = yield controller.regist(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -114,13 +115,8 @@ describe('modal submit friend codetest.', () => {
             return test_entity_1.TestEntity.get_test_game_master_info();
         });
         // expect
-        expect.assertions(1);
-        try {
-            yield modal_submit_friend_code_controller_1.ModalSubmitFriendCodeController.regist(interaction);
-        }
-        catch (e) {
-            expect(e).toContain("data is not affected.");
-        }
+        const result = yield controller.regist(interaction);
+        expect(result).toEqual(false);
     }));
     test.each([
         ["DISCORD_MODAL_CUSTOM_ID_REGIST_FRIEND_CODE-test_game_id", "test_server_id", "test_user_id", "test_input_friend_code"],
@@ -152,13 +148,8 @@ describe('modal submit friend codetest.', () => {
             return test_entity_1.TestEntity.get_test_game_master_info();
         });
         // expect
-        expect.assertions(1);
-        try {
-            yield modal_submit_friend_code_controller_1.ModalSubmitFriendCodeController.regist(interaction);
-        }
-        catch (e) {
-            expect(e).toContain("data is not affected.");
-        }
+        const result = yield controller.regist(interaction);
+        expect(result).toEqual(false);
     }));
     test.each([
         ["DISCORD_MODAL_CUSTOM_ID_REGIST_FRIEND_CODE-test_game_id", "test_server_id", "test_user_id", "test_input_friend_code"],
@@ -183,13 +174,8 @@ describe('modal submit friend codetest.', () => {
         });
         // no mock for discord common - for system exception
         // expect
-        expect.assertions(1);
-        try {
-            yield modal_submit_friend_code_controller_1.ModalSubmitFriendCodeController.regist(interaction);
-        }
-        catch (e) {
-            expect(e).toContain("regist friend code error.");
-        }
+        const result = yield controller.regist(interaction);
+        expect(result).toEqual(false);
     }));
 });
 //# sourceMappingURL=controller.modal_submit_friend_code_controller.test.js.map

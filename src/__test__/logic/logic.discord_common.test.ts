@@ -492,12 +492,12 @@ describe("get_game_master_list_select_menu", () => {
 
     test("test for get_game_master_list_select_menu blank.", () => {
         // setup mock
-        const set_custom_id = jest.fn((v: string): Discord.SelectMenuBuilder => { return new Discord.SelectMenuBuilder() });
+        const set_custom_id = jest.fn((v: string): Discord.StringSelectMenuBuilder => { return new Discord.StringSelectMenuBuilder() });
         const add_options = jest.fn((): any => { });
         const set_placeholder = jest.fn((v: string): any => { });
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
 
         // custom mock
         const add_components = jest.fn((): any => { return true; });
@@ -517,12 +517,12 @@ describe("get_game_master_list_select_menu", () => {
 
     test("test for get_game_master_list_select_menu single.", () => {
         // setup mock
-        const set_custom_id = jest.fn((v: string): Discord.SelectMenuBuilder => { return new Discord.SelectMenuBuilder() });
+        const set_custom_id = jest.fn((v: string): Discord.StringSelectMenuBuilder => { return new Discord.StringSelectMenuBuilder() });
         const add_options = jest.fn((): any => { });
-        const set_placeholder = jest.fn((v: string): any => { return new Discord.SelectMenuBuilder() });
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
+        const set_placeholder = jest.fn((v: string): any => { return new Discord.StringSelectMenuBuilder() });
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
 
         // custom mock
         const add_components = jest.fn((): any => { return true; });
@@ -542,12 +542,12 @@ describe("get_game_master_list_select_menu", () => {
 
     test("test for get_game_master_list_select_menu multi.", () => {
         // setup mock
-        const set_custom_id = jest.fn((v: string): Discord.SelectMenuBuilder => { return new Discord.SelectMenuBuilder() });
+        const set_custom_id = jest.fn((v: string): Discord.StringSelectMenuBuilder => { return new Discord.StringSelectMenuBuilder() });
         const add_options = jest.fn((): any => { });
-        const set_placeholder = jest.fn((v: string): any => { return new Discord.SelectMenuBuilder() });
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
+        const set_placeholder = jest.fn((v: string): any => { return new Discord.StringSelectMenuBuilder() });
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
 
         // custom mock
         const add_components = jest.fn((): any => { return true; });
@@ -582,12 +582,12 @@ describe("get_game_master_list_select_menu", () => {
 
     test("test for get_game_master_list_select_menu multi at single.", () => {
         // setup mock
-        const set_custom_id = jest.fn((v: string): Discord.SelectMenuBuilder => { return new Discord.SelectMenuBuilder() });
+        const set_custom_id = jest.fn((v: string): Discord.StringSelectMenuBuilder => { return new Discord.StringSelectMenuBuilder() });
         const add_options = jest.fn((): any => { });
-        const set_placeholder = jest.fn((v: string): any => { return new Discord.SelectMenuBuilder() });
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
+        const set_placeholder = jest.fn((v: string): any => { return new Discord.StringSelectMenuBuilder() });
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
 
         // custom mock
         const add_components = jest.fn((): any => { return true; });
@@ -639,12 +639,12 @@ describe("get_role_list_select_menu", () => {
         };
 
         // setup mock
-        const set_custom_id = jest.fn((v: string): Discord.SelectMenuBuilder => { return new Discord.SelectMenuBuilder() });
+        const set_custom_id = jest.fn((v: string): Discord.StringSelectMenuBuilder => { return new Discord.StringSelectMenuBuilder() });
         const add_options = jest.fn((): any => { });
-        const set_placeholder = jest.fn((v: string): any => { return new Discord.SelectMenuBuilder() });
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
+        const set_placeholder = jest.fn((v: string): any => { return new Discord.StringSelectMenuBuilder() });
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
 
         // custom mock
         const add_components = jest.fn((): any => { return true; });
@@ -684,12 +684,12 @@ describe("get_role_list_select_menu", () => {
         };
 
         // setup mock
-        const set_custom_id = jest.fn((v: string): Discord.SelectMenuBuilder => { return new Discord.SelectMenuBuilder() });
+        const set_custom_id = jest.fn((v: string): Discord.StringSelectMenuBuilder => { return new Discord.StringSelectMenuBuilder() });
         const add_options = jest.fn((): any => { });
-        const set_placeholder = jest.fn((v: string): any => { return new Discord.SelectMenuBuilder() });
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
-        jest.spyOn(Discord.SelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
+        const set_placeholder = jest.fn((v: string): any => { return new Discord.StringSelectMenuBuilder() });
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setCustomId").mockImplementation(set_custom_id);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "addOptions").mockImplementation(add_options);
+        jest.spyOn(Discord.StringSelectMenuBuilder.prototype, "setPlaceholder").mockImplementation(set_placeholder);
 
         // custom mock
         const add_components = jest.fn((): any => { return true; });

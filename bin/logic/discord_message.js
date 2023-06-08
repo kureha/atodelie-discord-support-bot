@@ -274,6 +274,24 @@ class DiscordMessage {
             .replace('%%GAME_NAME%%', game_name)
             .replace('%%FRIEND_CODE%%', friend_code);
     }
+    /**
+     * return automatic announcement message
+     * replaceing:
+     * %%DISCORD_REPLY_ROLE%% -> role id
+     * %%GAME_PLAYING_CHANNEL_ID%% -> game playing channel id
+     * %%GAME_NAME%% -> game name
+     * @param template
+     * @param recruitment_target_role
+     * @param game_name
+     * @returns string
+     */
+    static get_auto_announcement_message(template, recruitment_target_role, game_playing_channel_id, game_name) {
+        let message = DiscordMessage.enable_lf(template)
+            .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
+            .replace('%%GAME_PLAYING_CHANNEL_ID%%', game_playing_channel_id)
+            .replace('%%GAME_NAME%%', game_name);
+        return message;
+    }
 }
 exports.DiscordMessage = DiscordMessage;
 ;

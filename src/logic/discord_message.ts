@@ -45,7 +45,7 @@ export class DiscordMessage {
      * @param recruitment 
      * @returns 
      */
-    static get_recruitment_thread_title(template: string, recruitment: Recruitment) {
+    static get_recruitment_thread_title(template: string, recruitment: Recruitment): string {
         let title: string = template
             .replace('%%TITLE%%', recruitment.name);
 
@@ -62,7 +62,7 @@ export class DiscordMessage {
      * @param recruitment 
      * @returns Discord.MessageEmbed message
      */
-    static get_recruitment_announcement_message(template: string, recruitment_target_role: string, recruitment: Recruitment) {
+    static get_recruitment_announcement_message(template: string, recruitment_target_role: string, recruitment: Recruitment): string {
         let message: string = DiscordMessage.enable_lf(template)
             .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
             .replace('%%TOKEN%%', recruitment.token);
@@ -308,5 +308,25 @@ export class DiscordMessage {
             .replace('%%USER_ID%%', user_id)
             .replace('%%GAME_NAME%%', game_name)
             .replace('%%FRIEND_CODE%%', friend_code);
+    }
+
+    /**
+     * return automatic announcement message
+     * replaceing: 
+     * %%DISCORD_REPLY_ROLE%% -> role id
+     * %%GAME_PLAYING_CHANNEL_ID%% -> game playing channel id
+     * %%GAME_NAME%% -> game name
+     * @param template 
+     * @param recruitment_target_role 
+     * @param game_name 
+     * @returns string
+     */
+    static get_auto_announcement_message(template: string, recruitment_target_role: string, game_playing_channel_id: string, game_name: string): string {
+        let message: string = DiscordMessage.enable_lf(template)
+            .replace('%%DISCORD_REPLY_ROLE%%', recruitment_target_role)
+            .replace('%%GAME_PLAYING_CHANNEL_ID%%', game_playing_channel_id)
+            .replace('%%GAME_NAME%%', game_name);
+
+        return message;
     }
 };

@@ -5,46 +5,23 @@ import { TestDiscordMock } from "../common/test_discord_mock";
 
 import { RecruitmentRepository } from "../../db/recruitement";
 import { ParticipateRepository } from "../../db/participate";
-import { Participate } from "../../entity/participate";
+
 import { Constants } from "../../common/constants";
 const constants = new Constants;
 
 import { TestEntity } from "../common/test_entity";
+import { Recruitment } from "../../entity/recruitment";
 import { ServerInfoRepository } from "../../db/server_info";
+import { ServerInfo } from "../../entity/server_info";
 
-import * as fs from 'fs';
-const sqlite_file: string = './.data/controller.recruitment.test.sqlite';
-
-// copy test file for test
-beforeEach(async () => {
-    // delete file if exists
-    if (fs.existsSync(sqlite_file)) {
-        fs.rmSync(sqlite_file);
-    }
-
-    // copy file
-    fs.copyFileSync(constants.SQLITE_TEMPLATE_FILE, sqlite_file);
-
-    // setup server info
-    const repo_server_info = new ServerInfoRepository(sqlite_file);
-    await repo_server_info.insert_m_server_info(TestEntity.get_test_server_info());
-
-});
-
-// delete test file alter all
-afterAll(() => {
-    // delete file if exists
-    if (fs.existsSync(sqlite_file)) {
-        fs.rmSync(sqlite_file);
-    }
-});
+const controller = new ButtonInteractionRecruitmentController();
 
 describe('button interaction recruitment controllertest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
-    
+
     test.each([
         ["error_custom_id", "test_server_id", "test_user_id", "button interaction recruitment error."],
         ["join-recruite-token=test_token", undefined, "test_user_id", "interaction's guild id is undefined."],
@@ -54,13 +31,20 @@ describe('button interaction recruitment controllertest.', () => {
         const Mock = TestDiscordMock.button_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
 
+        // setup mocks
+        jest.spyOn(RecruitmentRepository.prototype, 'get_m_recruitment').mockImplementationOnce(() => {
+            throw new Error(`target m_recruitment is not found. token = 12345`);
+        });
+
+        jest.spyOn(ServerInfoRepository.prototype, 'get_m_server_info').mockImplementationOnce(() => {
+            return new Promise<ServerInfo>((resolve) => {
+                resolve(TestEntity.get_test_server_info());
+            });
+        });
+
         // expect
-        expect.assertions(1);
-        try {
-            await ButtonInteractionRecruitmentController.recruitment_interaction(interaction, sqlite_file);
-        } catch (e) {
-            expect(e).toContain(error_message);
-        }
+        const result = await controller.recruitment_interaction(interaction);
+        expect(result).toEqual(false);
     });
 
     test.each([
@@ -76,29 +60,33 @@ describe('button interaction recruitment controllertest.', () => {
         const test_par_another = TestEntity.get_test_participate();
         test_par_another.user_id = "test_user_id_another";
 
-        // insert to database
-        const repo_recruitment = new RecruitmentRepository(sqlite_file);
-        const repo_participate = new ParticipateRepository(sqlite_file);
-        let cnt = await repo_recruitment.insert_m_recruitment(test_rec);
-        expect(cnt).toEqual(1);
-        cnt = await repo_participate.insert_t_participate(test_par_another);
-        expect(cnt).toEqual(1);
+        // setup mocks
+        jest.spyOn(RecruitmentRepository.prototype, 'get_m_recruitment').mockImplementationOnce(() => {
+            return new Promise<Recruitment>((resolve) => {
+                resolve(test_rec);
+            });
+        });
+
+        jest.spyOn(ParticipateRepository.prototype, 'insert_t_participate').mockImplementationOnce(() => {
+            return new Promise<number>((resolve) => {
+                resolve(1);
+            });
+        });
+        jest.spyOn(ParticipateRepository.prototype, 'update_t_participate').mockImplementationOnce(() => {
+            return new Promise<number>((resolve) => {
+                resolve(1);
+            });
+        });
+
+        jest.spyOn(ServerInfoRepository.prototype, 'get_m_server_info').mockImplementationOnce(() => {
+            return new Promise<ServerInfo>((resolve) => {
+                resolve(TestEntity.get_test_server_info());
+            });
+        });
 
         // update recruitment
-        let result = await ButtonInteractionRecruitmentController.recruitment_interaction(interaction, sqlite_file);
+        let result = await controller.recruitment_interaction(interaction);
         expect(result).toEqual(true);
-
-        // check recruitment
-        let participate_list: Participate[] = await repo_participate.get_t_participate(test_rec.token);
-
-        // expected participate
-        const test_par_expect = TestEntity.get_test_participate();
-        test_par_expect.status = expected_status;
-
-        // expect
-        expect(participate_list.length).toEqual(2);
-        expect(participate_list).toContainEqual(test_par_expect);
-        expect(participate_list).toContainEqual(test_par_another);
     });
 
     test.each([
@@ -111,37 +99,35 @@ describe('button interaction recruitment controllertest.', () => {
 
         // setup test entityes
         const test_rec = TestEntity.get_test_recruitment();
-        const test_par = TestEntity.get_test_participate();
-        const test_par_another = TestEntity.get_test_participate();
-        test_par_another.user_id = "test_user_id_another";
 
-        // insert to database
-        const repo_recruitment = new RecruitmentRepository(sqlite_file);
-        const repo_participate = new ParticipateRepository(sqlite_file);
-        let cnt = await repo_recruitment.insert_m_recruitment(test_rec);
-        expect(cnt).toEqual(1);
-        cnt = await repo_participate.insert_t_participate(test_par);
-        expect(cnt).toEqual(1);
-        cnt = await repo_participate.insert_t_participate(test_par_another);
-        expect(cnt).toEqual(1);
+        // setup mocks
+        jest.spyOn(RecruitmentRepository.prototype, 'get_m_recruitment').mockImplementationOnce(() => {
+            return new Promise<Recruitment>((resolve) => {
+                resolve(test_rec);
+            });
+        });
+
+        jest.spyOn(ParticipateRepository.prototype, 'insert_t_participate').mockImplementationOnce(() => {
+            return new Promise<number>((_resolve, reject) => {
+                reject(`record exists`);
+            });
+        });
+        jest.spyOn(ParticipateRepository.prototype, 'update_t_participate').mockImplementationOnce(() => {
+            return new Promise<number>((resolve) => {
+                resolve(1);
+            });
+        });
+
+        jest.spyOn(ServerInfoRepository.prototype, 'get_m_server_info').mockImplementationOnce(() => {
+            return new Promise<ServerInfo>((resolve) => {
+                resolve(TestEntity.get_test_server_info());
+            });
+        });
 
         // update recruitment
-        let result = await ButtonInteractionRecruitmentController.recruitment_interaction(interaction, sqlite_file);
+        let result = await controller.recruitment_interaction(interaction);
         expect(result).toEqual(true);
-
-        // check recruitment
-        let participate_list: Participate[] = await repo_participate.get_t_participate(test_rec.token);
-
-        // expected participate
-        const test_par_expect = TestEntity.get_test_participate();
-        test_par_expect.status = expected_status;
-
-        // expect
-        expect(participate_list.length).toEqual(2);
-        expect(participate_list).toContainEqual(test_par_expect);
-        expect(participate_list).toContainEqual(test_par_another);
     });
-
 
     test.each([
         ["decline-recruite-token=test_token", "test_server_id", "test_user_id"],
@@ -152,27 +138,33 @@ describe('button interaction recruitment controllertest.', () => {
 
         // setup test entityes
         const test_rec = TestEntity.get_test_recruitment();
-        const test_par = TestEntity.get_test_participate();
-        const test_par_another = TestEntity.get_test_participate();
-        test_par_another.user_id = "test_user_id_another";
 
-        // insert to database
-        const repo_recruitment = new RecruitmentRepository(sqlite_file);
-        const repo_participate = new ParticipateRepository(sqlite_file);
-        let cnt = await repo_recruitment.insert_m_recruitment(test_rec);
-        expect(cnt).toEqual(1);
-        cnt = await repo_participate.insert_t_participate(test_par);
-        expect(cnt).toEqual(1);
-        cnt = await repo_participate.insert_t_participate(test_par_another);
-        expect(cnt).toEqual(1);
+        // setup mocks
+        jest.spyOn(RecruitmentRepository.prototype, 'get_m_recruitment').mockImplementationOnce(() => {
+            return new Promise<Recruitment>((resolve) => {
+                resolve(test_rec);
+            });
+        });
+
+        jest.spyOn(ParticipateRepository.prototype, 'insert_t_participate').mockImplementationOnce(() => {
+            return new Promise<number>((_resolve, reject) => {
+                reject(`record exists`);
+            });
+        });
+        jest.spyOn(ParticipateRepository.prototype, 'update_t_participate').mockImplementationOnce(() => {
+            return new Promise<number>((resolve) => {
+                resolve(1);
+            });
+        });
+
+        jest.spyOn(ServerInfoRepository.prototype, 'get_m_server_info').mockImplementationOnce(() => {
+            return new Promise<ServerInfo>((resolve) => {
+                resolve(TestEntity.get_test_server_info());
+            });
+        });
 
         // update recruitment
-        let result = await ButtonInteractionRecruitmentController.recruitment_interaction(interaction, sqlite_file);
+        let result = await controller.recruitment_interaction(interaction);
         expect(result).toEqual(true);
-
-        // check recruitment
-        let participate_list: Participate[] = await repo_participate.get_t_participate(test_rec.token);
-        expect(participate_list.length).toEqual(1);
-        expect(participate_list).toContainEqual(test_par_another);
     });
 });

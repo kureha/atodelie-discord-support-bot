@@ -15,6 +15,7 @@ const command_friend_code_controller_1 = require("../../controller/command_frien
 const discord_common_1 = require("../../logic/discord_common");
 // import test entity
 const test_entity_1 = require("../common/test_entity");
+const controller = new command_friend_code_controller_1.CommandFriendCodeController();
 function get_discord_common_mock() {
     const get_game_master_from_guild = jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild');
     get_game_master_from_guild.mockImplementationOnce((guild, ignore_role_name_list) => {
@@ -38,7 +39,7 @@ describe('slash command search friend codetest.', () => {
         const interaction = new Mock();
         // setup extra mock
         get_discord_common_mock();
-        let result = yield command_friend_code_controller_1.CommandFriendCodeController.search_friend_code(interaction);
+        let result = yield controller.search_friend_code(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -51,13 +52,8 @@ describe('slash command search friend codetest.', () => {
         interaction.guild = undefined;
         // setup extra mock
         get_discord_common_mock();
-        expect.assertions(1);
-        try {
-            yield command_friend_code_controller_1.CommandFriendCodeController.search_friend_code(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = yield controller.search_friend_code(interaction);
+        expect(result).toEqual(false);
     }));
 });
 describe('slash command regist friend codetest.', () => {
@@ -73,7 +69,7 @@ describe('slash command regist friend codetest.', () => {
         const interaction = new Mock();
         // setup extra mock
         get_discord_common_mock();
-        let result = yield command_friend_code_controller_1.CommandFriendCodeController.regist_friend_code(interaction);
+        let result = yield controller.regist_friend_code(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -86,13 +82,8 @@ describe('slash command regist friend codetest.', () => {
         interaction.guild = undefined;
         // setup extra mock
         get_discord_common_mock();
-        expect.assertions(1);
-        try {
-            yield command_friend_code_controller_1.CommandFriendCodeController.regist_friend_code(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = yield controller.regist_friend_code(interaction);
+        expect(result).toEqual(false);
     }));
 });
 describe('slash command delete friend codetest.', () => {
@@ -108,7 +99,7 @@ describe('slash command delete friend codetest.', () => {
         const interaction = new Mock();
         // setup extra mock
         get_discord_common_mock();
-        let result = yield command_friend_code_controller_1.CommandFriendCodeController.delete_friend_code(interaction);
+        let result = yield controller.delete_friend_code(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -121,13 +112,8 @@ describe('slash command delete friend codetest.', () => {
         interaction.guild = undefined;
         // setup extra mock
         get_discord_common_mock();
-        expect.assertions(1);
-        try {
-            yield command_friend_code_controller_1.CommandFriendCodeController.delete_friend_code(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = yield controller.delete_friend_code(interaction);
+        expect(result).toEqual(false);
     }));
 });
 //# sourceMappingURL=controller.command_friend_code.test.js.map

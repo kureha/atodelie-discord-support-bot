@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscordInteractionAnalyzer = void 0;
 // define logger
@@ -31,7 +40,7 @@ class DiscordInteractionAnalyzer {
      * @param user_id discord bot's id
      */
     analyze(custom_id, user_id) {
-        return new Promise((resolve, reject) => {
+        return __awaiter(this, void 0, void 0, function* () {
             // check custom id for recruitment join
             if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}`))) {
                 logger_1.logger.debug(`interaction is valid. type = ${constants.TYPE_JOIN}`);
@@ -62,13 +71,12 @@ class DiscordInteractionAnalyzer {
             }
             else {
                 // error
-                logger_1.logger.warn(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
+                logger_1.logger.error(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
                 this.error_messages.push(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
                 // this is not valid interaction.
                 this.valid = false;
-                // ng
-                reject();
-                return;
+                // analyze result is ng, reject
+                throw new Error(`this interaction dosen't match join recruitment. : customId = ${custom_id}`);
             }
             // this is valid interaction.
             this.valid = true;
@@ -76,8 +84,8 @@ class DiscordInteractionAnalyzer {
             // set valiables
             this.user_id = user_id;
             this.description = constants.RECRUITMENT_DEFAULT_DESCRIPTION;
-            // ok
-            resolve();
+            // resolve
+            return;
         });
     }
     /**
@@ -219,9 +227,9 @@ class DiscordInteractionAnalyzer {
         return dest_date;
     }
 }
-exports.DiscordInteractionAnalyzer = DiscordInteractionAnalyzer;
 /**
  * default recruitment time (copy from constants)
  */
 DiscordInteractionAnalyzer.HOURS_DEFAULT = constants.RECRUITMENT_DEFAULT_LIMIT_HOURS;
+exports.DiscordInteractionAnalyzer = DiscordInteractionAnalyzer;
 //# sourceMappingURL=discord_interaction_analyzer.js.map

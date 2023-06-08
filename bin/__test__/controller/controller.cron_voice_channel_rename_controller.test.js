@@ -38,6 +38,9 @@ const Discord = __importStar(require("discord.js"));
 const server_info_1 = require("../../db/server_info");
 const test_entity_1 = require("../common/test_entity");
 const discord_common_1 = require("../../logic/discord_common");
+const game_master_1 = require("../../db/game_master");
+const activity_history_1 = require("../../db/activity_history");
+const controller = new cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController();
 /**
  * mockup test function
  * @param user_id
@@ -70,7 +73,7 @@ function get_activity(input_type, input_name) {
  * mockup create function for update_voice_channel_name
  */
 function setup_update_voice_channel_name_mock(server_info_list) {
-    jest.spyOn(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController, 'execute_logic_for_guild').mockImplementation(() => {
+    jest.spyOn(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.prototype, 'execute_logic_for_guild').mockImplementation(() => {
         return new Promise((resolve, reject) => {
             resolve(true);
         });
@@ -113,7 +116,7 @@ describe("update_channel_name", () => {
         ["更新ゲーム", "[テストゲーム] テストチャンネル", '[%%GAME_NAME%%] %%CHANNEL_NAME%%', /^\[[^\]]+\] /, "[更新ゲーム] テストチャンネル"],
         ["", "[bbb] テストチャンネル", '[%%GAME_NAME%%] %%CHANNEL_NAME%%', /^\[[^\]]+\] /, "テストチャンネル"],
     ])("test for update_channel_name (%s, %s, %s, %s => %s)", (game_name, now_channel_name, prefix_format, prefix_regexp, expected) => {
-        expect(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.get_update_channel_name(game_name, now_channel_name, prefix_format, prefix_regexp)).toEqual(expected);
+        expect(controller.get_update_channel_name(game_name, now_channel_name, prefix_format, prefix_regexp)).toEqual(expected);
     });
 });
 describe('get_most_played_sort_game_list', () => {
@@ -124,8 +127,45 @@ describe('get_most_played_sort_game_list', () => {
         [['', 'bbb', 'aaa', 'bbb', 'aaa', 'aaa'], ['aaa', 'bbb', '']],
         [['bbb', 'aaa', 'bbb', 'aaa'], ['aaa', 'bbb']],
     ])("get_most_played_sort_game_list test (%s => %s)", (input, expected) => {
-        expect(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.get_sorted_game_list(input)).toEqual(expected);
+        expect(controller.get_sorted_game_list(input)).toEqual(expected);
     });
+});
+describe('get_channel_joined_member_count', () => {
+    afterEach(() => {
+        jest.resetAllMocks();
+        jest.restoreAllMocks();
+    });
+    test('test for get_channel_joined_member_count.', () => __awaiter(void 0, void 0, void 0, function* () {
+        // setup mock
+        const mock_member_list = new Map();
+        let channel_id = 'test_channel_id_1';
+        // data 1
+        let id = 'test_user_id_1';
+        mock_member_list.set(id, get_test_member(id, channel_id));
+        // data 2
+        id = 'test_user_id_2';
+        mock_member_list.set(id, get_test_member(id, channel_id + "_another"));
+        // data 3
+        id = 'test_user_id_3';
+        mock_member_list.set(id, get_test_member(id, channel_id));
+        // data 4
+        id = 'test_user_id_4';
+        mock_member_list.set(id, get_test_member(id, channel_id));
+        // data 5
+        id = 'test_user_id_5';
+        mock_member_list.set(id, get_test_member(id, null));
+        // main logic called
+        const result = yield controller.get_channel_joined_member_count(channel_id, mock_member_list);
+        expect(result).toEqual(3);
+    }));
+    test('test for get_playing_game_list blank.', () => __awaiter(void 0, void 0, void 0, function* () {
+        // setup mock
+        const mock_member_list = new Map();
+        let channel_id = 'test_channel_id_1';
+        // main logic called
+        const result = yield controller.get_channel_joined_member_count(channel_id, mock_member_list);
+        expect(result).toEqual(0);
+    }));
 });
 describe('get_playing_game_list', () => {
     afterEach(() => {
@@ -152,13 +192,13 @@ describe('get_playing_game_list', () => {
         id = 'test_user_id_5';
         mock_member_list.set(id, get_test_member(id, null));
         // mockup presence (presence is called for valid channel)
-        jest.spyOn(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController, 'get_playing_game_name')
+        jest.spyOn(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.prototype, 'get_playing_game_name')
             .mockImplementationOnce(() => { return "test_game_001"; })
             .mockImplementationOnce(() => { return "test_game_002"; })
             .mockImplementationOnce(() => { return "test_game_001"; })
             .mockImplementationOnce(() => { return "test_game_003"; }); // 3 is not include for result
         // main logic called
-        const result = yield cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.get_playing_game_list(channel_id, mock_member_list);
+        const result = yield controller.get_playing_game_list(channel_id, mock_member_list);
         expect(result.sort()).toStrictEqual(["test_game_001", "test_game_001", "test_game_002"]);
     }));
     test('test for get_playing_game_list blank.', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -166,13 +206,14 @@ describe('get_playing_game_list', () => {
         const mock_member_list = new Map();
         let channel_id = 'test_channel_id_1';
         // main logic called
-        const result = yield cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.get_playing_game_list(channel_id, mock_member_list);
+        const result = yield controller.get_playing_game_list(channel_id, mock_member_list);
         expect(result.sort()).toStrictEqual([]);
     }));
 });
 describe('get_playing_game_name', () => {
     test.each([
         ["test_presence_01", Discord.ActivityType.Playing, "test_presence_01"],
+        ["test_presence_01", Discord.ActivityType.Streaming, "test_presence_01"],
         ["", Discord.ActivityType.Playing, ""],
         ["test_presence_01", Discord.ActivityType.Custom, ""],
     ])('test for get_playing_game_name (%s, %s -> %s)', (name, type, exp) => {
@@ -181,19 +222,38 @@ describe('get_playing_game_name', () => {
                 get_activity(type, name)
             ],
         };
-        expect(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.get_playing_game_name(presence_mock)).toBe(exp);
+        expect(controller.get_playing_game_name(presence_mock)).toBe(exp);
+    });
+    test.each([
+        ["test_presence_01", Discord.ActivityType.Playing, [], "test_presence_01"],
+        ["test_presence_01", Discord.ActivityType.Playing, ["another_precense"], "test_presence_01"],
+        ["test_presence_01", Discord.ActivityType.Playing, ["test_presence_01"], ""],
+    ])('test for get_playing_game_name with ignore list (%s, %s -> %s)', (name, type, ignore_list, exp) => {
+        const presence_mock = {
+            activities: [
+                get_activity(type, name)
+            ],
+        };
+        expect(controller.get_playing_game_name(presence_mock, ignore_list)).toBe(exp);
     });
     test('test for get_playing_game_name for blank', () => {
         const presence_mock = {
             activities: [],
         };
-        expect(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.get_playing_game_name(presence_mock)).toBe('');
+        expect(controller.get_playing_game_name(presence_mock)).toBe('');
     });
     test('test for get_playing_game_name for null', () => {
-        expect(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.get_playing_game_name(null)).toBe('');
+        expect(controller.get_playing_game_name(null)).toBe('');
     });
 });
 describe('update_voice_channel_name', () => {
+    beforeEach(() => {
+        jest.spyOn(activity_history_1.ActivityHistoryRepository.prototype, 'insert_t_activity_history').mockImplementationOnce((v) => {
+            return new Promise((resolve) => {
+                resolve(1);
+            });
+        });
+    });
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
@@ -205,7 +265,7 @@ describe('update_voice_channel_name', () => {
         // expect assertions
         expect.assertions(1);
         // execute
-        const result = yield cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.update_voice_channel_name(client_mock);
+        const result = yield controller.update_voice_channel_name(client_mock);
         expect(result).toBe(false);
     }));
     test('test for update_voice_channel_name', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -215,7 +275,7 @@ describe('update_voice_channel_name', () => {
         // expect assertions
         expect.assertions(1);
         // execute
-        const result = yield cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.update_voice_channel_name(client_mock);
+        const result = yield controller.update_voice_channel_name(client_mock);
         expect(result).toBe(true);
     }));
     test('test for update_voice_channel_name for null', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -225,7 +285,7 @@ describe('update_voice_channel_name', () => {
         // expect assertions
         expect.assertions(1);
         // execute
-        const result = yield cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.update_voice_channel_name(client_mock);
+        const result = yield controller.update_voice_channel_name(client_mock);
         expect(result).toBe(true);
     }));
 });
@@ -244,9 +304,14 @@ describe('execute_logic_for_guild', () => {
         jest.spyOn(discord_common_1.DiscordCommon, 'get_voice_channel').mockImplementationOnce(() => {
             return mock_get_voice_channel("test_channel_id", "test_channel_name");
         });
-        jest.spyOn(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController, 'get_playing_game_list').mockImplementationOnce(() => {
+        jest.spyOn(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.prototype, 'get_playing_game_list').mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
                 resolve(game_id_list);
+            });
+        });
+        jest.spyOn(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.prototype, 'get_game_master_alias_name').mockImplementation((v, p) => {
+            return new Promise((resolve, reject) => {
+                resolve('');
             });
         });
         const mock_guild = {
@@ -258,7 +323,7 @@ describe('execute_logic_for_guild', () => {
         // expect assertions
         expect.assertions(1);
         // execute
-        const result = yield cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.execute_logic_for_guild(mock_guild);
+        const result = yield controller.execute_logic_for_guild(mock_guild);
         expect(result).toBe(true);
     }));
     test.each([
@@ -271,9 +336,14 @@ describe('execute_logic_for_guild', () => {
         jest.spyOn(discord_common_1.DiscordCommon, 'get_voice_channel').mockImplementationOnce(() => {
             return mock_get_voice_channel("test_channel_id", "test_channel_name");
         });
-        jest.spyOn(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController, 'get_playing_game_list').mockImplementationOnce(() => {
+        jest.spyOn(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.prototype, 'get_playing_game_list').mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
                 resolve(game_id_list);
+            });
+        });
+        jest.spyOn(cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.prototype, 'get_game_master_alias_name').mockImplementation((v, p) => {
+            return new Promise((resolve, reject) => {
+                resolve('');
             });
         });
         // invalid guild - for execption
@@ -283,7 +353,7 @@ describe('execute_logic_for_guild', () => {
         // expect assertions
         expect.assertions(1);
         // execute
-        const result = yield cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.execute_logic_for_guild(mock_guild);
+        const result = yield controller.execute_logic_for_guild(mock_guild);
         expect(result).toBe(true);
     }));
     test.each([
@@ -297,11 +367,46 @@ describe('execute_logic_for_guild', () => {
         expect.assertions(1);
         // execute
         try {
-            yield cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.execute_logic_for_guild({});
+            yield controller.execute_logic_for_guild({});
         }
         catch (err) {
             expect(true).toBe(true);
         }
+    }));
+});
+describe('get_game_master_alias_name', () => {
+    afterEach(() => {
+        jest.resetAllMocks();
+        jest.restoreAllMocks();
+    });
+    test.each([
+        ['testing_precense_name', 'test_getted_game_name', 'test_getted_game_name'],
+        ['testing_precense_name', '', 'testing_precense_name'],
+        ['', '', ''],
+    ])('test for get_game_master_alias_name (%s, %s -> %s)', (presence_name, game_name, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        jest.spyOn(game_master_1.GameMasterRepository.prototype, 'get_m_game_master_by_presence_name').mockImplementationOnce((server_id, presence_name) => {
+            return new Promise((resolve, reject) => {
+                const game_master = test_entity_1.TestEntity.get_test_game_master_info();
+                game_master.game_name = game_name;
+                game_master.presence_name = presence_name;
+                resolve([game_master]);
+            });
+        });
+        const server_id = "server_id";
+        const result = yield controller.get_game_master_alias_name(server_id, presence_name);
+        expect(result).toBe(expected);
+    }));
+    test.each([
+        ['testing_precense_name', '', 'testing_precense_name'],
+    ])('test for get_game_master_alias_name select blank (%s, %s -> %s)', (presence_name, game_name, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        jest.spyOn(game_master_1.GameMasterRepository.prototype, 'get_m_game_master_by_presence_name').mockImplementationOnce((server_id, presence_name) => {
+            return new Promise((resolve, reject) => {
+                resolve([]);
+            });
+        });
+        const server_id = "server_id";
+        const result = yield controller.get_game_master_alias_name(server_id, presence_name);
+        expect(result).toBe(expected);
     }));
 });
 //# sourceMappingURL=controller.cron_voice_channel_rename_controller.test.js.map

@@ -24,35 +24,34 @@ class MessageRegistCommandController {
      * @param message
      * @param client_id
      */
-    static regist_command(message, client_id, is_check_privillege = true) {
+    regist_command(message, client_id, is_check_privillege = true) {
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                var _a, _b, _c;
-                try {
-                    // check privilleges
-                    if (discord_common_1.DiscordCommon.check_privillege(constants.DISCORD_BOT_ADMIN_USER_ID, (_a = message.client.user) === null || _a === void 0 ? void 0 : _a.id, is_check_privillege) == true) {
-                        logger_1.logger.info(`regist command privillege check ok. user id = ${(_b = message.client.user) === null || _b === void 0 ? void 0 : _b.id}`);
-                    }
-                    else {
-                        logger_1.logger.error(`regist command failed to privillege check. user id = ${(_c = message.client.user) === null || _c === void 0 ? void 0 : _c.id}`);
-                        message.reply(constants.DISCORD_MESSAGE_NO_PERMISSION);
-                        // resolve (no permissions)
-                        resolve(false);
-                        return;
-                    }
-                    // call regist slash command logic
-                    const success_server_info = yield discord_register_command_1.DiscordRegisterCommand.regist_command(client_id);
-                    logger_1.logger.info(`regist slash command successed. server info count = ${success_server_info.length}`);
-                    // reply message
-                    yield message.reply(constants.DISCORD_MESSAGE_COMMAND_IS_REGIST);
-                    resolve(true);
+            try {
+                // check privilleges
+                if (discord_common_1.DiscordCommon.check_privillege(constants.DISCORD_BOT_ADMIN_USER_ID, (_a = message.client.user) === null || _a === void 0 ? void 0 : _a.id, is_check_privillege) == true) {
+                    logger_1.logger.info(`regist command privillege check ok. user id = ${(_b = message.client.user) === null || _b === void 0 ? void 0 : _b.id}`);
                 }
-                catch (err) {
-                    logger_1.logger.error(err);
-                    message.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
-                    reject(`regist slash command error. error = ${err}`);
+                else {
+                    logger_1.logger.error(`regist command failed to privillege check. user id = ${(_c = message.client.user) === null || _c === void 0 ? void 0 : _c.id}`);
+                    message.reply(constants.DISCORD_MESSAGE_NO_PERMISSION);
+                    // resolve (no permissions)
+                    return false;
                 }
-            }));
+                // call regist slash command logic
+                const register_command = new discord_register_command_1.DiscordRegisterCommand();
+                const success_server_info = yield register_command.regist_command(client_id);
+                logger_1.logger.info(`regist slash command successed. server info count = ${success_server_info.length}`);
+                // reply message
+                yield message.reply(constants.DISCORD_MESSAGE_COMMAND_IS_REGIST);
+            }
+            catch (err) {
+                logger_1.logger.error(`regist slash command error.`, err);
+                yield message.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+                return false;
+            }
+            logger_1.logger.info(`regist slash command completed.`);
+            return true;
         });
     }
     /**
@@ -61,7 +60,7 @@ class MessageRegistCommandController {
      * @param message
      * @returns
      */
-    static is_regist_command(client_id, message) {
+    is_regist_command(client_id, message) {
         // define result value
         let result = false;
         // check values

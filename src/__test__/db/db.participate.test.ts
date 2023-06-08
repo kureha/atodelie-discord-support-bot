@@ -3,54 +3,21 @@ import { ParticipateRepository } from '../../db/participate';
 
 import { Participate } from '../../entity/participate';
 
-// import constants
-import { Constants } from '../../common/constants';
-const constants = new Constants();
 
 // import test entities
 import { TestEntity } from '../common/test_entity';
 
-import * as fs from 'fs';
-
-const sqlite_file: string = './.data/db.participate.test.sqlite';
-
-describe("db.participate intialize test", () => {
-    test("test for initialize", async () => {
-        const rep = new ParticipateRepository(":memory:");
-        await expect(rep.create_all_database(rep.get_db_instance(":memory:"))).resolves;
-    });
-});
+// create rep
+const rec_rep = new RecruitmentRepository();
+const par_rep = new ParticipateRepository();
 
 describe("db.participate test.", () => {
-    // copy test file for test
-    beforeEach(() => {
-        // delete file if exists
-        if (fs.existsSync(sqlite_file)) {
-            fs.rmSync(sqlite_file);
-        }
-
-        // copy file
-        fs.copyFileSync(constants.SQLITE_TEMPLATE_FILE, sqlite_file);
-    });
-
-    // delete test file alter all
-    afterAll(() => {
-        // delete file if exists
-        if (fs.existsSync(sqlite_file)) {
-            fs.rmSync(sqlite_file);
-        }
-    });
-
-    test("constructor test", () => {
-        const rep = new ParticipateRepository(sqlite_file);
-        expect(fs.existsSync(rep.get_sqlite_file_path())).toBeTruthy();
-        expect(fs.existsSync(rep.get_sqlite_file_path() + ".notfound")).toBeFalsy();
+    beforeEach(async () => {
+        await rec_rep.delete_m_recruitment_all();
+        await par_rep.delete_t_participate_all();
     });
 
     test("select participate test: empty result", async () => {
-        const rec_rep = new RecruitmentRepository(sqlite_file);
-        const par_rep = new ParticipateRepository(sqlite_file);
-
         // select empty
         let result = await par_rep.get_t_participate('');
         expect(result.length).toEqual(0);
@@ -65,9 +32,6 @@ describe("db.participate test.", () => {
     });
 
     test("select participate test: insert(multi) -> select(multi) -> insert(single) -> select(single)", async () => {
-        const rec_rep = new RecruitmentRepository(sqlite_file);
-        const par_rep = new ParticipateRepository(sqlite_file);
-
         // create recruitment
         let test_rec = TestEntity.get_test_recruitment();
         await rec_rep.insert_m_recruitment(test_rec);
@@ -107,9 +71,6 @@ describe("db.participate test.", () => {
     });
 
     test("select participate test: expire select result", async () => {
-        const rec_rep = new RecruitmentRepository(sqlite_file);
-        const par_rep = new ParticipateRepository(sqlite_file);
-
         // create expire recruitment
         let test_rec = TestEntity.get_test_recruitment();
         test_rec.limit_time = new Date("2000-12-31T11:59:59.000Z");
@@ -129,9 +90,6 @@ describe("db.participate test.", () => {
     });
 
     test("update and delete test: insert -> select -> update -> select -> delete -> select", async () => {
-        const rec_rep = new RecruitmentRepository(sqlite_file);
-        const par_rep = new ParticipateRepository(sqlite_file);
-
         // create recruitment
         let test_rec = TestEntity.get_test_recruitment();
         await rec_rep.insert_m_recruitment(test_rec);
@@ -190,7 +148,6 @@ describe("db.participate test.", () => {
     });
 
     test("update or delete non-found participate test", async () => {
-        const par_rep = new ParticipateRepository(sqlite_file);
         let cnt = await par_rep.insert_t_participate(TestEntity.get_test_participate());
         expect(cnt).toEqual(0);
         cnt = await par_rep.update_t_participate(TestEntity.get_test_participate());

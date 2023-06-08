@@ -21,7 +21,7 @@ describe("recieve test.", () => {
         jest.spyOn(ButtonInteractionController, 'check_recruitment_interaction').mockImplementationOnce(() => {
             return cmd_check_result;
         });
-        jest.spyOn(ButtonInteractionRecruitmentController, 'recruitment_interaction').mockImplementationOnce(() => {
+        jest.spyOn(ButtonInteractionRecruitmentController.prototype, 'recruitment_interaction').mockImplementationOnce(() => {
             return new Promise<boolean>((resolve, reject) => {
                 resolve(true);
             });

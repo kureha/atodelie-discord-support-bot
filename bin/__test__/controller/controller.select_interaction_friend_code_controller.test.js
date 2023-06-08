@@ -15,6 +15,7 @@ const discord_common_1 = require("../../logic/discord_common");
 const test_entity_1 = require("../common/test_entity");
 const friend_code_1 = require("../../db/friend_code");
 const friend_code_history_1 = require("../../db/friend_code_history");
+const controller = new select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController();
 describe('select menu search friend codetest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -43,7 +44,7 @@ describe('select menu search friend codetest.', () => {
             });
         });
         // expect
-        let result = yield select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController.search_friend_code(interaction);
+        let result = yield controller.search_friend_code(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -69,7 +70,7 @@ describe('select menu search friend codetest.', () => {
             });
         });
         // expect
-        let result = yield select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController.search_friend_code(interaction);
+        let result = yield controller.search_friend_code(interaction);
         expect(result).toEqual(false);
     }));
     test.each([
@@ -81,13 +82,8 @@ describe('select menu search friend codetest.', () => {
         // hack mock
         interaction.guild = undefined;
         // expect
-        expect.assertions(1);
-        try {
-            yield select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController.search_friend_code(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = yield controller.search_friend_code(interaction);
+        expect(result).toEqual(false);
     }));
 });
 describe('select menu regist friend codetest.', () => {
@@ -120,7 +116,7 @@ describe('select menu regist friend codetest.', () => {
             });
         });
         // expect
-        let result = yield select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController.regist_friend_code(interaction);
+        let result = yield controller.regist_friend_code(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -132,13 +128,8 @@ describe('select menu regist friend codetest.', () => {
         // hack mock
         interaction.guild = undefined;
         // expect
-        expect.assertions(1);
-        try {
-            yield select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController.regist_friend_code(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = yield controller.regist_friend_code(interaction);
+        expect(result).toEqual(false);
     }));
 });
 describe('select menu delete friend codetest.', () => {
@@ -175,7 +166,7 @@ describe('select menu delete friend codetest.', () => {
             return new Promise((resolve, reject) => { resolve(1); });
         });
         // expect
-        let result = yield select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController.delete_friend_code(interaction);
+        let result = yield controller.delete_friend_code(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -207,7 +198,7 @@ describe('select menu delete friend codetest.', () => {
             return new Promise((resolve, reject) => { resolve(1); });
         });
         // expect
-        let result = yield select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController.delete_friend_code(interaction);
+        let result = yield controller.delete_friend_code(interaction);
         expect(result).toEqual(false);
     }));
     test.each([
@@ -233,7 +224,7 @@ describe('select menu delete friend codetest.', () => {
             });
         });
         // expect
-        let result = yield select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController.delete_friend_code(interaction);
+        let result = yield controller.delete_friend_code(interaction);
         expect(result).toEqual(false);
     }));
     test.each([
@@ -245,13 +236,8 @@ describe('select menu delete friend codetest.', () => {
         // hack mock
         interaction.guild = undefined;
         // expect
-        expect.assertions(1);
-        try {
-            yield select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController.delete_friend_code(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = yield controller.delete_friend_code(interaction);
+        expect(result).toEqual(false);
     }));
     test.each([
         ["test_custom_id", "test_server_id", "test_user_id", "test_game_id"],
@@ -282,13 +268,8 @@ describe('select menu delete friend codetest.', () => {
             return new Promise((resolve, reject) => { resolve(1); });
         });
         // expect
-        expect.assertions(1);
-        try {
-            yield select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController.delete_friend_code(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`data is not affected.`);
-        }
+        const result = yield controller.delete_friend_code(interaction);
+        expect(result).toEqual(false);
     }));
 });
 //# sourceMappingURL=controller.select_interaction_friend_code_controller.test.js.map

@@ -1,60 +1,23 @@
 import { FriendCodeRepository } from '../../db/friend_code';
 
-// import constants
-import { Constants } from '../../common/constants';
-const constants = new Constants();
-
 // import test entities
 import { TestEntity } from '../common/test_entity';
 
-import * as fs from 'fs';
-
-const sqlite_file: string = './.data/db.friend_code.test.sqlite';
-
-describe("db.friend_code intialize test", () => {
-    test("test for initialize", async () => {
-        const rep = new FriendCodeRepository(":memory:");
-        await expect(rep.create_all_database(rep.get_db_instance(":memory:"))).resolves;
-    });
-});
+// get db file
+const rep = new FriendCodeRepository();
 
 describe("db.friend_code test.", () => {
-    // copy test file for test
-    beforeEach(() => {
-        // delete file if exists
-        if (fs.existsSync(sqlite_file)) {
-            fs.rmSync(sqlite_file);
-        }
-
-        // copy file
-        fs.copyFileSync(constants.SQLITE_TEMPLATE_FILE, sqlite_file);
-    });
-
-    // delete test file alter all
-    afterAll(() => {
-        // delete file if exists
-        if (fs.existsSync(sqlite_file)) {
-            fs.rmSync(sqlite_file);
-        }
-    });
-
-    test("constructor test", () => {
-        const rep = new FriendCodeRepository(sqlite_file);
-        expect(fs.existsSync(rep.get_sqlite_file_path())).toBeTruthy();
-        expect(fs.existsSync(rep.get_sqlite_file_path() + ".notfound")).toBeFalsy();
+    beforeEach(async () => {
+        await rep.delete_t_friend_code_all();
     });
 
     test("select friend code test: empty result", async () => {
-        const rep = new FriendCodeRepository(sqlite_file);
-
         // select and assertions
         await expect(rep.get_t_friend_code_all("dummy_server_id")).resolves.toEqual([]);
         await expect(rep.get_t_friend_code("dummy_server_id", 'target_key')).resolves.toEqual([]);
     });
 
     test("select friend code test: insert -> select(normal)", async () => {
-        const rep = new FriendCodeRepository(sqlite_file);
-
         // test insert object 1
         let test_frc_info = TestEntity.get_test_friend_code();
         let cnt = await rep.insert_t_friend_code(test_frc_info);
@@ -115,8 +78,6 @@ describe("db.friend_code test.", () => {
     });
 
     test("insert and update test: insert -> select -> update -> select", async () => {
-        const rep = new FriendCodeRepository(sqlite_file);
-
         // test insert onject 1
         let test_frc_info = TestEntity.get_test_friend_code();
         let cnt = await rep.insert_t_friend_code(test_frc_info);
@@ -154,8 +115,6 @@ describe("db.friend_code test.", () => {
     });
 
     test("insert and delete test: insert -> select -> delete -> select", async () => {
-        const rep = new FriendCodeRepository(sqlite_file);
-
         // test insert onject 1
         let test_frc_info = TestEntity.get_test_friend_code();
         let cnt = await rep.insert_t_friend_code(test_frc_info);
@@ -181,7 +140,6 @@ describe("db.friend_code test.", () => {
     });
 
     test("update or delete non-found friend code test", async () => {
-        const rep = new FriendCodeRepository(sqlite_file);
         let cnt = await rep.update_t_friend_code(TestEntity.get_test_friend_code());
         expect(cnt).toEqual(0);
         cnt = await rep.delete_t_friend_code(TestEntity.get_test_friend_code().server_id, TestEntity.get_test_friend_code().user_id, TestEntity.get_test_friend_code().game_id);

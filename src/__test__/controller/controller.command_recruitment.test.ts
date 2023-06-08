@@ -13,8 +13,10 @@ import { Participate } from '../../entity/participate';
 import { ServerInfoRepository } from '../../db/server_info';
 import { ServerInfo } from '../../entity/server_info';
 
+const controller = new CommandRecruitmentController();
+
 function set_show_recruitment_input_modal_mock() {
-    const show_recruitment_input_modal = jest.spyOn(CommandRecruitmentController, 'show_recruitment_input_modal');
+    const show_recruitment_input_modal = jest.spyOn(CommandRecruitmentController.prototype, 'show_recruitment_input_modal');
     show_recruitment_input_modal.mockImplementationOnce((interaction: Discord.ChatInputCommandInteraction, modal: Discord.ModalBuilder, limit_time: Date | undefined, description: string | undefined): Promise<boolean> => {
         return new Promise<boolean>((resolve, reject) => {
             resolve(true);
@@ -78,7 +80,7 @@ describe('new recruitment commandtest.', () => {
         // set extra mock
         set_show_recruitment_input_modal_mock();
 
-        let result = await CommandRecruitmentController.new_recruitment_input_modal(interaction);
+        let result = await controller.new_recruitment_input_modal(interaction);
         expect(result).toEqual(true);
     });
 
@@ -92,12 +94,8 @@ describe('new recruitment commandtest.', () => {
         // get modal builder mock
         TestDiscordMock.modal_builder_mock();
 
-        expect.assertions(1);
-        try {
-            await CommandRecruitmentController.new_recruitment_input_modal(interaction);
-        } catch (e) {
-            expect(e).toContain(`show modal for new recruitment error.`);
-        }
+        const result = await controller.new_recruitment_input_modal(interaction);
+        expect(result).toEqual(false);
     });
 });
 
@@ -124,7 +122,7 @@ describe('edit recruitment commandtest.', () => {
         set_test_repositories();
 
         expect.assertions(1);
-        let result = await CommandRecruitmentController.edit_recruitment_input_modal(interaction);
+        let result = await controller.edit_recruitment_input_modal(interaction);
         expect(result).toEqual(true);
     });
 
@@ -146,12 +144,8 @@ describe('edit recruitment commandtest.', () => {
                 });
             });
 
-        expect.assertions(1);
-        try {
-            await CommandRecruitmentController.edit_recruitment_input_modal(interaction);
-        } catch (e) {
-            expect(e).toContain(`target user's recruitment is null or 0.`);
-        }
+        const result = await controller.edit_recruitment_input_modal(interaction);
+        expect(result).toEqual(false);
     });
 });
 
@@ -177,8 +171,7 @@ describe('delete recruitment commandtest.', () => {
         // set extra mock
         set_show_recruitment_input_modal_mock();
 
-        expect.assertions(1);
-        let result = await CommandRecruitmentController.delete_recruitment(interaction);
+        let result = await controller.delete_recruitment(interaction);
         expect(result).toEqual(true);
     });
 
@@ -200,11 +193,7 @@ describe('delete recruitment commandtest.', () => {
                 });
             });
 
-        expect.assertions(1);
-        try {
-            await CommandRecruitmentController.delete_recruitment(interaction);
-        } catch (e) {
-            expect(e).toContain(`target user's recruitment is null or 0.`);
-        }
+        const result = await controller.delete_recruitment(interaction);
+        expect(result).toEqual(false);
     });
 });

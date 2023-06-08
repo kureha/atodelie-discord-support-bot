@@ -17,20 +17,11 @@ import { Constants } from './common/constants';
 const constants = new Constants();
 
 // import fs modules
-import * as fs from 'fs';
 import { MessageController } from './controller/message_controller';
 import { CronVoiceChannelRenameController } from './controller/cron_voice_channel_rename_controller';
+import { CronAnnouncementController } from './controller/cron_announcement_controller';
 
 try {
-    // check database file
-    if (fs.existsSync(constants.SQLITE_FILE)) {
-        logger.debug(`database file is ok. path = ${constants.SQLITE_FILE}`);
-    } else {
-        logger.warn(`database file is not exists. initialize file. from = ${constants.SQLITE_TEMPLATE_FILE}, dest = ${constants.SQLITE_FILE}`);
-        fs.copyFileSync(constants.SQLITE_TEMPLATE_FILE, constants.SQLITE_FILE);
-        logger.info(`database file initialize ok.`);
-    }
-
     // create client
     const client = new Discord.Client({
         intents: [
@@ -80,19 +71,22 @@ try {
         }
     });
 
-    // cron section for change name
-    logger.info(`update channel name cron setting : ${constants.DISCORD_UPDATE_CHANNEL_NAME_CRON}`);
-    cron.schedule(constants.DISCORD_UPDATE_CHANNEL_NAME_CRON, (() => {
-        CronVoiceChannelRenameController.update_voice_channel_name(client);
+    // cron section for change name and announcement
+    logger.info(`update channel name + announcement cron setting : ${constants.DISCORD_UPDATE_CHANNEL_NAME_CRON}`);
+    cron.schedule(constants.DISCORD_UPDATE_CHANNEL_NAME_CRON, (async () => {
+        const channel_rename_controller = new CronVoiceChannelRenameController();
+        const announcement_controller = new CronAnnouncementController();
+        await channel_rename_controller.update_voice_channel_name(client);
+        await announcement_controller.auto_annoucement(client);
     }));
 
     // cron section for follow
     logger.info(`follow cron setting : ${constants.DISCORD_FOLLOW_CRON}`);
-    cron.schedule(constants.DISCORD_FOLLOW_CRON, (() => {
-        // follow recruitment member
-        CronFollowController.follow_recruitment_member(client);
+    cron.schedule(constants.DISCORD_FOLLOW_CRON, (async () => {
+        const follow_controller = new CronFollowController();
+        await follow_controller.follow_recruitment_member(client);
     }));
 } catch (err) {
     // loggin error
-    logger.error(`fatal error. error = ${err}`)
+    logger.error(`fatal error. bot stopped.`, err)
 }

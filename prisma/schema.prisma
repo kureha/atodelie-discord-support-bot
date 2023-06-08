@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model m_game_master {
+  server_id     String
+  game_id       String
+  game_name     String
+  presence_name String
+  regist_time   DateTime
+  update_time   DateTime
+  delete        Boolean
+
+  @@id([server_id, game_id])
+}
+
+model m_recruitment {
+  id          Int      @id @unique(map: "sqlite_autoindex_m_recruitment_1") @default(autoincrement())
+  server_id   String
+  message_id  String?
+  thread_id   String?
+  token       String   @unique(map: "sqlite_autoindex_m_recruitment_2")
+  status      Int
+  limit_time  DateTime
+  name        String
+  owner_id    String
+  description String?
+  regist_time DateTime
+  update_time DateTime
+  delete      Boolean
+}
+
+model m_server_info {
+  server_id               String    @id
+  channel_id              String
+  recruitment_target_role String
+  follow_time             DateTime?
+}
+
+model m_version {
+  app_version      String
+  database_version String
+
+  @@id([app_version, database_version])
+}
+
+model t_friend_code {
+  server_id   String
+  user_id     String
+  user_name   String
+  game_id     String
+  game_name   String
+  friend_code String
+  regist_time DateTime
+  update_time DateTime
+  delete      Boolean
+
+  @@id([server_id, user_id, game_id])
+}
+
+model t_friend_code_history {
+  server_id   String
+  user_id     String
+  user_name   String
+  game_id     String
+  game_name   String
+  friend_code String
+  regist_time DateTime
+  update_time DateTime
+  delete      Boolean
+
+  @@id([server_id, user_id, regist_time, game_id])
+}
+
+model t_participate {
+  id          Int
+  status      Int
+  user_id     String
+  description String?
+  regist_time DateTime
+  update_time DateTime
+  delete      Boolean
+
+  @@id([id, user_id])
+}
+
+model t_activity_history {
+  server_id          String
+  channel_id         String
+  game_name          String
+  member_count       Int
+  total_member_count Int
+  change_time        DateTime
+  regist_time        DateTime
+  update_time        DateTime
+  delete             Boolean
+
+  @@id([server_id, channel_id, change_time])
+}
+
+model t_announcement_history {
+  server_id         String
+  channel_id        String
+  game_name         String?
+  announcement_time DateTime
+
+  @@id([server_id, channel_id, announcement_time])
+}

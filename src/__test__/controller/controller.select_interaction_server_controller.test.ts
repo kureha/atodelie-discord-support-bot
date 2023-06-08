@@ -10,6 +10,8 @@ import { TestEntity } from "../common/test_entity";
 import { ServerInfoRepository } from "../../db/server_info";
 import { ServerInfo } from "../../entity/server_info";
 
+const controller = new SelectInteractionServerController();
+
 describe('select menu server regist master codetest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -47,7 +49,7 @@ describe('select menu server regist master codetest.', () => {
         });
 
         // expect
-        let result = await SelectInteractionServerController.regist_server_master(interaction, false);
+        let result = await controller.regist_server_master(interaction, false);
         expect(result).toEqual(true);
     });
 
@@ -82,7 +84,7 @@ describe('select menu server regist master codetest.', () => {
         });
 
         // expect
-        let result = await SelectInteractionServerController.regist_server_master(interaction, false);
+        let result = await controller.regist_server_master(interaction, false);
         expect(result).toEqual(false);
     });
 
@@ -94,7 +96,7 @@ describe('select menu server regist master codetest.', () => {
         const interaction = new Mock();
 
         // expect
-        let result = await SelectInteractionServerController.regist_server_master(interaction);
+        let result = await controller.regist_server_master(interaction);
         expect(result).toEqual(false);
     });
 });

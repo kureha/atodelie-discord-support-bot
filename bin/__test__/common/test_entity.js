@@ -9,6 +9,9 @@ const server_info_1 = require("../../entity/server_info");
 const version_1 = require("../../entity/version");
 const constants_1 = require("../../common/constants");
 const user_info_1 = require("../../entity/user_info");
+const activity_history_1 = require("../../entity/activity_history");
+const announcement_history_1 = require("../../entity/announcement_history");
+const announcement_info_1 = require("../../entity/announcement_info");
 const constants = new constants_1.Constants();
 class TestEntity {
     /**
@@ -89,6 +92,7 @@ class TestEntity {
         test_gm_info.server_id = "test_server_id";
         test_gm_info.game_id = "test_game_id";
         test_gm_info.game_name = "test_game_name";
+        test_gm_info.presence_name = "test_presence_name";
         test_gm_info.regist_time = new Date("2099-02-03T01:02:03.000Z");
         test_gm_info.update_time = new Date("2099-12-31T11:59:59.000Z");
         test_gm_info.delete = false;
@@ -125,6 +129,51 @@ class TestEntity {
             role_list.push(role_info);
         }
         return role_list;
+    }
+    /**
+     * Return activity for test
+     * @param regist_change_timetime
+     * @returns
+     */
+    static get_test_activity(change_time) {
+        const v = new activity_history_1.ActivityHistory();
+        v.server_id = "test-server-id";
+        v.channel_id = "test-channel-id";
+        v.game_name = "test-game";
+        v.member_count = 3;
+        v.change_time = change_time;
+        v.regist_time = new Date("2099-02-03T01:02:03.000Z");
+        v.update_time = new Date("2099-02-03T01:02:03.000Z");
+        v.delete = false;
+        return v;
+    }
+    /**
+     * Return announcement history for test
+     * @param announcement_time
+     * @returns
+     */
+    static get_test_announcement_history(announcement_time) {
+        const v = new announcement_history_1.AnnouncementHistory();
+        v.server_id = "test-server-id";
+        v.channel_id = "test-channel-id";
+        v.game_name = "test-game";
+        v.announcement_time = announcement_time;
+        return v;
+    }
+    /**
+     * Return announcement info for test
+     * @param announcement_time
+     * @returns
+     */
+    static get_test_announcement_info(announcement_time) {
+        const v = new announcement_info_1.AnnouncementInfo();
+        v.server_id = "test-server-id";
+        v.channel_id = "test-channel-id";
+        v.game_name = "test-game";
+        v.current_game_member_count = 1;
+        v.max_total_member_count = 1;
+        v.game_start_time = announcement_time;
+        return v;
     }
 }
 exports.TestEntity = TestEntity;

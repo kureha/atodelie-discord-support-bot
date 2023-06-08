@@ -14,6 +14,7 @@ const select_interaction_server_controller_1 = require("../../controller/select_
 const discord_common_1 = require("../../logic/discord_common");
 const test_entity_1 = require("../common/test_entity");
 const server_info_1 = require("../../db/server_info");
+const controller = new select_interaction_server_controller_1.SelectInteractionServerController();
 describe('select menu server regist master codetest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -47,7 +48,7 @@ describe('select menu server regist master codetest.', () => {
             });
         });
         // expect
-        let result = yield select_interaction_server_controller_1.SelectInteractionServerController.regist_server_master(interaction, false);
+        let result = yield controller.regist_server_master(interaction, false);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -78,7 +79,7 @@ describe('select menu server regist master codetest.', () => {
             });
         });
         // expect
-        let result = yield select_interaction_server_controller_1.SelectInteractionServerController.regist_server_master(interaction, false);
+        let result = yield controller.regist_server_master(interaction, false);
         expect(result).toEqual(false);
     }));
     test.each([
@@ -88,7 +89,7 @@ describe('select menu server regist master codetest.', () => {
         const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
         const interaction = new Mock();
         // expect
-        let result = yield select_interaction_server_controller_1.SelectInteractionServerController.regist_server_master(interaction);
+        let result = yield controller.regist_server_master(interaction);
         expect(result).toEqual(false);
     }));
 });

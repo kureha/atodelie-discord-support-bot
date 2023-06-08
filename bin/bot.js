@@ -47,19 +47,10 @@ const cron_follow_controller_1 = require("./controller/cron_follow_controller");
 const constants_1 = require("./common/constants");
 const constants = new constants_1.Constants();
 // import fs modules
-const fs = __importStar(require("fs"));
 const message_controller_1 = require("./controller/message_controller");
 const cron_voice_channel_rename_controller_1 = require("./controller/cron_voice_channel_rename_controller");
+const cron_announcement_controller_1 = require("./controller/cron_announcement_controller");
 try {
-    // check database file
-    if (fs.existsSync(constants.SQLITE_FILE)) {
-        logger_1.logger.debug(`database file is ok. path = ${constants.SQLITE_FILE}`);
-    }
-    else {
-        logger_1.logger.warn(`database file is not exists. initialize file. from = ${constants.SQLITE_TEMPLATE_FILE}, dest = ${constants.SQLITE_FILE}`);
-        fs.copyFileSync(constants.SQLITE_TEMPLATE_FILE, constants.SQLITE_FILE);
-        logger_1.logger.info(`database file initialize ok.`);
-    }
     // create client
     const client = new Discord.Client({
         intents: [
@@ -103,20 +94,23 @@ try {
             modal_submit_controller_1.ModalSubmitController.recieve(interaction);
         }
     }));
-    // cron section for change name
-    logger_1.logger.info(`update channel name cron setting : ${constants.DISCORD_UPDATE_CHANNEL_NAME_CRON}`);
-    cron.schedule(constants.DISCORD_UPDATE_CHANNEL_NAME_CRON, (() => {
-        cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController.update_voice_channel_name(client);
-    }));
+    // cron section for change name and announcement
+    logger_1.logger.info(`update channel name + announcement cron setting : ${constants.DISCORD_UPDATE_CHANNEL_NAME_CRON}`);
+    cron.schedule(constants.DISCORD_UPDATE_CHANNEL_NAME_CRON, (() => __awaiter(void 0, void 0, void 0, function* () {
+        const channel_rename_controller = new cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController();
+        const announcement_controller = new cron_announcement_controller_1.CronAnnouncementController();
+        yield channel_rename_controller.update_voice_channel_name(client);
+        yield announcement_controller.auto_annoucement(client);
+    })));
     // cron section for follow
     logger_1.logger.info(`follow cron setting : ${constants.DISCORD_FOLLOW_CRON}`);
-    cron.schedule(constants.DISCORD_FOLLOW_CRON, (() => {
-        // follow recruitment member
-        cron_follow_controller_1.CronFollowController.follow_recruitment_member(client);
-    }));
+    cron.schedule(constants.DISCORD_FOLLOW_CRON, (() => __awaiter(void 0, void 0, void 0, function* () {
+        const follow_controller = new cron_follow_controller_1.CronFollowController();
+        yield follow_controller.follow_recruitment_member(client);
+    })));
 }
 catch (err) {
     // loggin error
-    logger_1.logger.error(`fatal error. error = ${err}`);
+    logger_1.logger.error(`fatal error. bot stopped.`, err);
 }
 //# sourceMappingURL=bot.js.map

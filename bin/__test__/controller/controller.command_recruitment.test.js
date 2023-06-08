@@ -15,8 +15,9 @@ const recruitement_1 = require("../../db/recruitement");
 const test_entity_1 = require("../common/test_entity");
 const participate_1 = require("../../db/participate");
 const server_info_1 = require("../../db/server_info");
+const controller = new command_recruitment_controller_1.CommandRecruitmentController();
 function set_show_recruitment_input_modal_mock() {
-    const show_recruitment_input_modal = jest.spyOn(command_recruitment_controller_1.CommandRecruitmentController, 'show_recruitment_input_modal');
+    const show_recruitment_input_modal = jest.spyOn(command_recruitment_controller_1.CommandRecruitmentController.prototype, 'show_recruitment_input_modal');
     show_recruitment_input_modal.mockImplementationOnce((interaction, modal, limit_time, description) => {
         return new Promise((resolve, reject) => {
             resolve(true);
@@ -71,7 +72,7 @@ describe('new recruitment commandtest.', () => {
         test_discord_mock_1.TestDiscordMock.modal_builder_mock();
         // set extra mock
         set_show_recruitment_input_modal_mock();
-        let result = yield command_recruitment_controller_1.CommandRecruitmentController.new_recruitment_input_modal(interaction);
+        let result = yield controller.new_recruitment_input_modal(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -82,13 +83,8 @@ describe('new recruitment commandtest.', () => {
         const interaction = new Mock();
         // get modal builder mock
         test_discord_mock_1.TestDiscordMock.modal_builder_mock();
-        expect.assertions(1);
-        try {
-            yield command_recruitment_controller_1.CommandRecruitmentController.new_recruitment_input_modal(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`show modal for new recruitment error.`);
-        }
+        const result = yield controller.new_recruitment_input_modal(interaction);
+        expect(result).toEqual(false);
     }));
 });
 describe('edit recruitment commandtest.', () => {
@@ -109,7 +105,7 @@ describe('edit recruitment commandtest.', () => {
         // set repository mock
         set_test_repositories();
         expect.assertions(1);
-        let result = yield command_recruitment_controller_1.CommandRecruitmentController.edit_recruitment_input_modal(interaction);
+        let result = yield controller.edit_recruitment_input_modal(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -127,13 +123,8 @@ describe('edit recruitment commandtest.', () => {
                 resolve([]);
             });
         });
-        expect.assertions(1);
-        try {
-            yield command_recruitment_controller_1.CommandRecruitmentController.edit_recruitment_input_modal(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`target user's recruitment is null or 0.`);
-        }
+        const result = yield controller.edit_recruitment_input_modal(interaction);
+        expect(result).toEqual(false);
     }));
 });
 describe('delete recruitment commandtest.', () => {
@@ -153,8 +144,7 @@ describe('delete recruitment commandtest.', () => {
         set_test_repositories();
         // set extra mock
         set_show_recruitment_input_modal_mock();
-        expect.assertions(1);
-        let result = yield command_recruitment_controller_1.CommandRecruitmentController.delete_recruitment(interaction);
+        let result = yield controller.delete_recruitment(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -172,13 +162,8 @@ describe('delete recruitment commandtest.', () => {
                 resolve([]);
             });
         });
-        expect.assertions(1);
-        try {
-            yield command_recruitment_controller_1.CommandRecruitmentController.delete_recruitment(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`target user's recruitment is null or 0.`);
-        }
+        const result = yield controller.delete_recruitment(interaction);
+        expect(result).toEqual(false);
     }));
 });
 //# sourceMappingURL=controller.command_recruitment.test.js.map

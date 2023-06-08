@@ -24,87 +24,90 @@ import * as Discord from 'discord.js';
 import { DiscordCommon } from '../logic/discord_common';
 
 export class CronFollowController {
+
+    public recruitment_repo = new RecruitmentRepository();
+    public participate_repo = new ParticipateRepository();
+    public server_info_repo = new ServerInfoRepository();
+
     /**
      * check follow recruitment and send message
      * @param client discord client
      */
-    static async follow_recruitment_member(client: Discord.Client): Promise<boolean> {
-        return new Promise<boolean>(async (resolve, reject) => {
-            try {
-                // follow to date
-                const to_datetime = new Date();
-                to_datetime.setMinutes(to_datetime.getMinutes() + constants.DISCORD_FOLLOW_MINUTE);
-                logger.info(`follow recruitment cron start. : to_datetime = ${to_datetime.toISOString()}`);
+    async follow_recruitment_member(client: Discord.Client): Promise<boolean> {
+        try {
+            // follow to date
+            const to_datetime = new Date();
+            to_datetime.setMinutes(to_datetime.getMinutes() + constants.DISCORD_FOLLOW_MINUTE);
+            logger.info(`follow recruitment cron start. : to_datetime = ${to_datetime.toISOString()}`);
 
-                // create db instances
-                const recruitment_repo = new RecruitmentRepository();
-                const participate_repo = new ParticipateRepository();
-                const server_info_repo = new ServerInfoRepository();
+            // loop for guild id
+            const server_info_list: ServerInfo[] = await this.server_info_repo.get_m_server_info_all();
+            logger.info(`follow server length = ${server_info_list}`);
 
-                // loop for guild id
-                const server_info_list: ServerInfo[] = await server_info_repo.get_m_server_info_all();
-                logger.info(`follow server length = ${server_info_list}`);
-
-                // if length is 0, return
-                if (server_info_list.length == 0) {
-                    // resolve
-                    resolve(false);
-                }
-
-                let complete_follow_server_length: number = 0;
-                server_info_list.forEach(async (server_info: ServerInfo) => {
-                    try {
-                        // get follow lists
-                        const recruitment_data_list: Recruitment[] = await recruitment_repo.get_m_recruitment_for_follow(server_info.server_id, server_info.follow_time, to_datetime);
-                        logger.info(`select follow data list completed.`);
-                        logger.trace(recruitment_data_list);
-
-                        // get join data and send message
-                        recruitment_data_list.forEach(async (recruitment_data) => {
-                            logger.info(`follow target : name = ${recruitment_data.name}`);
-
-                            // load participate from db
-                            recruitment_data.user_list = await participate_repo.get_t_participate(recruitment_data.token);
-                            logger.info(`follow target select user list completed. : name = ${recruitment_data.name}, user_list_length = ${recruitment_data.user_list.length}`)
-
-                            // if user more than 0 member, followup executed.
-                            if (recruitment_data.user_list.length > 0) {
-                                // search channel
-                                const text_channel: Discord.TextChannel = DiscordCommon.get_text_channel(client, server_info.channel_id);
-                                await text_channel.send({
-                                    embeds: [
-                                        DiscordMessage.get_join_recruitment_follow_message(recruitment_data, server_info.recruitment_target_role),
-                                    ]
-                                });
-                            }
-                        });
-
-                        // update master
-                        await server_info_repo.update_m_server_info_follow_time(server_info.server_id, to_datetime);
-                        logger.info(`follow recruitment cron completed.`);
-                    } catch (err) {
-                        // send error message
-                        logger.error(`cron command failed for error.`);
-                        logger.error(err);
-                    } finally {
-                        complete_follow_server_length = complete_follow_server_length + 1;
-                        logger.info(`follow one server completed. now = ${complete_follow_server_length}, task total = ${server_info_list.length}`);
-
-                        // check could be resolve
-                        if (complete_follow_server_length == server_info_list.length) {
-                            logger.info(`complete all follow server. resolve.`);
-                            // resolve
-                            resolve(true);
-                        }
-                    }
-                });
-            } catch (err) {
-                // send error message
-                logger.error(err);
-
-                // reject
-                reject(`cron command error. error = ${err}`);
+            // if length is 0, return
+            if (server_info_list.length == 0) {
+                // resolve
+                return false;
             }
-        });
+
+            // execute for loop
+            for (const server_info of server_info_list) {
+                await this.execute_logic_for_guild(client, server_info, to_datetime);
+            }
+        } catch (err) {
+            // send error message
+            logger.error(`cron command error.`, err);
+
+            return false;
+        }
+
+        logger.info(`follow one server completed.`);
+        return true;
+    }
+
+    /**
+     * follor for guild
+     * @param client 
+     * @param server_info 
+     * @param to_datetime 
+     */
+    async execute_logic_for_guild(client: Discord.Client, server_info: ServerInfo, to_datetime: Date): Promise<boolean> {
+        try {
+            // get follow lists
+            const recruitment_data_list: Recruitment[] = await this.recruitment_repo.get_m_recruitment_for_follow(server_info.server_id, server_info.follow_time, to_datetime);
+            logger.info(`select follow data list completed.`);
+            logger.trace(recruitment_data_list);
+
+            // get join data and send message
+            recruitment_data_list.forEach(async (recruitment_data) => {
+                logger.info(`follow target : name = ${recruitment_data.name}`);
+
+                // load participate from db
+                recruitment_data.user_list = await this.participate_repo.get_t_participate(recruitment_data.token);
+                logger.info(`follow target select user list completed. : name = ${recruitment_data.name}, user_list_length = ${recruitment_data.user_list.length}`)
+
+                // if user more than 0 member, followup executed.
+                if (recruitment_data.user_list.length > 0) {
+                    // search channel
+                    const text_channel: Discord.TextChannel = DiscordCommon.get_text_channel(client, server_info.channel_id);
+                    await text_channel.send({
+                        embeds: [
+                            DiscordMessage.get_join_recruitment_follow_message(recruitment_data, server_info.recruitment_target_role),
+                        ]
+                    });
+                }
+            });
+
+            // update master
+            await this.server_info_repo.update_m_server_info_follow_time(server_info.server_id, to_datetime);
+            logger.info(`follow recruitment cron completed.`);
+        } catch (err) {
+            // send error message
+            logger.error(`cron command failed for error.`, err);
+
+            return false;
+        };
+
+        return true;
     }
 };

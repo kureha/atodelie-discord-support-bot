@@ -11,6 +11,8 @@ import { FriendCodeRepository } from "../../db/friend_code";
 import { FriendCode } from "../../entity/friend_code";
 import { FriendCodeHistoryRepository } from "../../db/friend_code_history";
 
+const controller = new SelectInteractionFriendCodeController();
+
 describe('select menu search friend codetest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -43,7 +45,7 @@ describe('select menu search friend codetest.', () => {
         });
 
         // expect
-        let result = await SelectInteractionFriendCodeController.search_friend_code(interaction);
+        let result = await controller.search_friend_code(interaction);
         expect(result).toEqual(true);
     });
 
@@ -73,7 +75,7 @@ describe('select menu search friend codetest.', () => {
         });
 
         // expect
-        let result = await SelectInteractionFriendCodeController.search_friend_code(interaction);
+        let result = await controller.search_friend_code(interaction);
         expect(result).toEqual(false);
     });
 
@@ -88,13 +90,8 @@ describe('select menu search friend codetest.', () => {
         interaction.guild = undefined;
 
         // expect
-        expect.assertions(1);
-
-        try {
-            await SelectInteractionFriendCodeController.search_friend_code(interaction);
-        } catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = await controller.search_friend_code(interaction);
+        expect(result).toEqual(false);
     });
 });
 
@@ -132,7 +129,7 @@ describe('select menu regist friend codetest.', () => {
         });
 
         // expect
-        let result = await SelectInteractionFriendCodeController.regist_friend_code(interaction);
+        let result = await controller.regist_friend_code(interaction);
         expect(result).toEqual(true);
     });
 
@@ -147,12 +144,8 @@ describe('select menu regist friend codetest.', () => {
         interaction.guild = undefined;
 
         // expect
-        expect.assertions(1);
-        try {
-            await SelectInteractionFriendCodeController.regist_friend_code(interaction);
-        } catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = await controller.regist_friend_code(interaction);
+        expect(result).toEqual(false);
     });
 });
 
@@ -195,7 +188,7 @@ describe('select menu delete friend codetest.', () => {
         });
 
         // expect
-        let result = await SelectInteractionFriendCodeController.delete_friend_code(interaction);
+        let result = await controller.delete_friend_code(interaction);
         expect(result).toEqual(true);
     });
 
@@ -232,7 +225,7 @@ describe('select menu delete friend codetest.', () => {
         });
 
         // expect
-        let result = await SelectInteractionFriendCodeController.delete_friend_code(interaction);
+        let result = await controller.delete_friend_code(interaction);
         expect(result).toEqual(false);
     });
 
@@ -262,7 +255,7 @@ describe('select menu delete friend codetest.', () => {
         });
 
         // expect
-        let result = await SelectInteractionFriendCodeController.delete_friend_code(interaction);
+        let result = await controller.delete_friend_code(interaction);
         expect(result).toEqual(false);
     });
 
@@ -277,13 +270,10 @@ describe('select menu delete friend codetest.', () => {
         interaction.guild = undefined;
 
         // expect
-        expect.assertions(1);
-        try {
-            await SelectInteractionFriendCodeController.delete_friend_code(interaction);
-        } catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = await controller.delete_friend_code(interaction);
+        expect(result).toEqual(false);
     });
+
     test.each([
         ["test_custom_id", "test_server_id", "test_user_id", "test_game_id"],
     ])("select menu friend code error test (exception for delete record). (%s, %s, %s, %s)", async (custom_id: any, guild_id: any, user_id: any, input_value: any) => {
@@ -317,11 +307,7 @@ describe('select menu delete friend codetest.', () => {
         });
 
         // expect
-        expect.assertions(1);
-        try {
-            await SelectInteractionFriendCodeController.delete_friend_code(interaction);
-        } catch (e) {
-            expect(e).toContain(`data is not affected.`);
-        }
+        const result = await controller.delete_friend_code(interaction);
+        expect(result).toEqual(false);
     });
 });

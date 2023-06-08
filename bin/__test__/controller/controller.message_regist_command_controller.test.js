@@ -13,6 +13,7 @@ const test_discord_mock_1 = require("../common/test_discord_mock");
 const message_regist_command_controller_1 = require("../../controller/message_regist_command_controller");
 const discord_register_command_1 = require("../../logic/discord_register_command");
 const constants_1 = require("../../common/constants");
+const controller = new message_regist_command_controller_1.MessageRegistCommandController();
 describe('regist commandtest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -24,10 +25,10 @@ describe('regist commandtest.', () => {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.message_mock(user_id, constants_1.Constants.STRING_EMPTY);
         const message = new Mock();
-        jest.spyOn(discord_register_command_1.DiscordRegisterCommand, 'regist_command').mockImplementationOnce((client_id) => {
+        jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'regist_command').mockImplementationOnce((client_id) => {
             return new Promise((resolve, reject) => { resolve([]); });
         });
-        let result = yield message_regist_command_controller_1.MessageRegistCommandController.regist_command(message, client_id, false);
+        let result = yield controller.regist_command(message, client_id, false);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -36,10 +37,10 @@ describe('regist commandtest.', () => {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.message_mock(user_id, constants_1.Constants.STRING_EMPTY);
         const message = new Mock();
-        jest.spyOn(discord_register_command_1.DiscordRegisterCommand, 'regist_command').mockImplementationOnce((client_id) => {
+        jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'regist_command').mockImplementationOnce((client_id) => {
             return new Promise((resolve, reject) => { resolve([]); });
         });
-        let result = yield message_regist_command_controller_1.MessageRegistCommandController.regist_command(message, client_id);
+        let result = yield controller.regist_command(message, client_id);
         expect(result).toEqual(false);
     }));
     test.each([
@@ -48,16 +49,11 @@ describe('regist commandtest.', () => {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.message_mock(user_id, constants_1.Constants.STRING_EMPTY);
         const message = new Mock();
-        jest.spyOn(discord_register_command_1.DiscordRegisterCommand, 'regist_command').mockImplementationOnce((client_id) => {
+        jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'regist_command').mockImplementationOnce((client_id) => {
             throw new Error(`test exception`);
         });
-        expect.assertions(1);
-        try {
-            yield message_regist_command_controller_1.MessageRegistCommandController.regist_command(message, client_id, false);
-        }
-        catch (e) {
-            expect(e).toContain(`test exception`);
-        }
+        const result = yield controller.regist_command(message, client_id, false);
+        expect(result).toEqual(false);
     }));
 });
 describe('regist commandtest.', () => {
@@ -66,14 +62,14 @@ describe('regist commandtest.', () => {
         jest.restoreAllMocks();
     });
     test.each([
-        ["test_user_id", "@test_user_id regist", true],
-        ["test_user_id", "regist", false],
+        ["test_user_id", "@test_user_id regist_slash_command", true],
+        ["test_user_id", "regist_slash_command", false],
         ["test_user_id", "", false],
     ])('regist command test', (user_id, contents, exp) => {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.message_mock(user_id, contents);
         const message = new Mock();
-        expect(message_regist_command_controller_1.MessageRegistCommandController.is_regist_command(user_id, message)).toEqual(exp);
+        expect(controller.is_regist_command(user_id, message)).toEqual(exp);
     });
 });
 //# sourceMappingURL=controller.message_regist_command_controller.test.js.map

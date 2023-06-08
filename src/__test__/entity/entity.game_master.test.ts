@@ -10,6 +10,7 @@ describe("entity.game_master test.", () => {
             server_id: Constants.STRING_EMPTY,
             game_id: Constants.STRING_EMPTY,
             game_name: Constants.STRING_EMPTY,
+            presence_name: Constants.STRING_EMPTY,
             regist_time: Constants.get_default_date(),
             update_time: Constants.get_default_date(),
             delete: false,
@@ -18,13 +19,14 @@ describe("entity.game_master test.", () => {
 
     test.each(
         [
-            ["", 0, "", new Date('1970-01-01T00:00:00.000+09:00'), new Date('1970-01-01T00:00:00.000+09:00'), false],
-            ["test_server_id", 999, "test_game_id", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
+            ["", 0, "", "", new Date('1970-01-01T00:00:00.000+09:00'), new Date('1970-01-01T00:00:00.000+09:00'), false],
+            ["test_server_id", 999, "test_game_id", "test_presence_name", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
         ]
     )("test for parse game master info, id = %s", (
         server_id: string,
         game_id: number,
         game_name: string,
+        presence_name: string,
         regist_time: Date,
         update_time: Date,
         deleted: boolean,
@@ -33,6 +35,7 @@ describe("entity.game_master test.", () => {
             server_id: server_id,
             game_id: game_id,
             game_name: game_name,
+            presence_name: presence_name,
             regist_time: regist_time,
             update_time: update_time,
             deleted: deleted,
@@ -40,6 +43,7 @@ describe("entity.game_master test.", () => {
             server_id: server_id,
             game_id: game_id,
             game_name: game_name,
+            presence_name: presence_name,
             regist_time: regist_time,
             update_time: update_time,
             delete: deleted,
@@ -48,14 +52,16 @@ describe("entity.game_master test.", () => {
 
     test.each(
         [
-            [undefined, 999, "test_game_id", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
-            ["test_server_id", undefined, "test_game_id", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
-            ["test_server_id", 999, undefined, new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
+            [undefined, 999, "test_game_id", "test_presence_name", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
+            ["test_server_id", undefined, "test_game_id", "test_presence_name", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
+            ["test_server_id", 999, undefined, "test_presence_name", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
+            ["test_server_id", 999, "test_game_id", undefined, new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
         ]
     )("test for parse error game master info, {%s, %s, %s, %s, %s, %s}", (
         server_id: any,
         game_id: any,
         game_name: any,
+        presence_name: any,
         regist_time: any,
         update_time: any,
         deleted: any,
@@ -64,6 +70,7 @@ describe("entity.game_master test.", () => {
             server_id: server_id,
             game_id: game_id,
             game_name: game_name,
+            presence_name: presence_name,
             regist_time: regist_time,
             update_time: update_time,
             delete: deleted,

@@ -16,6 +16,7 @@ const discord_common_1 = require("../../logic/discord_common");
 const recruitement_1 = require("../../db/recruitement");
 const participate_1 = require("../../db/participate");
 const server_info_1 = require("../../db/server_info");
+const controller = new modal_submit_recruitment_controller_1.ModalSubmitRecruitmentController();
 function set_test_repositories() {
     // get repository mock
     jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_user')
@@ -83,7 +84,7 @@ describe('modal submit friend codetest.', () => {
             return {};
         });
         // expect
-        let result = yield modal_submit_recruitment_controller_1.ModalSubmitRecruitmentController.regist(interaction);
+        let result = yield controller.regist(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -118,7 +119,7 @@ describe('modal submit friend codetest.', () => {
             return {};
         });
         // expect
-        let result = yield modal_submit_recruitment_controller_1.ModalSubmitRecruitmentController.edit(interaction);
+        let result = yield controller.edit(interaction);
         expect(result).toEqual(true);
     }));
 });

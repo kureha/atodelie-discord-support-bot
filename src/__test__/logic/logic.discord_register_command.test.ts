@@ -9,6 +9,8 @@ jest.mock('@discordjs/rest');
 
 const RestMock = REST as unknown as jest.Mock;
 
+const controller = new DiscordRegisterCommand();
+
 function mock_discord_rest() {
     RestMock.mockReset();
     RestMock.mockImplementation(() => {
@@ -24,15 +26,15 @@ function mock_discord_rest() {
         }
     });
 
-    jest.spyOn(DiscordRegisterCommand, 'get_url_for_guild_based_command').mockImplementation((client_id: string, guild_id: string): any => {
+    jest.spyOn(DiscordRegisterCommand.prototype, 'get_url_for_guild_based_command').mockImplementation((client_id: string, guild_id: string): any => {
         return `/test`;
     });
 
-    jest.spyOn(DiscordRegisterCommand, 'get_slash_command').mockImplementation((name: string, desc: string): any => {
+    jest.spyOn(DiscordRegisterCommand.prototype, 'get_slash_command').mockImplementation((name: string, desc: string): any => {
         return {};
     });
 
-    jest.spyOn(DiscordRegisterCommand, 'get_regist_slash_command_body').mockImplementation((command_list: any[]): any => {
+    jest.spyOn(DiscordRegisterCommand.prototype, 'get_regist_slash_command_body').mockImplementation((command_list: any[]): any => {
         return 'test_body';
     });
 }
@@ -54,7 +56,7 @@ describe("regist_command test.", () => {
             });
         });
 
-        const result: ServerInfo[] = await DiscordRegisterCommand.regist_command('test_client_id');
+        const result: ServerInfo[] = await controller.regist_command('test_client_id');
         expect(result.length).toEqual(1);
         expect(result[0]).toStrictEqual(TestEntity.get_test_server_info());
     });
@@ -70,7 +72,7 @@ describe("regist_command test.", () => {
             });
         });
 
-        const result: ServerInfo[] = await DiscordRegisterCommand.regist_command('test_client_id');
+        const result: ServerInfo[] = await controller.regist_command('test_client_id');
         expect(result.length).toEqual(0);
     });
 });

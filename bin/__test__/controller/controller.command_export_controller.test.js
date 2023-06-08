@@ -17,6 +17,7 @@ const test_entity_1 = require("../common/test_entity");
 const export_user_info_1 = require("../../logic/export_user_info");
 jest.mock("../../logic/export_user_info");
 const ExportUserInfoMock = export_user_info_1.ExportUserInfo;
+const controller = new command_export_controller_1.CommandExportController();
 /**
  * export user info mock
  * @param data_list
@@ -56,8 +57,8 @@ describe('export user infotest.', () => {
             test_entity_1.TestEntity.get_test_user_info(3, 2),
         ]);
         // expect
-        yield expect(command_export_controller_1.CommandExportController.export_user_info(interaction, false)).resolves.toEqual(true);
-        yield expect(command_export_controller_1.CommandExportController.export_user_info(interaction)).resolves.toEqual(false);
+        yield expect(controller.export_user_info(interaction, false)).resolves.toEqual(true);
+        yield expect(controller.export_user_info(interaction)).resolves.toEqual(false);
     }));
     test.each([
         ["test_custom_id", "test_server_id", "test_user_id"],
@@ -70,13 +71,8 @@ describe('export user infotest.', () => {
         // get export user info mock
         get_export_user_info_mock([]);
         // expect
-        expect.assertions(1);
-        try {
-            yield command_export_controller_1.CommandExportController.export_user_info(interaction);
-        }
-        catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = yield controller.export_user_info(interaction);
+        expect(result).toEqual(false);
     }));
 });
 //# sourceMappingURL=controller.command_export_controller.test.js.map

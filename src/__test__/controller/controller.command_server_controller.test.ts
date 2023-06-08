@@ -7,6 +7,8 @@ import * as Discord from 'discord.js';
 import { DiscordCommon } from '../../logic/discord_common';
 import { CommandServerController } from "../../controller/command_server_controller";
 
+const controller = new CommandServerController();
+
 describe('slash command select menu regist server mastertest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -25,7 +27,7 @@ describe('slash command select menu regist server mastertest.', () => {
             return {};
         });
 
-        let result = await CommandServerController.regist_server_master(interaction, false);
+        let result = await controller.regist_server_master(interaction, false);
         expect(result).toEqual(true);
     });
 
@@ -44,11 +46,8 @@ describe('slash command select menu regist server mastertest.', () => {
             return {};
         });
 
-        try {
-            await CommandServerController.regist_server_master(interaction, false);
-        } catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = await controller.regist_server_master(interaction);
+        expect(result).toEqual(false);
     });
 
     test.each([
@@ -63,7 +62,7 @@ describe('slash command select menu regist server mastertest.', () => {
             return {};
         });
 
-        let result = await CommandServerController.regist_server_master(interaction);
+        let result = await controller.regist_server_master(interaction);
         expect(result).toEqual(false);
     });
 });

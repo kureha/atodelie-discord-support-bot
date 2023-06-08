@@ -12,6 +12,8 @@ import { FriendCodeHistoryRepository } from '../../db/friend_code_history';
 import { DiscordCommon } from "../../logic/discord_common";
 import { GameMaster } from "../../entity/game_master";
 
+const controller = new ModalSubmitFriendCodeController();
+
 describe('modal submit friend codetest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -51,7 +53,7 @@ describe('modal submit friend codetest.', () => {
         });
 
         // expect
-        let result = await ModalSubmitFriendCodeController.regist(interaction);
+        let result = await controller.regist(interaction);
         expect(result).toEqual(true);
     });
 
@@ -89,7 +91,7 @@ describe('modal submit friend codetest.', () => {
         });
 
         // expect
-        let result = await ModalSubmitFriendCodeController.regist(interaction);
+        let result = await controller.regist(interaction);
         expect(result).toEqual(true);
     });
 
@@ -127,12 +129,8 @@ describe('modal submit friend codetest.', () => {
         });
 
         // expect
-        expect.assertions(1);
-        try {
-            await ModalSubmitFriendCodeController.regist(interaction);
-        } catch (e) {
-            expect(e).toContain("data is not affected.");
-        }
+        const result = await controller.regist(interaction);
+        expect(result).toEqual(false);
     });
 
     test.each([
@@ -169,12 +167,8 @@ describe('modal submit friend codetest.', () => {
         });
 
         // expect
-        expect.assertions(1);
-        try {
-            await ModalSubmitFriendCodeController.regist(interaction);
-        } catch (e) {
-            expect(e).toContain("data is not affected.");
-        }
+        const result = await controller.regist(interaction);
+        expect(result).toEqual(false);
     });
 
     test.each([
@@ -203,11 +197,7 @@ describe('modal submit friend codetest.', () => {
 
         // no mock for discord common - for system exception
         // expect
-        expect.assertions(1);
-        try {
-            await ModalSubmitFriendCodeController.regist(interaction);
-        } catch (e) {
-            expect(e).toContain("regist friend code error.");
-        }
+        const result = await controller.regist(interaction);
+        expect(result).toEqual(false);
     });
 });

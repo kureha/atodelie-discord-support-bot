@@ -7,6 +7,9 @@ import { Version } from "../../entity/version";
 
 import { Constants } from "../../common/constants";
 import { RoleInfo, UserInfo } from "../../entity/user_info";
+import { ActivityHistory } from "../../entity/activity_history";
+import { AnnouncementHistory } from "../../entity/announcement_history";
+import { AnnouncementInfo } from "../../entity/announcement_info";
 const constants = new Constants();
 
 export class TestEntity {
@@ -102,6 +105,7 @@ export class TestEntity {
         test_gm_info.server_id = "test_server_id";
         test_gm_info.game_id = "test_game_id";
         test_gm_info.game_name = "test_game_name";
+        test_gm_info.presence_name = "test_presence_name";
         test_gm_info.regist_time = new Date("2099-02-03T01:02:03.000Z");
         test_gm_info.update_time = new Date("2099-12-31T11:59:59.000Z");
         test_gm_info.delete = false;
@@ -146,5 +150,59 @@ export class TestEntity {
         }
 
         return role_list;
+    }
+
+    /**
+     * Return activity for test
+     * @param regist_change_timetime 
+     * @returns 
+     */
+    static get_test_activity(change_time: Date): ActivityHistory {
+        const v = new ActivityHistory();
+
+        v.server_id = "test-server-id";
+        v.channel_id = "test-channel-id";
+        v.game_name = "test-game";
+        v.member_count = 3;
+        v.change_time = change_time;
+        v.regist_time = new Date("2099-02-03T01:02:03.000Z");
+        v.update_time = new Date("2099-02-03T01:02:03.000Z");
+        v.delete = false;
+
+        return v;
+    }
+
+    /**
+     * Return announcement history for test
+     * @param announcement_time 
+     * @returns 
+     */
+    static get_test_announcement_history(announcement_time: Date): AnnouncementHistory {
+        const v = new AnnouncementHistory();
+
+        v.server_id = "test-server-id";
+        v.channel_id = "test-channel-id";
+        v.game_name = "test-game";
+        v.announcement_time = announcement_time;
+
+        return v;
+    }
+
+    /**
+     * Return announcement info for test
+     * @param announcement_time 
+     * @returns 
+     */
+    static get_test_announcement_info(announcement_time: Date): AnnouncementInfo {
+        const v = new AnnouncementInfo();
+
+        v.server_id = "test-server-id";
+        v.channel_id = "test-channel-id";
+        v.game_name = "test-game";
+        v.current_game_member_count = 1;
+        v.max_total_member_count = 1;
+        v.game_start_time = announcement_time;
+
+        return v;
     }
 }

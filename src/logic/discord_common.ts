@@ -87,18 +87,15 @@ export class DiscordCommon {
             force: true
         });
 
-        // check result and resolve / reject
-        return new Promise<Discord.VoiceChannel>((resolve, reject) => {
-            if (fetch_channel == undefined) {
-                // check channel is null
-                reject(`Target channel is not exists.`);
-            } else if (fetch_channel.isVoiceBased()) {
-                // check channel types
-                resolve(fetch_channel as Discord.VoiceChannel);
-            } else {
-                reject(`Target channel is not voice channel.`);
-            }
-        });
+        if (fetch_channel == undefined) {
+            // check channel is null
+            throw `Target channel is not exists.`;
+        } else if (fetch_channel.isVoiceBased()) {
+            // check channel types
+            return fetch_channel as Discord.VoiceChannel;
+        } else {
+            throw `Target channel is not voice channel.`;
+        }
     }
 
     /**
@@ -325,8 +322,8 @@ export class DiscordCommon {
      * @param split_length select menu's length. discord's limit is 25.
      * @returns 
      */
-    static get_game_master_list_select_menu(custom_id: string, game_master_list: GameMaster[], split_length: number): Discord.ActionRowBuilder<Discord.SelectMenuBuilder>[] {
-        const row_list: Discord.ActionRowBuilder<Discord.SelectMenuBuilder>[] = [];
+    static get_game_master_list_select_menu(custom_id: string, game_master_list: GameMaster[], split_length: number): Discord.ActionRowBuilder<Discord.StringSelectMenuBuilder>[] {
+        const row_list: Discord.ActionRowBuilder<Discord.StringSelectMenuBuilder>[] = [];
 
         // check input value
         if (split_length < 1) {
@@ -339,7 +336,7 @@ export class DiscordCommon {
             logger.info(`create game select menu. idx = ${select_idx}, custom_id = ${select_custom_id}`);
 
             // create select menu
-            const select_menu = new Discord.SelectMenuBuilder()
+            const select_menu = new Discord.StringSelectMenuBuilder()
                 .setCustomId(select_custom_id);
 
             // buffer of option label list
@@ -369,7 +366,7 @@ export class DiscordCommon {
             select_menu.setPlaceholder(`${options_label_list[0]} ～ ${options_label_list[options_label_list.length - 1]}`);
 
             // push component to action row builder
-            row_list.push(new Discord.ActionRowBuilder<Discord.SelectMenuBuilder>()
+            row_list.push(new Discord.ActionRowBuilder<Discord.StringSelectMenuBuilder>()
                 .addComponents(select_menu));
         }
 
@@ -383,7 +380,7 @@ export class DiscordCommon {
      * @param guild 
      * @returns 
      */
-    static get_role_list_select_menu(custom_id: string, placeholder: string, guild: Discord.Guild): Discord.ActionRowBuilder<Discord.SelectMenuBuilder> {
+    static get_role_list_select_menu(custom_id: string, placeholder: string, guild: Discord.Guild): Discord.ActionRowBuilder<Discord.StringSelectMenuBuilder> {
         // collect roles
         const role_list: RoleInfo[] = [];
         guild.roles.cache.forEach((role: Discord.Role) => {
@@ -391,7 +388,7 @@ export class DiscordCommon {
         });
 
         // show role list
-        const select_members = new Discord.SelectMenuBuilder()
+        const select_members = new Discord.StringSelectMenuBuilder()
             .setCustomId(custom_id)
             .setPlaceholder(placeholder);
 
@@ -404,7 +401,7 @@ export class DiscordCommon {
         });
 
         // create action row
-        return new Discord.ActionRowBuilder<Discord.SelectMenuBuilder>()
+        return new Discord.ActionRowBuilder<Discord.StringSelectMenuBuilder>()
             .addComponents(select_members);
     }
     //#endregion

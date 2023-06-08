@@ -114,20 +114,17 @@ class DiscordCommon {
                 cache: false,
                 force: true
             });
-            // check result and resolve / reject
-            return new Promise((resolve, reject) => {
-                if (fetch_channel == undefined) {
-                    // check channel is null
-                    reject(`Target channel is not exists.`);
-                }
-                else if (fetch_channel.isVoiceBased()) {
-                    // check channel types
-                    resolve(fetch_channel);
-                }
-                else {
-                    reject(`Target channel is not voice channel.`);
-                }
-            });
+            if (fetch_channel == undefined) {
+                // check channel is null
+                throw `Target channel is not exists.`;
+            }
+            else if (fetch_channel.isVoiceBased()) {
+                // check channel types
+                return fetch_channel;
+            }
+            else {
+                throw `Target channel is not voice channel.`;
+            }
         });
     }
     /**
@@ -345,7 +342,7 @@ class DiscordCommon {
             const select_custom_id = `${custom_id}-${select_idx}`;
             logger_1.logger.info(`create game select menu. idx = ${select_idx}, custom_id = ${select_custom_id}`);
             // create select menu
-            const select_menu = new Discord.SelectMenuBuilder()
+            const select_menu = new Discord.StringSelectMenuBuilder()
                 .setCustomId(select_custom_id);
             // buffer of option label list
             const options_label_list = [];
@@ -390,7 +387,7 @@ class DiscordCommon {
             role_list.push(user_info_1.RoleInfo.parse_from_discordjs(role));
         });
         // show role list
-        const select_members = new Discord.SelectMenuBuilder()
+        const select_members = new Discord.StringSelectMenuBuilder()
             .setCustomId(custom_id)
             .setPlaceholder(placeholder);
         // add select values
@@ -451,7 +448,6 @@ class DiscordCommon {
             .setStyle(input_style);
     }
 }
-exports.DiscordCommon = DiscordCommon;
 /**
  * define button style
  */
@@ -463,4 +459,5 @@ DiscordCommon.BUTTON_STYLE_SUCCESS = 3;
  */
 DiscordCommon.TEXT_INPUT_STYLE_SHORT = 1;
 DiscordCommon.TEXT_INPUT_STYLE_PHARAGRAPH = 2;
+exports.DiscordCommon = DiscordCommon;
 //# sourceMappingURL=discord_common.js.map

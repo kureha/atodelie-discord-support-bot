@@ -16,6 +16,7 @@ const test_entity_1 = require("../common/test_entity");
 // mock all objects
 jest.mock('@discordjs/rest');
 const RestMock = rest_1.REST;
+const controller = new discord_register_command_1.DiscordRegisterCommand();
 function mock_discord_rest() {
     RestMock.mockReset();
     RestMock.mockImplementation(() => {
@@ -30,13 +31,13 @@ function mock_discord_rest() {
             },
         };
     });
-    jest.spyOn(discord_register_command_1.DiscordRegisterCommand, 'get_url_for_guild_based_command').mockImplementation((client_id, guild_id) => {
+    jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'get_url_for_guild_based_command').mockImplementation((client_id, guild_id) => {
         return `/test`;
     });
-    jest.spyOn(discord_register_command_1.DiscordRegisterCommand, 'get_slash_command').mockImplementation((name, desc) => {
+    jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'get_slash_command').mockImplementation((name, desc) => {
         return {};
     });
-    jest.spyOn(discord_register_command_1.DiscordRegisterCommand, 'get_regist_slash_command_body').mockImplementation((command_list) => {
+    jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'get_regist_slash_command_body').mockImplementation((command_list) => {
         return 'test_body';
     });
 }
@@ -54,7 +55,7 @@ describe("regist_command test.", () => {
                 resolve([test_entity_1.TestEntity.get_test_server_info()]);
             });
         });
-        const result = yield discord_register_command_1.DiscordRegisterCommand.regist_command('test_client_id');
+        const result = yield controller.regist_command('test_client_id');
         expect(result.length).toEqual(1);
         expect(result[0]).toStrictEqual(test_entity_1.TestEntity.get_test_server_info());
     }));
@@ -67,7 +68,7 @@ describe("regist_command test.", () => {
                 resolve([]);
             });
         });
-        const result = yield discord_register_command_1.DiscordRegisterCommand.regist_command('test_client_id');
+        const result = yield controller.regist_command('test_client_id');
         expect(result.length).toEqual(0);
     }));
 });

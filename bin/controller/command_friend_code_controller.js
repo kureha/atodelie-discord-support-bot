@@ -23,102 +23,99 @@ class CommandFriendCodeController {
      * list friend code for user. return user list select menu.
      * @param interaction
      */
-    static search_friend_code(interaction) {
+    search_friend_code(interaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                try {
-                    // get obejct from discord.
-                    if (interaction.guild == undefined) {
-                        throw new Error(`Discord interaction guild is undefined.`);
-                    }
-                    logger_1.logger.info(`request search friend code.`);
-                    // game master list
-                    const game_master_list = discord_common_1.DiscordCommon.get_game_master_from_guild(interaction.guild, constants.DISCORD_FRIEND_CODE_IGNORE_ROLE_LIST, constants.DISCORD_FRIEND_CODE_OTHER_COUNT);
-                    // get select game master action row list
-                    const select_game_master_action_row_list = discord_common_1.DiscordCommon.get_game_master_list_select_menu(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_SEARCH_FRIEND_CODE_BY_GAME_NAME_LIST, game_master_list, constants.DiSCORD_SELECT_MENU_LIMIT_LENGTH);
-                    logger_1.logger.info(`create game master list completed. length = ${game_master_list.length}`);
-                    // show select
-                    yield interaction.reply({
-                        content: discord_message_1.DiscordMessage.get_friend_code_message(constants.DISCORD_MESSAGE_SELECT_GAME_MASTER_FOR_SEARCH_FRIEND_CODE, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY),
-                        components: select_game_master_action_row_list,
-                        ephemeral: true,
-                    });
-                    resolve(true);
+            try {
+                // get obejct from discord.
+                if (interaction.guild == undefined) {
+                    throw new Error(`Discord interaction guild is undefined.`);
                 }
-                catch (err) {
-                    logger_1.logger.error(err);
-                    yield interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
-                    reject(`get select menu for search friend code error. error = ${err}`);
-                }
-            }));
+                logger_1.logger.info(`request search friend code.`);
+                // game master list
+                const game_master_list = discord_common_1.DiscordCommon.get_game_master_from_guild(interaction.guild, constants.DISCORD_FRIEND_CODE_IGNORE_ROLE_LIST, constants.DISCORD_FRIEND_CODE_OTHER_COUNT);
+                // get select game master action row list
+                const select_game_master_action_row_list = discord_common_1.DiscordCommon.get_game_master_list_select_menu(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_SEARCH_FRIEND_CODE_BY_GAME_NAME_LIST, game_master_list, constants.DiSCORD_SELECT_MENU_LIMIT_LENGTH);
+                logger_1.logger.info(`create game master list completed. length = ${game_master_list.length}`);
+                // show select
+                yield interaction.reply({
+                    content: discord_message_1.DiscordMessage.get_friend_code_message(constants.DISCORD_MESSAGE_SELECT_GAME_MASTER_FOR_SEARCH_FRIEND_CODE, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY),
+                    components: select_game_master_action_row_list,
+                    ephemeral: true,
+                });
+            }
+            catch (err) {
+                logger_1.logger.error(`get select menu for search friend code error.`, err);
+                yield interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+                return false;
+            }
+            logger_1.logger.info(`get select menu for search friend code completed.`);
+            return true;
         });
     }
     /**
      * regist friend code. return game list select menu.
      * @param interaction
      */
-    static regist_friend_code(interaction) {
+    regist_friend_code(interaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                try {
-                    // get obejct from discord.
-                    if (interaction.guild == undefined) {
-                        throw new Error(`Discord interaction guild is undefined.`);
-                    }
-                    logger_1.logger.info(`request select game list for regist friend code.`);
-                    // game master list
-                    const game_master_list = discord_common_1.DiscordCommon.get_game_master_from_guild(interaction.guild, constants.DISCORD_FRIEND_CODE_IGNORE_ROLE_LIST, constants.DISCORD_FRIEND_CODE_OTHER_COUNT);
-                    // get select game master action row list
-                    const select_game_master_action_row_list = discord_common_1.DiscordCommon.get_game_master_list_select_menu(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_REGIST_FRIEND_CODE_BY_GAME_NAME_LIST, game_master_list, constants.DiSCORD_SELECT_MENU_LIMIT_LENGTH);
-                    logger_1.logger.info(`create game master list completed. length = ${game_master_list.length}`);
-                    // show select
-                    yield interaction.reply({
-                        content: discord_message_1.DiscordMessage.get_friend_code_message(constants.DISCORD_MESSAGE_SELECT_GAME_MASTER_FOR_REGIST_FRIEND_CODE, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY),
-                        components: select_game_master_action_row_list,
-                        ephemeral: true,
-                    });
-                    resolve(true);
+            try {
+                // get obejct from discord.
+                if (interaction.guild == undefined) {
+                    throw new Error(`Discord interaction guild is undefined.`);
                 }
-                catch (err) {
-                    logger_1.logger.error(err);
-                    yield interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
-                    reject(`get select menu for regist friend code error. error = ${err}`);
-                }
-            }));
+                logger_1.logger.info(`request select game list for regist friend code.`);
+                // game master list
+                const game_master_list = discord_common_1.DiscordCommon.get_game_master_from_guild(interaction.guild, constants.DISCORD_FRIEND_CODE_IGNORE_ROLE_LIST, constants.DISCORD_FRIEND_CODE_OTHER_COUNT);
+                // get select game master action row list
+                const select_game_master_action_row_list = discord_common_1.DiscordCommon.get_game_master_list_select_menu(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_REGIST_FRIEND_CODE_BY_GAME_NAME_LIST, game_master_list, constants.DiSCORD_SELECT_MENU_LIMIT_LENGTH);
+                logger_1.logger.info(`create game master list completed. length = ${game_master_list.length}`);
+                // show select
+                yield interaction.reply({
+                    content: discord_message_1.DiscordMessage.get_friend_code_message(constants.DISCORD_MESSAGE_SELECT_GAME_MASTER_FOR_REGIST_FRIEND_CODE, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY),
+                    components: select_game_master_action_row_list,
+                    ephemeral: true,
+                });
+            }
+            catch (err) {
+                logger_1.logger.error(`get select menu for regist friend code error.`, err);
+                yield interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+                return false;
+            }
+            logger_1.logger.info(`get select menu for regist friend code completed.`);
+            return true;
         });
     }
     /**
      * delete friend code. return game list select menu.
      * @param interaction
      */
-    static delete_friend_code(interaction) {
+    delete_friend_code(interaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                try {
-                    // get obejct from discord.
-                    if (interaction.guild == undefined) {
-                        throw new Error(`Discord interaction guild is undefined.`);
-                    }
-                    logger_1.logger.info(`request select game list for delete friend code.`);
-                    // game master list
-                    const game_master_list = discord_common_1.DiscordCommon.get_game_master_from_guild(interaction.guild, constants.DISCORD_FRIEND_CODE_IGNORE_ROLE_LIST, constants.DISCORD_FRIEND_CODE_OTHER_COUNT);
-                    // get select game master action row list
-                    const select_game_master_action_row_list = discord_common_1.DiscordCommon.get_game_master_list_select_menu(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_DELETE_FRIEND_CODE_BY_GAME_NAME_LIST, game_master_list, constants.DiSCORD_SELECT_MENU_LIMIT_LENGTH);
-                    logger_1.logger.info(`create game master list completed. length = ${game_master_list.length}`);
-                    // show select
-                    yield interaction.reply({
-                        content: discord_message_1.DiscordMessage.get_friend_code_message(constants.DISCORD_MESSAGE_SELECT_GAME_MASTER_FOR_DELETE_FRIEND_CODE, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY),
-                        components: select_game_master_action_row_list,
-                        ephemeral: true,
-                    });
-                    resolve(true);
+            try {
+                // get obejct from discord.
+                if (interaction.guild == undefined) {
+                    throw new Error(`Discord interaction guild is undefined.`);
                 }
-                catch (err) {
-                    logger_1.logger.error(err);
-                    yield interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
-                    reject(`get select menu for delete friend code error. error = ${err}`);
-                }
-            }));
+                logger_1.logger.info(`request select game list for delete friend code.`);
+                // game master list
+                const game_master_list = discord_common_1.DiscordCommon.get_game_master_from_guild(interaction.guild, constants.DISCORD_FRIEND_CODE_IGNORE_ROLE_LIST, constants.DISCORD_FRIEND_CODE_OTHER_COUNT);
+                // get select game master action row list
+                const select_game_master_action_row_list = discord_common_1.DiscordCommon.get_game_master_list_select_menu(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_DELETE_FRIEND_CODE_BY_GAME_NAME_LIST, game_master_list, constants.DiSCORD_SELECT_MENU_LIMIT_LENGTH);
+                logger_1.logger.info(`create game master list completed. length = ${game_master_list.length}`);
+                // show select
+                yield interaction.reply({
+                    content: discord_message_1.DiscordMessage.get_friend_code_message(constants.DISCORD_MESSAGE_SELECT_GAME_MASTER_FOR_DELETE_FRIEND_CODE, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY, constants_1.Constants.STRING_EMPTY),
+                    components: select_game_master_action_row_list,
+                    ephemeral: true,
+                });
+            }
+            catch (err) {
+                logger_1.logger.error(`get select menu for delete friend code error.`, err);
+                yield interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+                return false;
+            }
+            logger_1.logger.info(`get select menu for delete friend code completed.`);
+            return true;
         });
     }
 }

@@ -2,53 +2,18 @@ import { RecruitmentRepository } from '../../db/recruitement';
 
 import { Recruitment } from '../../entity/recruitment';
 
-// import constants
-import { Constants } from '../../common/constants';
-const constants = new Constants();
-
 // import test entities
 import { TestEntity } from '../common/test_entity';
 
-import * as fs from 'fs';
-
-const sqlite_file: string = './.data/db.recruitment.test.sqlite';
-
-describe("db.recruitment intialize test", () => {
-    test("test for initialize", async () => {
-        const rep = new RecruitmentRepository(":memory:");
-        await expect(rep.create_all_database(rep.get_db_instance(":memory:"))).resolves;
-    });
-});
+// get rep
+const rep = new RecruitmentRepository();
 
 describe("db.recruitment test.", () => {
-    // copy test file for test
-    beforeEach(() => {
-        // delete file if exists
-        if (fs.existsSync(sqlite_file)) {
-            fs.rmSync(sqlite_file);
-        }
-
-        // copy file
-        fs.copyFileSync(constants.SQLITE_TEMPLATE_FILE, sqlite_file);
-    });
-
-    // delete test file alter all
-    afterAll(() => {
-        // delete file if exists
-        if (fs.existsSync(sqlite_file)) {
-            fs.rmSync(sqlite_file);
-        }
-    });
-
-    test("constructor test", () => {
-        const rep = new RecruitmentRepository(sqlite_file);
-        expect(fs.existsSync(rep.get_sqlite_file_path())).toBeTruthy();
-        expect(fs.existsSync(rep.get_sqlite_file_path() + ".notfound")).toBeFalsy();
+    beforeEach(async () => {
+        await rep.delete_m_recruitment_all();
     });
 
     test("select recruitment test: empty result", async () => {
-        const rep = new RecruitmentRepository(sqlite_file);
-
         // expect assertion 1
         expect.assertions(1);
 
@@ -61,8 +26,6 @@ describe("db.recruitment test.", () => {
     });
 
     test("get max recruitment id test", async () => {
-        const rep = new RecruitmentRepository(sqlite_file);
-
         // initial number is 1
         await expect(rep.get_m_recruitment_id()).resolves.toEqual(1);
 
@@ -77,8 +40,6 @@ describe("db.recruitment test.", () => {
     });
 
     test("get recruitment token test", async () => {
-        const rep = new RecruitmentRepository(sqlite_file);
-
         // get instance
         let test_rec = TestEntity.get_test_recruitment();
 
@@ -104,8 +65,6 @@ describe("db.recruitment test.", () => {
     });
 
     test("select recruitment test: insert -> select(normal)", async () => {
-        const rep = new RecruitmentRepository(sqlite_file);
-
         // test insert onject 1
         let test_rec = TestEntity.get_test_recruitment();
         let cnt = await rep.insert_m_recruitment(test_rec);
@@ -162,8 +121,6 @@ describe("db.recruitment test.", () => {
     });
 
     test("insert and update test: insert -> select -> update -> select", async () => {
-        const rep = new RecruitmentRepository(sqlite_file);
-
         // test insert onject 1
         let test_rec = TestEntity.get_test_recruitment();
         let cnt = await rep.insert_m_recruitment(test_rec);
@@ -190,8 +147,6 @@ describe("db.recruitment test.", () => {
     });
 
     test("insert and delete test: insert -> select -> delete -> select", async () => {
-        const rep = new RecruitmentRepository(sqlite_file);
-
         // test insert onject 1
         let test_rec = TestEntity.get_test_recruitment();
         let cnt = await rep.insert_m_recruitment(test_rec);
@@ -216,8 +171,6 @@ describe("db.recruitment test.", () => {
     });
 
     test("select for user, follow, message_id, latests test", async () => {
-        const rep = new RecruitmentRepository(sqlite_file);
-
         // test insert onject 1
         let test_rec_1 = TestEntity.get_test_recruitment();
         let cnt = await rep.insert_m_recruitment(test_rec_1);
@@ -350,7 +303,6 @@ describe("db.recruitment test.", () => {
     });
 
     test("update or delete non-found recruitment test", async () => {
-        const rep = new RecruitmentRepository(sqlite_file);
         let cnt = await rep.update_m_recruitment(TestEntity.get_test_recruitment());
         expect(cnt).toEqual(0);
         cnt = await rep.delete_m_recruitment(TestEntity.get_test_recruitment().token);

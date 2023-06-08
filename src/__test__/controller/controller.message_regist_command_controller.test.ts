@@ -7,6 +7,8 @@ import { DiscordRegisterCommand } from "../../logic/discord_register_command";
 import { Constants } from '../../common/constants';
 import { ServerInfo } from "../../entity/server_info";
 
+const controller = new MessageRegistCommandController();
+
 describe('regist commandtest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -20,11 +22,11 @@ describe('regist commandtest.', () => {
         const Mock = TestDiscordMock.message_mock(user_id, Constants.STRING_EMPTY);
         const message = new Mock();
 
-        jest.spyOn(DiscordRegisterCommand, 'regist_command').mockImplementationOnce((client_id: string): Promise<ServerInfo[]> => {
+        jest.spyOn(DiscordRegisterCommand.prototype, 'regist_command').mockImplementationOnce((client_id: string): Promise<ServerInfo[]> => {
             return new Promise<ServerInfo[]>((resolve, reject) => { resolve([]) });
         });
 
-        let result = await MessageRegistCommandController.regist_command(message, client_id, false);
+        let result = await controller.regist_command(message, client_id, false);
         expect(result).toEqual(true);
     });
 
@@ -35,11 +37,11 @@ describe('regist commandtest.', () => {
         const Mock = TestDiscordMock.message_mock(user_id, Constants.STRING_EMPTY);
         const message = new Mock();
 
-        jest.spyOn(DiscordRegisterCommand, 'regist_command').mockImplementationOnce((client_id: string): Promise<ServerInfo[]> => {
+        jest.spyOn(DiscordRegisterCommand.prototype, 'regist_command').mockImplementationOnce((client_id: string): Promise<ServerInfo[]> => {
             return new Promise<ServerInfo[]>((resolve, reject) => { resolve([]) });
         });
 
-        let result = await MessageRegistCommandController.regist_command(message, client_id);
+        let result = await controller.regist_command(message, client_id);
         expect(result).toEqual(false);
     });
 
@@ -50,16 +52,12 @@ describe('regist commandtest.', () => {
         const Mock = TestDiscordMock.message_mock(user_id, Constants.STRING_EMPTY);
         const message = new Mock();
 
-        jest.spyOn(DiscordRegisterCommand, 'regist_command').mockImplementationOnce((client_id: string) => {
+        jest.spyOn(DiscordRegisterCommand.prototype, 'regist_command').mockImplementationOnce((client_id: string) => {
             throw new Error(`test exception`);
         });
 
-        expect.assertions(1);
-        try {
-            await MessageRegistCommandController.regist_command(message, client_id, false);
-        } catch (e) {
-            expect(e).toContain(`test exception`);
-        }
+        const result = await controller.regist_command(message, client_id, false);
+        expect(result).toEqual(false);
     });
 });
 
@@ -70,14 +68,14 @@ describe('regist commandtest.', () => {
     });
 
     test.each([
-        ["test_user_id", "@test_user_id regist", true],
-        ["test_user_id", "regist", false],
+        ["test_user_id", "@test_user_id regist_slash_command", true],
+        ["test_user_id", "regist_slash_command", false],
         ["test_user_id", "", false],
     ])('regist command test', (user_id: any, contents: any, exp: boolean) => {
         // get mock
         const Mock = TestDiscordMock.message_mock(user_id, contents);
         const message = new Mock();
 
-        expect(MessageRegistCommandController.is_regist_command(user_id, message)).toEqual(exp);
+        expect(controller.is_regist_command(user_id, message)).toEqual(exp);
     });
 });

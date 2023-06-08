@@ -13,6 +13,7 @@ const test_discord_mock_1 = require("../common/test_discord_mock");
 // setup discord common mock
 const discord_common_1 = require("../../logic/discord_common");
 const command_server_controller_1 = require("../../controller/command_server_controller");
+const controller = new command_server_controller_1.CommandServerController();
 describe('slash command select menu regist server mastertest.', () => {
     afterEach(() => {
         jest.resetAllMocks();
@@ -28,7 +29,7 @@ describe('slash command select menu regist server mastertest.', () => {
         jest.spyOn(discord_common_1.DiscordCommon, 'get_role_list_select_menu').mockImplementationOnce((custom_id, placeholder, guild) => {
             return {};
         });
-        let result = yield command_server_controller_1.CommandServerController.regist_server_master(interaction, false);
+        let result = yield controller.regist_server_master(interaction, false);
         expect(result).toEqual(true);
     }));
     test.each([
@@ -43,12 +44,8 @@ describe('slash command select menu regist server mastertest.', () => {
         jest.spyOn(discord_common_1.DiscordCommon, 'get_role_list_select_menu').mockImplementationOnce((custom_id, placeholder, guild) => {
             return {};
         });
-        try {
-            yield command_server_controller_1.CommandServerController.regist_server_master(interaction, false);
-        }
-        catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = yield controller.regist_server_master(interaction);
+        expect(result).toEqual(false);
     }));
     test.each([
         ["test_custom_id", "test_server_id", "test_user_id"],
@@ -60,7 +57,7 @@ describe('slash command select menu regist server mastertest.', () => {
         jest.spyOn(discord_common_1.DiscordCommon, 'get_role_list_select_menu').mockImplementationOnce((custom_id, placeholder, guild) => {
             return {};
         });
-        let result = yield command_server_controller_1.CommandServerController.regist_server_master(interaction);
+        let result = yield controller.regist_server_master(interaction);
         expect(result).toEqual(false);
     }));
 });

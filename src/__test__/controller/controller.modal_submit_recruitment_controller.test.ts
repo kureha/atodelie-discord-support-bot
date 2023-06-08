@@ -16,6 +16,8 @@ import { ServerInfoRepository } from "../../db/server_info";
 import { ServerInfo } from "../../entity/server_info";
 import { RoleInfo } from "../../entity/user_info";
 
+const controller = new ModalSubmitRecruitmentController();
+
 function set_test_repositories() {
     // get repository mock
     jest.spyOn(RecruitmentRepository.prototype, 'get_m_recruitment_for_user')
@@ -92,7 +94,7 @@ describe('modal submit friend codetest.', () => {
         });
 
         // expect
-        let result = await ModalSubmitRecruitmentController.regist(interaction);
+        let result = await controller.regist(interaction);
         expect(result).toEqual(true);
     });
 
@@ -132,7 +134,7 @@ describe('modal submit friend codetest.', () => {
         });
 
         // expect
-        let result = await ModalSubmitRecruitmentController.edit(interaction);
+        let result = await controller.edit(interaction);
         expect(result).toEqual(true);
     });
 });

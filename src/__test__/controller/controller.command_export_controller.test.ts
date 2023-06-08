@@ -12,6 +12,8 @@ import { ExportUserInfo } from "../../logic/export_user_info";
 jest.mock("../../logic/export_user_info");
 const ExportUserInfoMock = ExportUserInfo as jest.Mock;
 
+const controller = new CommandExportController();
+
 /**
  * export user info mock
  * @param data_list 
@@ -57,8 +59,8 @@ describe('export user infotest.', () => {
         );
 
         // expect
-        await expect(CommandExportController.export_user_info(interaction, false)).resolves.toEqual(true);
-        await expect(CommandExportController.export_user_info(interaction)).resolves.toEqual(false);
+        await expect(controller.export_user_info(interaction, false)).resolves.toEqual(true);
+        await expect(controller.export_user_info(interaction)).resolves.toEqual(false);
     });
 
     test.each([
@@ -75,11 +77,7 @@ describe('export user infotest.', () => {
         get_export_user_info_mock([]);
 
         // expect
-        expect.assertions(1);
-        try {
-            await CommandExportController.export_user_info(interaction);
-        } catch (e) {
-            expect(e).toContain(`Discord interaction guild is undefined.`);
-        }
+        const result = await controller.export_user_info(interaction);
+        expect(result).toEqual(false);
     });
 });

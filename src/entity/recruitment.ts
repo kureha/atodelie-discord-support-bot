@@ -15,11 +15,13 @@ export class Recruitment {
     thread_id: string;
     token: string;
     status: number;
+    limit_time: Date;
     name: string;
     owner_id: string;
     description: string;
+    regist_time: Date;
+    update_time: Date;
     delete: boolean;
-    limit_time: Date;
 
     user_list: Participate[];
 
@@ -38,6 +40,8 @@ export class Recruitment {
         this.name = '';
         this.owner_id = '';
         this.description = '';
+        this.regist_time = Constants.get_default_date();
+        this.update_time = Constants.get_default_date();
         this.delete = false;
 
         // insert participate array
@@ -68,6 +72,18 @@ export class Recruitment {
             v.name = SqliteUtils.get_value(row.name);
             v.owner_id = SqliteUtils.get_value(row.owner_id);
             v.description = SqliteUtils.get_value(row.description);
+            // regist_time is nullable
+            try {
+                v.regist_time = new Date(row.regist_time);
+            } catch (e) {
+                v.regist_time = Constants.get_default_date();
+            }
+            // update_time is nullable
+            try {
+                v.update_time = new Date(row.update_time);
+            } catch (e) {
+                v.update_time = Constants.get_default_date();
+            }
             // db delete is number, change boolean
             if (row.delete == true) {
                 v.delete = true;

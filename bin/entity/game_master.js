@@ -17,6 +17,7 @@ class GameMaster {
         this.server_id = constants_1.Constants.STRING_EMPTY;
         this.game_id = constants_1.Constants.STRING_EMPTY;
         this.game_name = constants_1.Constants.STRING_EMPTY;
+        this.presence_name = constants_1.Constants.STRING_EMPTY;
         this.regist_time = constants_1.Constants.get_default_date();
         this.update_time = constants_1.Constants.get_default_date();
         this.delete = false;
@@ -32,6 +33,7 @@ class GameMaster {
             v.server_id = sqlite_utils_1.SqliteUtils.get_value(row.server_id);
             v.game_id = sqlite_utils_1.SqliteUtils.get_value(row.game_id);
             v.game_name = sqlite_utils_1.SqliteUtils.get_value(row.game_name);
+            v.presence_name = sqlite_utils_1.SqliteUtils.get_value(row.presence_name);
             // regist_time, update_time is nullable
             try {
                 v.regist_time = new Date(row.regist_time);

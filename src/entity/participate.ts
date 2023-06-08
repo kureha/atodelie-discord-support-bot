@@ -11,6 +11,8 @@ export class Participate {
     status: number;
     user_id: string;
     description: string;
+    regist_time: Date;
+    update_time: Date;
     delete: boolean;
 
     /**
@@ -23,6 +25,8 @@ export class Participate {
         this.status = constants.STATUS_DISABLED;
         this.user_id = '';
         this.description = '';
+        this.regist_time = Constants.get_default_date();
+        this.update_time = Constants.get_default_date();
         this.delete = false;
     }
 
@@ -41,6 +45,18 @@ export class Participate {
             v.status = SqliteUtils.get_value(row.status);
             v.user_id = SqliteUtils.get_value(row.user_id);
             v.description = SqliteUtils.get_value(row.description);
+            // regist_time is nullable
+            try {
+                v.regist_time = new Date(row.regist_time);
+            } catch (e) {
+                v.regist_time = Constants.get_default_date();
+            }
+            // update_time is nullable
+            try {
+                v.update_time = new Date(row.update_time);
+            } catch (e) {
+                v.update_time = Constants.get_default_date();
+            }
             // db delete is number, change boolean
             if (row.delete == true) {
                 v.delete = true;
