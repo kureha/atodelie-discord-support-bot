@@ -50,6 +50,7 @@ const constants = new constants_1.Constants();
 const message_controller_1 = require("./controller/message_controller");
 const cron_voice_channel_rename_controller_1 = require("./controller/cron_voice_channel_rename_controller");
 const cron_announcement_controller_1 = require("./controller/cron_announcement_controller");
+const cron_activity_controller_1 = require("./controller/cron_activity_controller");
 try {
     // create client
     const client = new Discord.Client({
@@ -94,19 +95,29 @@ try {
             modal_submit_controller_1.ModalSubmitController.recieve(interaction);
         }
     }));
-    // cron section for change name and announcement
-    logger_1.logger.info(`update channel name + announcement cron setting : ${constants.DISCORD_UPDATE_CHANNEL_NAME_CRON}`);
-    cron.schedule(constants.DISCORD_UPDATE_CHANNEL_NAME_CRON, (() => __awaiter(void 0, void 0, void 0, function* () {
-        const channel_rename_controller = new cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController();
-        const announcement_controller = new cron_announcement_controller_1.CronAnnouncementController();
-        yield channel_rename_controller.update_voice_channel_name(client);
-        yield announcement_controller.auto_annoucement(client);
-    })));
     // cron section for follow
     logger_1.logger.info(`follow cron setting : ${constants.DISCORD_FOLLOW_CRON}`);
     cron.schedule(constants.DISCORD_FOLLOW_CRON, (() => __awaiter(void 0, void 0, void 0, function* () {
         const follow_controller = new cron_follow_controller_1.CronFollowController();
         yield follow_controller.follow_recruitment_member(client);
+    })));
+    // cron section for record activity
+    logger_1.logger.info(`record activity cron setting : ${constants.DISCORD_ACTIVITY_RECORD_CRON}`);
+    cron.schedule(constants.DISCORD_ACTIVITY_RECORD_CRON, (() => __awaiter(void 0, void 0, void 0, function* () {
+        const activity_record_controller = new cron_activity_controller_1.CronActivityRecordController();
+        yield activity_record_controller.activity_history_regist(client);
+    })));
+    // cron section for auto announcement
+    logger_1.logger.info(`auto announcement setting : ${constants.DISCORD_AUTO_ANNOUNCE_CRON}`);
+    cron.schedule(constants.DISCORD_AUTO_ANNOUNCE_CRON, (() => __awaiter(void 0, void 0, void 0, function* () {
+        const announcement_controller = new cron_announcement_controller_1.CronAnnouncementController();
+        yield announcement_controller.auto_annoucement(client);
+    })));
+    // cron section for update channel name
+    logger_1.logger.info(`update channel name cron setting : ${constants.DISCORD_UPDATE_CHANNEL_NAME_CRON}`);
+    cron.schedule(constants.DISCORD_UPDATE_CHANNEL_NAME_CRON, (() => __awaiter(void 0, void 0, void 0, function* () {
+        const channel_rename_controller = new cron_voice_channel_rename_controller_1.CronVoiceChannelRenameController();
+        yield channel_rename_controller.update_voice_channel_name(client);
     })));
 }
 catch (err) {

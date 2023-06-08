@@ -97,149 +97,6 @@ describe("update_channel_name", () => {
     });
 });
 
-describe('get_most_played_sort_game_list', () => {
-    test.each([
-        [[], []],
-        [['ccc', 'bbb', 'aaa', 'bbb', 'aaa', 'aaa'], ['aaa', 'bbb', 'ccc']],
-        [['aaa', 'aaa'], ['aaa']],
-        [['', 'bbb', 'aaa', 'bbb', 'aaa', 'aaa'], ['aaa', 'bbb', '']],
-        [['bbb', 'aaa', 'bbb', 'aaa'], ['aaa', 'bbb']],
-    ])("get_most_played_sort_game_list test (%s => %s)", (input: string[], expected: string[]) => {
-        expect(controller.get_sorted_game_list(input)).toEqual(expected);
-    });
-});
-
-describe('get_channel_joined_member_count', () => {
-    afterEach(() => {
-        jest.resetAllMocks();
-        jest.restoreAllMocks();
-    });
-
-    test('test for get_channel_joined_member_count.', async () => {
-        // setup mock
-        const mock_member_list = new Map<string, any>();
-        let channel_id = 'test_channel_id_1';
-        // data 1
-        let id = 'test_user_id_1';
-        mock_member_list.set(id, get_test_member(id, channel_id));
-        // data 2
-        id = 'test_user_id_2';
-        mock_member_list.set(id, get_test_member(id, channel_id + "_another"));
-        // data 3
-        id = 'test_user_id_3';
-        mock_member_list.set(id, get_test_member(id, channel_id));
-        // data 4
-        id = 'test_user_id_4';
-        mock_member_list.set(id, get_test_member(id, channel_id));
-        // data 5
-        id = 'test_user_id_5';
-        mock_member_list.set(id, get_test_member(id, null));
-
-        // main logic called
-        const result = await controller.get_channel_joined_member_count(channel_id, mock_member_list as Discord.Collection<string, Discord.GuildMember>);
-        expect(result).toEqual(3);
-    });
-
-    test('test for get_playing_game_list blank.', async () => {
-        // setup mock
-        const mock_member_list = new Map<string, any>();
-        let channel_id = 'test_channel_id_1';
-
-        // main logic called
-        const result = await controller.get_channel_joined_member_count(channel_id, mock_member_list as Discord.Collection<string, Discord.GuildMember>);
-        expect(result).toEqual(0);
-    });
-});
-
-describe('get_playing_game_list', () => {
-    afterEach(() => {
-        jest.resetAllMocks();
-        jest.restoreAllMocks();
-    });
-
-    test('test for get_playing_game_list.', async () => {
-        // setup mock
-        const mock_member_list = new Map<string, any>();
-        let channel_id = 'test_channel_id_1';
-        // data 1
-        let id = 'test_user_id_1';
-        mock_member_list.set(id, get_test_member(id, channel_id));
-        // data 2
-        id = 'test_user_id_2';
-        mock_member_list.set(id, get_test_member(id, channel_id + "_another"));
-        // data 3
-        id = 'test_user_id_3';
-        mock_member_list.set(id, get_test_member(id, channel_id));
-        // data 4
-        id = 'test_user_id_4';
-        mock_member_list.set(id, get_test_member(id, channel_id));
-        // data 5
-        id = 'test_user_id_5';
-        mock_member_list.set(id, get_test_member(id, null));
-
-        // mockup presence (presence is called for valid channel)
-        jest.spyOn(CronVoiceChannelRenameController.prototype, 'get_playing_game_name')
-            .mockImplementationOnce(() => { return "test_game_001"; })
-            .mockImplementationOnce(() => { return "test_game_002"; })
-            .mockImplementationOnce(() => { return "test_game_001"; })
-            .mockImplementationOnce(() => { return "test_game_003"; }); // 3 is not include for result
-
-        // main logic called
-        const result = await controller.get_playing_game_list(channel_id, mock_member_list as Discord.Collection<string, Discord.GuildMember>);
-        expect(result.sort()).toStrictEqual(["test_game_001", "test_game_001", "test_game_002"]);
-    });
-
-    test('test for get_playing_game_list blank.', async () => {
-        // setup mock
-        const mock_member_list = new Map<string, any>();
-        let channel_id = 'test_channel_id_1';
-
-        // main logic called
-        const result = await controller.get_playing_game_list(channel_id, mock_member_list as Discord.Collection<string, Discord.GuildMember>);
-        expect(result.sort()).toStrictEqual([]);
-    });
-});
-
-describe('get_playing_game_name', () => {
-    test.each([
-        ["test_presence_01", Discord.ActivityType.Playing, "test_presence_01"],
-        ["test_presence_01", Discord.ActivityType.Streaming, "test_presence_01"],
-        ["", Discord.ActivityType.Playing, ""],
-        ["test_presence_01", Discord.ActivityType.Custom, ""],
-    ])('test for get_playing_game_name (%s, %s -> %s)', (name: string, type: number, exp: string) => {
-        const presence_mock = {
-            activities: [
-                get_activity(type, name)
-            ],
-        };
-        expect(controller.get_playing_game_name(presence_mock as Discord.Presence)).toBe(exp);
-    });
-
-    test.each([
-        ["test_presence_01", Discord.ActivityType.Playing, [], "test_presence_01"],
-        ["test_presence_01", Discord.ActivityType.Playing, ["another_precense"], "test_presence_01"],
-        ["test_presence_01", Discord.ActivityType.Playing, ["test_presence_01"], ""],
-    ])('test for get_playing_game_name with ignore list (%s, %s -> %s)', (name: string, type: number, ignore_list: string[], exp: string) => {
-        const presence_mock = {
-            activities: [
-                get_activity(type, name)
-            ],
-        };
-        expect(controller.get_playing_game_name(presence_mock as Discord.Presence, ignore_list)).toBe(exp);
-    });
-
-    test('test for get_playing_game_name for blank', () => {
-        const presence_mock = {
-            activities: [],
-        };
-        expect(controller.get_playing_game_name(presence_mock as unknown as Discord.Presence)).toBe('');
-    });
-
-    test('test for get_playing_game_name for null', () => {
-        expect(controller.get_playing_game_name(null)).toBe('');
-    });
-});
-
 describe('update_voice_channel_name', () => {
     beforeEach(() => {
         jest.spyOn(ActivityHistoryRepository.prototype, 'insert_t_activity_history').mockImplementationOnce((v: ActivityHistory) => {
@@ -311,14 +168,84 @@ describe('execute_logic_for_guild', () => {
         jest.spyOn(DiscordCommon, 'get_voice_channel').mockImplementationOnce(() => {
             return mock_get_voice_channel("test_channel_id", "test_channel_name");
         });
-        jest.spyOn(CronVoiceChannelRenameController.prototype, 'get_playing_game_list').mockImplementationOnce(() => {
-            return new Promise<string[]>((resolve, reject) => {
-                resolve(game_id_list);
+        jest.spyOn(ActivityHistoryRepository.prototype, 'get_t_activity_history').mockImplementationOnce(() => {
+            return new Promise<ActivityHistory[]>((resolve, reject) => {
+                resolve([TestEntity.get_test_activity(new Date('1970-01-01T00:00:00.000+09:00'))]);
+            });
+        });
+        jest.spyOn(CronVoiceChannelRenameController.prototype, 'get_game_master_alias_name').mockImplementation((v: string, p: string): Promise<string> => {
+            return new Promise<string>((resolve, reject) => {
+                resolve('most-playing-game');
+            });
+        });
+        const mock_guild = {
+            id: "test_id",
+            members: {
+                cache: [],
+            },
+        };
+
+        // expect assertions
+        expect.assertions(1);
+
+        // execute
+        const result = await controller.execute_logic_for_guild(mock_guild as unknown as Discord.Guild)
+        expect(result).toBe(true);
+    });
+
+    test.each([
+        [["test_game_id_1", "test_game_id_1", "test_game_id_2"], ["test_server_1"]],
+    ])('execute_logic_for_guild for not update', async (game_id_list: string[], voice_channel_id_list: string[]) => {
+        // setup mocks
+        jest.spyOn(DiscordCommon, 'get_voice_channel_id_list').mockImplementationOnce(() => {
+            return voice_channel_id_list;
+        });
+        jest.spyOn(DiscordCommon, 'get_voice_channel').mockImplementationOnce(() => {
+            return mock_get_voice_channel("test_channel_id", "test_channel_name");
+        });
+        jest.spyOn(ActivityHistoryRepository.prototype, 'get_t_activity_history').mockImplementationOnce(() => {
+            return new Promise<ActivityHistory[]>((resolve, reject) => {
+                resolve([TestEntity.get_test_activity(new Date('1970-01-01T00:00:00.000+09:00'))]);
             });
         });
         jest.spyOn(CronVoiceChannelRenameController.prototype, 'get_game_master_alias_name').mockImplementation((v: string, p: string): Promise<string> => {
             return new Promise<string>((resolve, reject) => {
                 resolve('');
+            });
+        });
+        const mock_guild = {
+            id: "test_id",
+            members: {
+                cache: [],
+            },
+        };
+
+        // expect assertions
+        expect.assertions(1);
+
+        // execute
+        const result = await controller.execute_logic_for_guild(mock_guild as unknown as Discord.Guild)
+        expect(result).toBe(true);
+    });
+
+    test.each([
+        [["test_game_id_1", "test_game_id_1", "test_game_id_2"], ["test_server_1"]],
+    ])('execute_logic_for_guild for undefined activity', async (game_id_list: string[], voice_channel_id_list: string[]) => {
+        // setup mocks
+        jest.spyOn(DiscordCommon, 'get_voice_channel_id_list').mockImplementationOnce(() => {
+            return voice_channel_id_list;
+        });
+        jest.spyOn(DiscordCommon, 'get_voice_channel').mockImplementationOnce(() => {
+            return mock_get_voice_channel("test_channel_id", "test_channel_name");
+        });
+        jest.spyOn(ActivityHistoryRepository.prototype, 'get_t_activity_history').mockImplementationOnce(() => {
+            return new Promise<ActivityHistory[]>((resolve, reject) => {
+                resolve([undefined as unknown as ActivityHistory]);
+            });
+        });
+        jest.spyOn(CronVoiceChannelRenameController.prototype, 'get_game_master_alias_name').mockImplementation((v: string, p: string): Promise<string> => {
+            return new Promise<string>((resolve, reject) => {
+                resolve('most-playing-game');
             });
         });
         const mock_guild = {
@@ -346,14 +273,14 @@ describe('execute_logic_for_guild', () => {
         jest.spyOn(DiscordCommon, 'get_voice_channel').mockImplementationOnce(() => {
             return mock_get_voice_channel("test_channel_id", "test_channel_name");
         });
-        jest.spyOn(CronVoiceChannelRenameController.prototype, 'get_playing_game_list').mockImplementationOnce(() => {
-            return new Promise<string[]>((resolve, reject) => {
-                resolve(game_id_list);
+        jest.spyOn(ActivityHistoryRepository.prototype, 'get_t_activity_history').mockImplementationOnce(() => {
+            return new Promise<ActivityHistory[]>((resolve, reject) => {
+                resolve([TestEntity.get_test_activity(new Date('1970-01-01T00:00:00.000+09:00'))]);
             });
         });
         jest.spyOn(CronVoiceChannelRenameController.prototype, 'get_game_master_alias_name').mockImplementation((v: string, p: string): Promise<string> => {
             return new Promise<string>((resolve, reject) => {
-                resolve('');
+                resolve('most-playing-game');
             });
         });
         // invalid guild - for execption

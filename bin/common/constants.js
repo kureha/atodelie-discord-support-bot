@@ -24,6 +24,8 @@ class Constants {
             this.DISCORD_FOLLOW_MINUTE = 30;
         }
         this.DISCORD_FOLLOW_CRON = this.v(process.env.DISCORD_FOLLOW_CRON);
+        this.DISCORD_ACTIVITY_RECORD_CRON = this.v(process.env.DISCORD_ACTIVITY_RECORD_CRON);
+        this.DISCORD_AUTO_ANNOUNCE_CRON = this.v(process.env.DISCORD_AUTO_ANNOUNCE_CRON);
         this.DISCORD_UPDATE_CHANNEL_NAME_CRON = this.v(process.env.DISCORD_UPDATE_CHANNEL_NAME_CRON);
         this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE = parseInt(this.v(process.env.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE));
         if (isNaN(this.DISCORD_RECRUITMENT_EXPIRE_DELAY_MINUTE)) {

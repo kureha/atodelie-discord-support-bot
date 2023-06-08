@@ -20,6 +20,7 @@ const constants = new Constants();
 import { MessageController } from './controller/message_controller';
 import { CronVoiceChannelRenameController } from './controller/cron_voice_channel_rename_controller';
 import { CronAnnouncementController } from './controller/cron_announcement_controller';
+import { CronActivityRecordController } from './controller/cron_activity_controller';
 
 try {
     // create client
@@ -71,21 +72,34 @@ try {
         }
     });
 
-    // cron section for change name and announcement
-    logger.info(`update channel name + announcement cron setting : ${constants.DISCORD_UPDATE_CHANNEL_NAME_CRON}`);
-    cron.schedule(constants.DISCORD_UPDATE_CHANNEL_NAME_CRON, (async () => {
-        const channel_rename_controller = new CronVoiceChannelRenameController();
-        const announcement_controller = new CronAnnouncementController();
-        await channel_rename_controller.update_voice_channel_name(client);
-        await announcement_controller.auto_annoucement(client);
-    }));
-
     // cron section for follow
     logger.info(`follow cron setting : ${constants.DISCORD_FOLLOW_CRON}`);
     cron.schedule(constants.DISCORD_FOLLOW_CRON, (async () => {
         const follow_controller = new CronFollowController();
         await follow_controller.follow_recruitment_member(client);
     }));
+
+    // cron section for record activity
+    logger.info(`record activity cron setting : ${constants.DISCORD_ACTIVITY_RECORD_CRON}`);
+    cron.schedule(constants.DISCORD_ACTIVITY_RECORD_CRON, (async () => {
+        const activity_record_controller = new CronActivityRecordController();
+        await activity_record_controller.activity_history_regist(client)
+    }));
+
+    // cron section for auto announcement
+    logger.info(`auto announcement setting : ${constants.DISCORD_AUTO_ANNOUNCE_CRON}`);
+    cron.schedule(constants.DISCORD_AUTO_ANNOUNCE_CRON, (async () => {
+        const announcement_controller = new CronAnnouncementController();
+        await announcement_controller.auto_annoucement(client);
+    }));
+
+    // cron section for update channel name
+    logger.info(`update channel name cron setting : ${constants.DISCORD_UPDATE_CHANNEL_NAME_CRON}`);
+    cron.schedule(constants.DISCORD_UPDATE_CHANNEL_NAME_CRON, (async () => {
+        const channel_rename_controller = new CronVoiceChannelRenameController();
+        await channel_rename_controller.update_voice_channel_name(client);
+    }));
+
 } catch (err) {
     // loggin error
     logger.error(`fatal error. bot stopped.`, err)
