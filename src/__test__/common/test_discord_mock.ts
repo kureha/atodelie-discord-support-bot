@@ -251,6 +251,9 @@ export class TestDiscordMock {
                         }
                     },
                     memberCount: 10,
+                    roles: {
+                        cache: [],
+                    }
                 },
                 fields: {
                     getTextInputValue: (k: string): string => {

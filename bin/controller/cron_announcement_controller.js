@@ -46,26 +46,31 @@ class CronAnnouncementController {
             if (server_info_list.length == 0) {
                 return false;
             }
-            // loop with sync
+            // total result
+            let total_result = true;
             for (const server_info of server_info_list) {
                 try {
                     // get guild
                     const guild = client.guilds.resolve(server_info.server_id);
                     if (guild == null) {
+                        logger_1.logger.warn(`guild is null, can't regist history.`);
+                        total_result = false;
                         continue;
                     }
                     // execute main logics
-                    yield this.execute_logic_for_guild(guild, server_info.channel_id, server_info.recruitment_target_role);
+                    if ((yield this.execute_logic_for_guild(guild, server_info.channel_id, server_info.recruitment_target_role)) == false) {
+                        total_result = false;
+                    }
                 }
                 catch (err) {
-                    // send error message
                     logger_1.logger.error(`annoucement failed for error.`, err);
+                    total_result = false;
                 }
                 ;
             }
             ;
-            logger_1.logger.info(`annoucement with cron completed.`);
-            return true;
+            logger_1.logger.info(`annoucement with cron completed. result = ${total_result}`);
+            return total_result;
         });
     }
     /**
@@ -80,13 +85,17 @@ class CronAnnouncementController {
             // get voice channel id list
             const voice_channel_id_list = discord_common_1.DiscordCommon.get_voice_channel_id_list(guild);
             logger_1.logger.trace(`target voice channel id list : ${voice_channel_id_list}`);
+            // total result
+            let total_result = true;
             // check channel member's game name
             for (const channel_id of voice_channel_id_list) {
-                yield this.execute_logic_for_channel(guild, announce_channel_id, announce_target_role, channel_id);
+                if ((yield this.execute_logic_for_channel(guild, announce_channel_id, announce_target_role, channel_id)) == false) {
+                    total_result = false;
+                }
             }
             ;
-            logger_1.logger.info(`annoucement with cron completed. server id = ${guild.id}`);
-            return true;
+            logger_1.logger.info(`annoucement with cron completed. server id = ${guild.id}, result = ${total_result}`);
+            return total_result;
         });
     }
     /**
@@ -147,8 +156,11 @@ class CronAnnouncementController {
             catch (err) {
                 // send error message
                 logger_1.logger.error(`annoucement failed for error. server id = ${guild.id}`, err);
+                return false;
             }
             ;
+            logger_1.logger.error(`annoucement completed. server id = ${guild.id}`);
+            return true;
         });
     }
     /**

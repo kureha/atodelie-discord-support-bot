@@ -9,15 +9,17 @@ import { CommandServerController } from "../../controller/command_server_control
 
 const controller = new CommandServerController();
 
-describe('slash command select menu regist server mastertest.', () => {
+describe('regist_server_master', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("select menu regist server master test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        ["test_custom_id", "test_server_id", "test_user_id", true],
+    ])("test for regist_server_master, (%s, %s, %s) -> %s", async (
+        custom_id: any, guild_id: any, user_id: any, expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -28,12 +30,14 @@ describe('slash command select menu regist server mastertest.', () => {
         });
 
         let result = await controller.regist_server_master(interaction, false);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("select menu regist server master error test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for regist_server_master error, (%s, %s, %s) -> %s", async (
+        custom_id: any, guild_id: any, user_id: any, expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -46,13 +50,15 @@ describe('slash command select menu regist server mastertest.', () => {
             return {};
         });
 
-        const result = await controller.regist_server_master(interaction);
-        expect(result).toEqual(false);
+        const result = await controller.regist_server_master(interaction, false);
+        expect(result).toEqual(expected);
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("select menu regist server master error test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for regist_server_master error (%s, %s, %s) -> %s", async (
+        custom_id: any, guild_id: any, user_id: any, expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -63,6 +69,6 @@ describe('slash command select menu regist server mastertest.', () => {
         });
 
         let result = await controller.regist_server_master(interaction);
-        expect(result).toEqual(false);
+        expect(result).toEqual(expected);
     });
 });

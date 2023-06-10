@@ -151,7 +151,7 @@ class CommandRecruitmentController {
             }
             catch (err) {
                 logger_1.logger.error(err);
-                throw err;
+                return false;
             }
             return true;
         });

@@ -13,6 +13,7 @@ const constants_1 = require("../../common/constants");
 const cron_announcement_controller_1 = require("../../controller/cron_announcement_controller");
 const activity_history_1 = require("../../db/activity_history");
 const announcement_history_1 = require("../../db/announcement_history");
+const game_master_1 = require("../../db/game_master");
 const server_info_1 = require("../../db/server_info");
 const announcement_info_1 = require("../../entity/announcement_info");
 const discord_common_1 = require("../../logic/discord_common");
@@ -25,6 +26,140 @@ function get_test_activity(date, member_count, total_member_count, g_name) {
     v.game_name = g_name || '';
     return v;
 }
+/**
+ * mockup for guild
+ * @returns
+ */
+function get_guild_mock(ret) {
+    return {
+        guilds: {
+            resolve: () => {
+                return ret;
+            },
+        },
+        members: {
+            cache: [],
+        }
+    };
+}
+describe('announcement', () => {
+    afterEach(() => {
+        jest.resetAllMocks();
+        jest.restoreAllMocks();
+    });
+    test.each([
+        [[test_entity_1.TestEntity.get_test_server_info(), test_entity_1.TestEntity.get_test_server_info()], [true, true], true],
+        [[test_entity_1.TestEntity.get_test_server_info(), test_entity_1.TestEntity.get_test_server_info()], [false, true], false],
+        [[], [], false],
+    ])('test for announcement, (%s, %s) -> %s', (server_list, main_logic_result_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        // setup mocks
+        jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'get_m_server_info_all')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return server_list; }));
+        main_logic_result_list.forEach((v) => {
+            jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'execute_logic_for_guild')
+                .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return v; }));
+        });
+        const client_mock = get_guild_mock({});
+        // execute
+        const result = yield controller.auto_annoucement(client_mock);
+        expect(result).toBe(expected);
+    }));
+    test('test for announcement for null', () => __awaiter(void 0, void 0, void 0, function* () {
+        // setup mocks
+        jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'execute_logic_for_guild')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return true; }));
+        jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'get_m_server_info_all').mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () {
+            return [test_entity_1.TestEntity.get_test_server_info()];
+        }));
+        const client_mock = get_guild_mock(null);
+        // execute
+        const result = yield controller.auto_annoucement(client_mock);
+        expect(result).toBe(false);
+    }));
+    test('test for announcement for exception', () => __awaiter(void 0, void 0, void 0, function* () {
+        // setup mocks
+        jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'execute_logic_for_guild')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { throw `exception!`; }));
+        jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'get_m_server_info_all').mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () {
+            return [test_entity_1.TestEntity.get_test_server_info()];
+        }));
+        const client_mock = get_guild_mock({});
+        // execute
+        const result = yield controller.auto_annoucement(client_mock);
+        expect(result).toBe(false);
+    }));
+});
+describe('execute_logic_for_guild', () => {
+    afterEach(() => {
+        jest.resetAllMocks();
+        jest.restoreAllMocks();
+    });
+    test.each([
+        [["test1", "test2"], [true, true], true],
+        [["test1", "test2"], [false, true], false],
+        [[], [], true],
+    ])('test for execute_logic_for_guild, (%s, %s) -> %s', (vc_id_list, main_logic_result_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        // setup mocks
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_voice_channel_id_list')
+            .mockImplementationOnce(() => { return vc_id_list; });
+        main_logic_result_list.forEach((v) => {
+            jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'execute_logic_for_channel')
+                .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return v; }));
+        });
+        // execute
+        const result = yield controller.execute_logic_for_guild({}, 'test-ch-1', 'test-role-1');
+        expect(result).toBe(expected);
+    }));
+});
+describe('execute_logic_for_channel', () => {
+    afterEach(() => {
+        jest.resetAllMocks();
+        jest.restoreAllMocks();
+    });
+    // mockup for text channel
+    function mock_get_text_channel() {
+        return {
+            send: (v) => {
+                return new Promise((resolve) => { resolve(); });
+            }
+        };
+    }
+    // mockup for guild
+    const mock_guild = {
+        id: "test_id",
+        members: {
+            cache: [],
+        },
+        client: {},
+    };
+    test.each([
+        [true, 1, [], true],
+        [true, 0, [], false],
+        [false, 0, [], true],
+        [true, 1, [test_entity_1.TestEntity.get_test_game_master_info()], true],
+    ])('test for execute_logic_for_channel, (%s, %s, %s, %s) -> %s', (need_announce, his_ins_count, game_alias, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        // setup mocks
+        jest.spyOn(activity_history_1.ActivityHistoryRepository.prototype, 'get_t_activity_history')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return [test_entity_1.TestEntity.get_test_activity(new Date())]; }));
+        jest.spyOn(announcement_history_1.AnnouncementHistoryRepository.prototype, 'get_t_announcement')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return [test_entity_1.TestEntity.get_test_announcement_history(new Date())]; }));
+        jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'extract_announcement')
+            .mockImplementationOnce(() => {
+            return test_entity_1.TestEntity.get_test_announcement_info(new Date());
+        });
+        jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'is_exec_announcement')
+            .mockImplementationOnce(() => { return need_announce; });
+        jest.spyOn(announcement_history_1.AnnouncementHistoryRepository.prototype, 'insert_t_announcement')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return his_ins_count; }));
+        jest.spyOn(game_master_1.GameMasterRepository.prototype, 'get_m_game_master_by_presence_name')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return game_alias; }));
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_text_channel')
+            .mockImplementationOnce((c, id) => { return mock_get_text_channel(); });
+        // execute
+        const result = yield controller.execute_logic_for_channel(mock_guild, 'a-ch-id', 't-role', 'ch-id');
+        expect(result).toBe(expected);
+    }));
+});
 describe('cron announcement test', () => {
     test.each([
         [
@@ -134,246 +269,5 @@ describe('cron announcement test', () => {
         const result = controller.is_exec_announcement(info, [undefined], 1);
         expect(result).toEqual(false);
     });
-});
-/**
- * mockup for voice channel
- * @param id
- * @param name
- * @returns
- */
-function mock_get_voice_channel(id, name) {
-    return {
-        id: id,
-        name: name,
-        setName: (v) => { },
-    };
-}
-/**
- * mockup for text channel
- * @returns
- */
-function mock_get_text_channel() {
-    return {
-        send: (v) => {
-            return new Promise((resolve) => { resolve(); });
-        }
-    };
-}
-/**
- * mockup create function for update_voice_channel_name
- */
-function setup_update_voice_channel_name_mock(server_info_list) {
-    jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'execute_logic_for_guild').mockImplementation(() => {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    });
-    jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'get_m_server_info_all').mockImplementation(() => {
-        return new Promise((resolve, reject) => {
-            resolve(server_info_list);
-        });
-    });
-}
-/**
- * mockup for guid
- * @returns
- */
-function get_guild_mock_update_voice_channel_name(ret) {
-    return {
-        guilds: {
-            resolve: () => {
-                return ret;
-            },
-        },
-    };
-}
-describe('update_voice_channel_name', () => {
-    beforeEach(() => {
-    });
-    afterEach(() => {
-        jest.resetAllMocks();
-        jest.restoreAllMocks();
-    });
-    test('test for annoucement for blank', () => __awaiter(void 0, void 0, void 0, function* () {
-        // setup mocks
-        setup_update_voice_channel_name_mock([]);
-        const client_mock = get_guild_mock_update_voice_channel_name({});
-        // expect assertions
-        expect.assertions(1);
-        // execute
-        const result = yield controller.auto_annoucement(client_mock);
-        expect(result).toBe(false);
-    }));
-    test('test for annoucement', () => __awaiter(void 0, void 0, void 0, function* () {
-        // setup mocks
-        setup_update_voice_channel_name_mock([test_entity_1.TestEntity.get_test_server_info()]);
-        const client_mock = get_guild_mock_update_voice_channel_name({});
-        // expect assertions
-        expect.assertions(1);
-        // execute
-        const result = yield controller.auto_annoucement(client_mock);
-        expect(result).toBe(true);
-    }));
-});
-describe('execute_logic_for_guild', () => {
-    afterEach(() => {
-        jest.resetAllMocks();
-        jest.restoreAllMocks();
-    });
-    test.each([
-        [["test_game_id_1", "test_game_id_1", "test_game_id_2"], ["test_server_1"]],
-    ])('execute_logic_for_guild', (game_id_list, voice_channel_id_list) => __awaiter(void 0, void 0, void 0, function* () {
-        // setup mocks
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_voice_channel_id_list').mockImplementationOnce(() => {
-            return voice_channel_id_list;
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_voice_channel').mockImplementationOnce(() => {
-            return mock_get_voice_channel("test_channel_id", "test_channel_name");
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_text_channel').mockImplementationOnce((c, id) => {
-            return mock_get_text_channel();
-        });
-        jest.spyOn(activity_history_1.ActivityHistoryRepository.prototype, 'get_t_activity_history').mockImplementationOnce((g, c, l) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_activity(new Date())]);
-            });
-        });
-        jest.spyOn(announcement_history_1.AnnouncementHistoryRepository.prototype, 'get_t_announcement').mockImplementationOnce((g, c, l) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_announcement_history(new Date())]);
-            });
-        });
-        jest.spyOn(announcement_history_1.AnnouncementHistoryRepository.prototype, 'insert_t_announcement').mockImplementationOnce((v) => {
-            return new Promise((resolve, reject) => {
-                resolve(1);
-            });
-        });
-        jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'extract_announcement').mockImplementation((list) => {
-            return test_entity_1.TestEntity.get_test_announcement_info(new Date());
-        });
-        jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'is_exec_announcement').mockImplementation((v, list, n) => {
-            return true;
-        });
-        const mock_guild = {
-            id: "test_id",
-            members: {
-                cache: [],
-            },
-        };
-        // expect assertions
-        expect.assertions(1);
-        // execute
-        const result = yield controller.execute_logic_for_guild(mock_guild, 'test_ch_id', 'test_role');
-        expect(result).toBe(true);
-    }));
-    test.each([
-        [["test_game_id_1", "test_game_id_1", "test_game_id_2"], ["test_server_1"]],
-    ])('execute_logic_for_guild for no need announce', (game_id_list, voice_channel_id_list) => __awaiter(void 0, void 0, void 0, function* () {
-        // setup mocks
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_voice_channel_id_list').mockImplementationOnce(() => {
-            return voice_channel_id_list;
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_voice_channel').mockImplementationOnce(() => {
-            return mock_get_voice_channel("test_channel_id", "test_channel_name");
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_text_channel').mockImplementationOnce((c, id) => {
-            return mock_get_text_channel();
-        });
-        jest.spyOn(activity_history_1.ActivityHistoryRepository.prototype, 'get_t_activity_history').mockImplementationOnce((g, c, l) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_activity(new Date())]);
-            });
-        });
-        jest.spyOn(announcement_history_1.AnnouncementHistoryRepository.prototype, 'get_t_announcement').mockImplementationOnce((g, c, l) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_announcement_history(new Date())]);
-            });
-        });
-        jest.spyOn(announcement_history_1.AnnouncementHistoryRepository.prototype, 'insert_t_announcement').mockImplementationOnce((v) => {
-            return new Promise((resolve, reject) => {
-                resolve(1);
-            });
-        });
-        jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'extract_announcement').mockImplementation((list) => {
-            return test_entity_1.TestEntity.get_test_announcement_info(new Date());
-        });
-        jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'is_exec_announcement').mockImplementation((v, list, n) => {
-            return false;
-        });
-        const mock_guild = {
-            id: "test_id",
-            members: {
-                cache: [],
-            },
-        };
-        // expect assertions
-        expect.assertions(1);
-        // execute
-        const result = yield controller.execute_logic_for_guild(mock_guild, 'test_ch_id', 'test_role');
-        expect(result).toBe(true);
-    }));
-    test.each([
-        [["test_game_id_1", "test_game_id_1", "test_game_id_2"], ["test_server_1"]],
-    ])('execute_logic_for_guild for history insert failed', (game_id_list, voice_channel_id_list) => __awaiter(void 0, void 0, void 0, function* () {
-        // setup mocks
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_voice_channel_id_list').mockImplementationOnce(() => {
-            return voice_channel_id_list;
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_voice_channel').mockImplementationOnce(() => {
-            return mock_get_voice_channel("test_channel_id", "test_channel_name");
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_text_channel').mockImplementationOnce((c, id) => {
-            return mock_get_text_channel();
-        });
-        jest.spyOn(activity_history_1.ActivityHistoryRepository.prototype, 'get_t_activity_history').mockImplementationOnce((g, c, l) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_activity(new Date())]);
-            });
-        });
-        jest.spyOn(announcement_history_1.AnnouncementHistoryRepository.prototype, 'get_t_announcement').mockImplementationOnce((g, c, l) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_announcement_history(new Date())]);
-            });
-        });
-        jest.spyOn(announcement_history_1.AnnouncementHistoryRepository.prototype, 'insert_t_announcement').mockImplementationOnce((v) => {
-            return new Promise((resolve, reject) => {
-                resolve(0);
-            });
-        });
-        jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'extract_announcement').mockImplementation((list) => {
-            return test_entity_1.TestEntity.get_test_announcement_info(new Date());
-        });
-        jest.spyOn(cron_announcement_controller_1.CronAnnouncementController.prototype, 'is_exec_announcement').mockImplementation((v, list, n) => {
-            return true;
-        });
-        const mock_guild = {
-            id: "test_id",
-            members: {
-                cache: [],
-            },
-        };
-        // expect assertions
-        expect.assertions(1);
-        // execute
-        const result = yield controller.execute_logic_for_guild(mock_guild, 'test_ch_id', 'test_role');
-        expect(result).toBe(true);
-    }));
-    test.each([
-        [["test_game_id_1", "test_game_id_1", "test_game_id_2"], ["test_server_1"]],
-    ])('execute_logic_for_guild for exception', (game_id_list, voice_channel_id_list) => __awaiter(void 0, void 0, void 0, function* () {
-        // setup mocks
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_voice_channel_id_list').mockImplementationOnce(() => {
-            return null;
-        });
-        // expect assertions
-        expect.assertions(1);
-        // execute
-        try {
-            yield controller.execute_logic_for_guild({}, 'test_ch_id', 'test_role');
-        }
-        catch (err) {
-            expect(true).toBe(true);
-        }
-    }));
 });
 //# sourceMappingURL=controller.cron_announcement_controller.test.js.map

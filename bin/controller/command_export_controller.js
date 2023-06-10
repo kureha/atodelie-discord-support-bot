@@ -24,7 +24,7 @@ class CommandExportController {
      * user info list export
      * @param interaction
      */
-    export_user_info(interaction, is_check_privillege = true) {
+    export_user_info(interaction, is_check_privillege = true, member_limit = -1) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // get objects from discord.
@@ -41,6 +41,10 @@ class CommandExportController {
                     interaction.reply(constants.DISCORD_MESSAGE_NO_PERMISSION);
                     // resolve (no permissions)
                     return false;
+                }
+                // get member limit
+                if (member_limit == -1) {
+                    member_limit = constants.USER_INFO_LIST_LIMIT_NUMBER;
                 }
                 // get guild object
                 const guild = interaction.guild;
@@ -62,7 +66,7 @@ class CommandExportController {
                 logger_1.logger.info(`output user info to file completed. path = ${export_file_path}`);
                 // check member count is exceeded limit
                 let message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO;
-                if (guild.memberCount > constants.USER_INFO_LIST_LIMIT_NUMBER) {
+                if (guild.memberCount > member_limit) {
                     logger_1.logger.info(`user info list count is exceeded discord's limit number ${constants.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED}.`);
                     message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED;
                 }

@@ -26,25 +26,25 @@ function get_discord_common_mock() {
         return [];
     });
 }
-describe('slash command search friend codetest.', () => {
+describe('select_game_master', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("search friend code test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", true],
+    ])("test for select_game_master, (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
         // setup extra mock
         get_discord_common_mock();
         let result = yield controller.select_game_master(interaction, false);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("search friend code error test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for select_game_master error, (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -53,7 +53,20 @@ describe('slash command search friend codetest.', () => {
         // setup extra mock
         get_discord_common_mock();
         const result = yield controller.select_game_master(interaction);
-        expect(result).toEqual(false);
+        expect(result).toEqual(expected);
+    }));
+    test.each([
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for select_game_master check privilege error, (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        // get mock
+        const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
+        const interaction = new Mock();
+        jest.spyOn(discord_common_1.DiscordCommon, 'check_privillege')
+            .mockImplementationOnce(() => { return false; });
+        // setup extra mock
+        get_discord_common_mock();
+        const result = yield controller.select_game_master(interaction);
+        expect(result).toEqual(expected);
     }));
 });
 //# sourceMappingURL=controller.command_game_master.test.js.map

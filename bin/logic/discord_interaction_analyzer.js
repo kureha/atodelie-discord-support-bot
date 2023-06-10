@@ -85,7 +85,7 @@ class DiscordInteractionAnalyzer {
             this.user_id = user_id;
             this.description = constants.RECRUITMENT_DEFAULT_DESCRIPTION;
             // resolve
-            return;
+            return this;
         });
     }
     /**

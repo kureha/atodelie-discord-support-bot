@@ -15,51 +15,130 @@ import { ServerInfo } from "../../entity/server_info";
 
 const controller = new CronFollowController();
 
-describe('cron follow test.', () => {
+/**
+ * mockup for guild
+ * @returns 
+ */
+function get_guild_mock(ret: any): any {
+    return {
+        guilds: {
+            resolve: (): any => {
+                return ret;
+            },
+        },
+        members: {
+            cache: [],
+        }
+    };
+}
+
+describe('follow_recruitment_member', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
 
     test.each([
-        [[], false],
-        [[TestEntity.get_test_server_info()], true],
-        [[TestEntity.get_test_server_info(), TestEntity.get_test_server_info()], true],
-    ])("cron follow test. (%s)", async (server_info_list: ServerInfo[], expected: boolean) => {
+        [[TestEntity.get_test_server_info(), TestEntity.get_test_server_info()], [true, true], true],
+        [[TestEntity.get_test_server_info(), TestEntity.get_test_server_info()], [false, true], false],
+        [[], [], false],
+    ])('test for follow_recruitment_member, (%s, %s) -> %s', async (
+        server_list: ServerInfo[],
+        main_logic_result_list: boolean[],
+        expected: boolean
+    ) => {
+        // setup mocks
+        jest.spyOn(ServerInfoRepository.prototype, 'get_m_server_info_all')
+            .mockImplementationOnce(async () => { return server_list; });
+        main_logic_result_list.forEach((v) => {
+            jest.spyOn(CronFollowController.prototype, 'execute_logic_for_guild')
+                .mockImplementationOnce(async () => { return v; });
+        });
+        const client_mock: Discord.Client = get_guild_mock({});
+
+        // execute
+        const result = await controller.follow_recruitment_member(client_mock);
+        expect(result).toBe(expected);
+    });
+
+    test.each([
+        [[TestEntity.get_test_server_info(), TestEntity.get_test_server_info()], [true, true], false],
+        [[TestEntity.get_test_server_info(), TestEntity.get_test_server_info()], [false, true], false],
+        [[], [], false],
+    ])('test for follow_recruitment_member for exception, (%s, %s) -> %s', async (
+        server_list: ServerInfo[],
+        main_logic_result_list: boolean[],
+        expected: boolean
+    ) => {
+        // setup mocks
+        jest.spyOn(ServerInfoRepository.prototype, 'get_m_server_info_all')
+            .mockImplementationOnce(async () => { throw `exception!` });
+        const client_mock: Discord.Client = get_guild_mock({});
+
+        // execute
+        const result = await controller.follow_recruitment_member(client_mock);
+        expect(result).toBe(expected);
+    });
+});
+
+describe('execute_logic_for_guild', () => {
+    afterEach(() => {
+        jest.resetAllMocks();
+        jest.restoreAllMocks();
+    });
+
+    test.each([
+        [[], [], 0, true],
+        [[TestEntity.get_test_recruitment()], [TestEntity.get_test_participate()], 0, true],
+        [[TestEntity.get_test_recruitment()], [TestEntity.get_test_participate()], 1, true],
+    ])("test for execute_logic_for_guild, (%s, %s, %s) -> %s", async (
+        rec_list: Recruitment[],
+        par_list: Participate[],
+        upd_cnt: number,
+        expected: boolean) => {
         // get mock
         const Mock = TestDiscordMock.client_mock([{ id: "test_server_id" }]);
         const client = new Mock();
 
         // set special mock
-        jest.spyOn(ServerInfoRepository.prototype, 'get_m_server_info_all').mockImplementationOnce((): Promise<ServerInfo[]> => {
-            return new Promise<ServerInfo[]>((resolve, reject) => {
-                resolve(server_info_list)
-            });
-        });
-        jest.spyOn(RecruitmentRepository.prototype, 'get_m_recruitment_for_follow').mockImplementationOnce((server_id: string, from_datetime: Date, to_datetime: Date): Promise<Recruitment[]> => {
-            return new Promise<Recruitment[]>((resolve, reject) => {
-                resolve([TestEntity.get_test_recruitment()]);
-            });
-        });
-        jest.spyOn(ParticipateRepository.prototype, 'get_t_participate').mockImplementationOnce((token: string): Promise<Participate[]> => {
-            return new Promise<Participate[]>((resolve, reject) => {
-                resolve([TestEntity.get_test_participate()]);
-            });
-        });
-        jest.spyOn(ServerInfoRepository.prototype, 'update_m_server_info_follow_time').mockImplementationOnce((server_id: string, follow_time: Date): Promise<number> => {
-            return new Promise<number>((resolve, reject) => {
-                resolve(1);
-            });
-        });
-        jest.spyOn(DiscordCommon, 'get_text_channel').mockImplementationOnce((client: Discord.Client, channel_id: string): any => {
+        jest.spyOn(RecruitmentRepository.prototype, 'get_m_recruitment_for_follow')
+            .mockImplementationOnce(async (): Promise<Recruitment[]> => { return rec_list; });
+        jest.spyOn(ParticipateRepository.prototype, 'get_t_participate')
+            .mockImplementationOnce(async (): Promise<Participate[]> => { return par_list; });
+        jest.spyOn(ServerInfoRepository.prototype, 'update_m_server_info_follow_time')
+            .mockImplementationOnce(async (): Promise<number> => { return upd_cnt; });
+        jest.spyOn(DiscordCommon, 'get_text_channel').mockImplementationOnce(() => {
             return {
                 send: (): Promise<any> => {
                     return new Promise<boolean>((resolve, reject) => { resolve(true) });
                 },
-            };
+            } as unknown as Discord.TextChannel;
         });
 
-        let result = await controller.follow_recruitment_member(client);
+        // expect
+        let result = await controller.execute_logic_for_guild(client, TestEntity.get_test_server_info(), new Date());
+        expect(result).toEqual(expected);
+    });
+
+    test.each([
+        [[], [], 0, false],
+        [[TestEntity.get_test_recruitment()], [TestEntity.get_test_participate()], 0, false],
+        [[TestEntity.get_test_recruitment()], [TestEntity.get_test_participate()], 1, false],
+    ])("test for execute_logic_for_guild for exception, (%s, %s, %s) -> %s", async (
+        rec_list: Recruitment[],
+        par_list: Participate[],
+        upd_cnt: number,
+        expected: boolean) => {
+        // get mock
+        const Mock = TestDiscordMock.client_mock([{ id: "test_server_id" }]);
+        const client = new Mock();
+
+        // set special mock
+        jest.spyOn(RecruitmentRepository.prototype, 'get_m_recruitment_for_follow')
+            .mockImplementationOnce(async (): Promise<Recruitment[]> => { throw `exception!` });
+
+        // expect
+        let result = await controller.execute_logic_for_guild(client, TestEntity.get_test_server_info(), new Date());
         expect(result).toEqual(expected);
     });
 });

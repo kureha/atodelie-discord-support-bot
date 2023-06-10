@@ -15,154 +15,145 @@ const recruitement_1 = require("../../db/recruitement");
 const test_entity_1 = require("../common/test_entity");
 const participate_1 = require("../../db/participate");
 const server_info_1 = require("../../db/server_info");
+const discord_common_1 = require("../../logic/discord_common");
 const controller = new command_recruitment_controller_1.CommandRecruitmentController();
-function set_show_recruitment_input_modal_mock() {
-    const show_recruitment_input_modal = jest.spyOn(command_recruitment_controller_1.CommandRecruitmentController.prototype, 'show_recruitment_input_modal');
-    show_recruitment_input_modal.mockImplementationOnce((interaction, modal, limit_time, description) => {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    });
-}
-function set_test_repositories() {
-    // get repository mock
-    jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_user')
-        .mockImplementationOnce((server_id, user_id) => {
-        return new Promise((resolve, reject) => {
-            resolve([test_entity_1.TestEntity.get_test_recruitment()]);
-        });
-    });
-    jest.spyOn(participate_1.ParticipateRepository.prototype, 'get_t_participate')
-        .mockImplementationOnce((token) => {
-        return new Promise((resolve, reject) => {
-            resolve([test_entity_1.TestEntity.get_test_participate()]);
-        });
-    });
-    jest.spyOn(participate_1.ParticipateRepository.prototype, 'delete_t_participate')
-        .mockImplementationOnce((token) => {
-        return new Promise((resolve, reject) => {
-            resolve(1);
-        });
-    });
-    jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'delete_m_recruitment')
-        .mockImplementationOnce((token) => {
-        return new Promise((resolve, reject) => {
-            resolve(1);
-        });
-    });
-    jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'get_m_server_info')
-        .mockImplementationOnce((token) => {
-        return new Promise((resolve, reject) => {
-            resolve(test_entity_1.TestEntity.get_test_server_info());
-        });
-    });
-}
-describe('new recruitment commandtest.', () => {
+describe('new_recruitment_input_modal', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
     test.each([
         ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("new recruitment modal test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+    ])("test for new_recruitment_input_modal, (%s, %s, %s) -> %s", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
+        jest.spyOn(command_recruitment_controller_1.CommandRecruitmentController.prototype, 'show_recruitment_input_modal')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return true; }));
         // get modal builder mock
         test_discord_mock_1.TestDiscordMock.modal_builder_mock();
-        // set extra mock
-        set_show_recruitment_input_modal_mock();
         let result = yield controller.new_recruitment_input_modal(interaction);
         expect(result).toEqual(true);
     }));
     test.each([
         ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("new recruitment modal error test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+    ])("new recruitment modal exception test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
+        jest.spyOn(command_recruitment_controller_1.CommandRecruitmentController.prototype, 'show_recruitment_input_modal')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { throw `exception!`; }));
         // get modal builder mock
         test_discord_mock_1.TestDiscordMock.modal_builder_mock();
-        const result = yield controller.new_recruitment_input_modal(interaction);
+        let result = yield controller.new_recruitment_input_modal(interaction);
         expect(result).toEqual(false);
     }));
 });
-describe('edit recruitment commandtest.', () => {
+describe('edit_recruitment_input_modal', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("edit recruitment modal test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", [test_entity_1.TestEntity.get_test_recruitment()], true],
+    ])("test for edit_recruitment_input_modal, (%s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, rec_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
+        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_user')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return rec_list; }));
+        jest.spyOn(command_recruitment_controller_1.CommandRecruitmentController.prototype, 'show_recruitment_input_modal')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return true; }));
         // get modal builder mock
         test_discord_mock_1.TestDiscordMock.modal_builder_mock();
-        // set extra mock
-        set_show_recruitment_input_modal_mock();
-        // set repository mock
-        set_test_repositories();
-        expect.assertions(1);
         let result = yield controller.edit_recruitment_input_modal(interaction);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("edit recruitment modal error test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", [], false],
+    ])("test for edit_recruitment_input_modal error, (%s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, rec_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
+        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_user')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return rec_list; }));
+        jest.spyOn(command_recruitment_controller_1.CommandRecruitmentController.prototype, 'show_recruitment_input_modal')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return true; }));
         // get modal builder mock
         test_discord_mock_1.TestDiscordMock.modal_builder_mock();
-        // set sp repository mock
-        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_user')
-            .mockImplementationOnce((server_id, user_id) => {
-            return new Promise((resolve, reject) => {
-                resolve([]);
-            });
-        });
-        const result = yield controller.edit_recruitment_input_modal(interaction);
-        expect(result).toEqual(false);
+        let result = yield controller.edit_recruitment_input_modal(interaction);
+        expect(result).toEqual(expected);
     }));
 });
-describe('delete recruitment commandtest.', () => {
+describe('delete_recruitment', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("delete recruitment modal test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", [test_entity_1.TestEntity.get_test_recruitment()], true],
+    ])("test for delete_recruitment, (%s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, rec_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
+        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_user')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return rec_list; }));
+        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'delete_m_recruitment')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return 1; }));
+        jest.spyOn(participate_1.ParticipateRepository.prototype, 'get_t_participate')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return []; }));
+        jest.spyOn(participate_1.ParticipateRepository.prototype, 'delete_t_participate')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return 2; }));
+        jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'get_m_server_info')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return test_entity_1.TestEntity.get_test_server_info(); }));
         // get modal builder mock
         test_discord_mock_1.TestDiscordMock.modal_builder_mock();
-        // set repository mock
-        set_test_repositories();
-        // set extra mock
-        set_show_recruitment_input_modal_mock();
         let result = yield controller.delete_recruitment(interaction);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("delete recruitment modal error test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", [], false],
+    ])("test for delete_recruitment error, (%s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, rec_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
+        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_user')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return rec_list; }));
+        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'delete_m_recruitment')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return 1; }));
+        jest.spyOn(participate_1.ParticipateRepository.prototype, 'get_t_participate')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return []; }));
+        jest.spyOn(participate_1.ParticipateRepository.prototype, 'delete_t_participate')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return 2; }));
+        jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'get_m_server_info')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return test_entity_1.TestEntity.get_test_server_info(); }));
         // get modal builder mock
         test_discord_mock_1.TestDiscordMock.modal_builder_mock();
-        // set sp repository mock
-        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_user')
-            .mockImplementationOnce((server_id, user_id) => {
-            return new Promise((resolve, reject) => {
-                resolve([]);
-            });
+        let result = yield controller.delete_recruitment(interaction);
+        expect(result).toEqual(expected);
+    }));
+});
+describe('show_recruitment_input_modal', () => {
+    test('test for show_recruitment_input_modal', () => __awaiter(void 0, void 0, void 0, function* () {
+        // get mock
+        const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock('test-c-id', 'test-g-id', 'test-u-id');
+        const interaction = new Mock();
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_text_input')
+            .mockImplementation(() => {
+            return {
+                setValue: () => { },
+            };
         });
-        const result = yield controller.delete_recruitment(interaction);
+        const result = yield controller.show_recruitment_input_modal(interaction, { addComponents: () => { } }, new Date(), '');
+        expect(result).toBe(true);
+    }));
+    test('test for show_recruitment_input_modal error', () => __awaiter(void 0, void 0, void 0, function* () {
+        // get mock
+        const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock('test-c-id', 'test-g-id', 'test-u-id');
+        const interaction = new Mock();
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_text_input')
+            .mockImplementation(() => { throw `exception!`; });
+        let result = yield controller.show_recruitment_input_modal(interaction, { addComponents: () => { } }, new Date(), '');
         expect(result).toEqual(false);
     }));
 });

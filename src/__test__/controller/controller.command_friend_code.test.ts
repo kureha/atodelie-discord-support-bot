@@ -26,15 +26,17 @@ function get_discord_common_mock() {
     });
 }
 
-describe('slash command search friend codetest.', () => {
+describe('search_friend_code', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("search friend code test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        ["test_custom_id", "test_server_id", "test_user_id", true],
+    ])("test for search_friend_code, (%s, %s , %s) -> %s", async (
+        custom_id: any, guild_id: any, user_id: any, expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -43,12 +45,14 @@ describe('slash command search friend codetest.', () => {
         get_discord_common_mock();
 
         let result = await controller.search_friend_code(interaction);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("search friend code error test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for search_friend_code exception, (%s, %s, %s) -> %s", async (
+        custom_id: any, guild_id: any, user_id: any, expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -60,19 +64,21 @@ describe('slash command search friend codetest.', () => {
         get_discord_common_mock();
 
         const result = await controller.search_friend_code(interaction);
-        expect(result).toEqual(false);
+        expect(result).toEqual(expected);
     });
 });
 
-describe('slash command regist friend codetest.', () => {
+describe('regist_friend_code', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("regist friend code test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        ["test_custom_id", "test_server_id", "test_user_id", true],
+    ])("test for regist_friend_code, (%s, %s, %s) -> %s", async (
+        custom_id: any, guild_id: any, user_id: any, expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -81,12 +87,14 @@ describe('slash command regist friend codetest.', () => {
         get_discord_common_mock();
 
         let result = await controller.regist_friend_code(interaction);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("regist friend code error test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for regist_friend_code exception (%s, %s %s)", async (
+        custom_id: any, guild_id: any, user_id: any, expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -98,19 +106,21 @@ describe('slash command regist friend codetest.', () => {
         get_discord_common_mock();
 
         const result = await controller.regist_friend_code(interaction);
-        expect(result).toEqual(false);
+        expect(result).toEqual(expected);
     });
 });
 
-describe('slash command delete friend codetest.', () => {
+describe('delete_friend_code', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("delete friend code test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        ["test_custom_id", "test_server_id", "test_user_id", true],
+    ])("test for delete_friend_code, (%s, %s, %s) -> %s", async (
+        custom_id: any, guild_id: any, user_id: any, expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -119,12 +129,14 @@ describe('slash command delete friend codetest.', () => {
         get_discord_common_mock();
 
         let result = await controller.delete_friend_code(interaction);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("delete friend code error test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for delete_friend_code error, (%s, %s, %s) -> %s", async (
+        custom_id: any, guild_id: any, user_id: any, expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -136,6 +148,6 @@ describe('slash command delete friend codetest.', () => {
         get_discord_common_mock();
 
         const result = await controller.delete_friend_code(interaction);
-        expect(result).toEqual(false);
+        expect(result).toEqual(expected);
     });
 });

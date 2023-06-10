@@ -17,48 +17,102 @@ const participate_1 = require("../../db/participate");
 const server_info_1 = require("../../db/server_info");
 const discord_common_1 = require("../../logic/discord_common");
 const controller = new cron_follow_controller_1.CronFollowController();
-describe('cron follow test.', () => {
+/**
+ * mockup for guild
+ * @returns
+ */
+function get_guild_mock(ret) {
+    return {
+        guilds: {
+            resolve: () => {
+                return ret;
+            },
+        },
+        members: {
+            cache: [],
+        }
+    };
+}
+describe('follow_recruitment_member', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
     test.each([
-        [[], false],
-        [[test_entity_1.TestEntity.get_test_server_info()], true],
-        [[test_entity_1.TestEntity.get_test_server_info(), test_entity_1.TestEntity.get_test_server_info()], true],
-    ])("cron follow test. (%s)", (server_info_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        [[test_entity_1.TestEntity.get_test_server_info(), test_entity_1.TestEntity.get_test_server_info()], [true, true], true],
+        [[test_entity_1.TestEntity.get_test_server_info(), test_entity_1.TestEntity.get_test_server_info()], [false, true], false],
+        [[], [], false],
+    ])('test for follow_recruitment_member, (%s, %s) -> %s', (server_list, main_logic_result_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        // setup mocks
+        jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'get_m_server_info_all')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return server_list; }));
+        main_logic_result_list.forEach((v) => {
+            jest.spyOn(cron_follow_controller_1.CronFollowController.prototype, 'execute_logic_for_guild')
+                .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return v; }));
+        });
+        const client_mock = get_guild_mock({});
+        // execute
+        const result = yield controller.follow_recruitment_member(client_mock);
+        expect(result).toBe(expected);
+    }));
+    test.each([
+        [[test_entity_1.TestEntity.get_test_server_info(), test_entity_1.TestEntity.get_test_server_info()], [true, true], false],
+        [[test_entity_1.TestEntity.get_test_server_info(), test_entity_1.TestEntity.get_test_server_info()], [false, true], false],
+        [[], [], false],
+    ])('test for follow_recruitment_member for exception, (%s, %s) -> %s', (server_list, main_logic_result_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        // setup mocks
+        jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'get_m_server_info_all')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { throw `exception!`; }));
+        const client_mock = get_guild_mock({});
+        // execute
+        const result = yield controller.follow_recruitment_member(client_mock);
+        expect(result).toBe(expected);
+    }));
+});
+describe('execute_logic_for_guild', () => {
+    afterEach(() => {
+        jest.resetAllMocks();
+        jest.restoreAllMocks();
+    });
+    test.each([
+        [[], [], 0, true],
+        [[test_entity_1.TestEntity.get_test_recruitment()], [test_entity_1.TestEntity.get_test_participate()], 0, true],
+        [[test_entity_1.TestEntity.get_test_recruitment()], [test_entity_1.TestEntity.get_test_participate()], 1, true],
+    ])("test for execute_logic_for_guild, (%s, %s, %s) -> %s", (rec_list, par_list, upd_cnt, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.client_mock([{ id: "test_server_id" }]);
         const client = new Mock();
         // set special mock
-        jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'get_m_server_info_all').mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                resolve(server_info_list);
-            });
-        });
-        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_follow').mockImplementationOnce((server_id, from_datetime, to_datetime) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_recruitment()]);
-            });
-        });
-        jest.spyOn(participate_1.ParticipateRepository.prototype, 'get_t_participate').mockImplementationOnce((token) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_participate()]);
-            });
-        });
-        jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'update_m_server_info_follow_time').mockImplementationOnce((server_id, follow_time) => {
-            return new Promise((resolve, reject) => {
-                resolve(1);
-            });
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_text_channel').mockImplementationOnce((client, channel_id) => {
+        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_follow')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return rec_list; }));
+        jest.spyOn(participate_1.ParticipateRepository.prototype, 'get_t_participate')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return par_list; }));
+        jest.spyOn(server_info_1.ServerInfoRepository.prototype, 'update_m_server_info_follow_time')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return upd_cnt; }));
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_text_channel').mockImplementationOnce(() => {
             return {
                 send: () => {
                     return new Promise((resolve, reject) => { resolve(true); });
                 },
             };
         });
-        let result = yield controller.follow_recruitment_member(client);
+        // expect
+        let result = yield controller.execute_logic_for_guild(client, test_entity_1.TestEntity.get_test_server_info(), new Date());
+        expect(result).toEqual(expected);
+    }));
+    test.each([
+        [[], [], 0, false],
+        [[test_entity_1.TestEntity.get_test_recruitment()], [test_entity_1.TestEntity.get_test_participate()], 0, false],
+        [[test_entity_1.TestEntity.get_test_recruitment()], [test_entity_1.TestEntity.get_test_participate()], 1, false],
+    ])("test for execute_logic_for_guild for exception, (%s, %s, %s) -> %s", (rec_list, par_list, upd_cnt, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        // get mock
+        const Mock = test_discord_mock_1.TestDiscordMock.client_mock([{ id: "test_server_id" }]);
+        const client = new Mock();
+        // set special mock
+        jest.spyOn(recruitement_1.RecruitmentRepository.prototype, 'get_m_recruitment_for_follow')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { throw `exception!`; }));
+        // expect
+        let result = yield controller.execute_logic_for_guild(client, test_entity_1.TestEntity.get_test_server_info(), new Date());
         expect(result).toEqual(expected);
     }));
 });

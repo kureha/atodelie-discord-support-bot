@@ -48,18 +48,21 @@ class CronFollowController {
                     // resolve
                     return false;
                 }
-                // execute for loop
+                // total result
+                let total_result = true;
                 for (const server_info of server_info_list) {
-                    yield this.execute_logic_for_guild(client, server_info, to_datetime);
+                    if ((yield this.execute_logic_for_guild(client, server_info, to_datetime)) == false) {
+                        total_result = false;
+                    }
                 }
+                logger_1.logger.info(`follow one server completed. result = ${total_result}`);
+                return total_result;
             }
             catch (err) {
                 // send error message
-                logger_1.logger.error(`cron command error.`, err);
+                logger_1.logger.error(`follow recruitment cron error.`, err);
                 return false;
             }
-            logger_1.logger.info(`follow one server completed.`);
-            return true;
         });
     }
     /**

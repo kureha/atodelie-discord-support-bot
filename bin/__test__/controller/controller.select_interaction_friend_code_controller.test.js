@@ -16,260 +16,183 @@ const test_entity_1 = require("../common/test_entity");
 const friend_code_1 = require("../../db/friend_code");
 const friend_code_history_1 = require("../../db/friend_code_history");
 const controller = new select_interaction_friend_code_controller_1.SelectInteractionFriendCodeController();
-describe('select menu search friend codetest.', () => {
+describe('search_friend_code', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
+    function exclude_friend_code(v) {
+        v.friend_code = '';
+        return v;
+    }
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_input_friend_code"],
-    ])("select menu friend code test (search ok). (%s, %s, %s, %s)", (custom_id, guild_id, user_id, input_value) => __awaiter(void 0, void 0, void 0, function* () {
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_input_friend_code",
+            [test_entity_1.TestEntity.get_test_friend_code()], true
+        ],
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_input_friend_code",
+            [exclude_friend_code(test_entity_1.TestEntity.get_test_friend_code())], false
+        ],
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_input_friend_code",
+            [test_entity_1.TestEntity.get_test_friend_code(), exclude_friend_code(test_entity_1.TestEntity.get_test_friend_code())], true
+        ],
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_input_friend_code",
+            [], false
+        ],
+    ])("test for search_friend_code, (%s, %s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, game_id, matched_friend_code_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
-        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
+        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [game_id]);
         const interaction = new Mock();
         test_discord_mock_1.TestDiscordMock.embed_mock();
-        // set special mock
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_interaction_value_by_idx').mockImplementationOnce((list, idx) => {
-            return input_value;
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_list').mockImplementationOnce((game_id, game_master_list) => {
-            return test_entity_1.TestEntity.get_test_game_master_info();
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild').mockImplementationOnce((guild, ignore_role_name_list) => {
-            return [test_entity_1.TestEntity.get_test_game_master_info()];
-        });
-        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'get_t_friend_code_from_game_id').mockImplementationOnce((server_id, game_id) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_friend_code()]);
-            });
-        });
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_interaction_value_by_idx')
+            .mockImplementationOnce(() => { return game_id; });
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_list')
+            .mockImplementationOnce(() => { return test_entity_1.TestEntity.get_test_game_master_info(); });
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild')
+            .mockImplementationOnce(() => { return []; });
+        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'get_t_friend_code_from_game_id')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return matched_friend_code_list; }));
         // expect
         let result = yield controller.search_friend_code(interaction);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_input_friend_code"],
-    ])("select menu friend code test (search ng). (%s, %s, %s, %s)", (custom_id, guild_id, user_id, input_value) => __awaiter(void 0, void 0, void 0, function* () {
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_input_friend_code",
+            [test_entity_1.TestEntity.get_test_friend_code()], false
+        ],
+    ])("test for search_friend_code exception, (%s, %s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, game_id, matched_friend_code_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
-        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
+        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [game_id]);
         const interaction = new Mock();
         test_discord_mock_1.TestDiscordMock.embed_mock();
-        // set special mock
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_interaction_value_by_idx').mockImplementationOnce((list, idx) => {
-            return input_value;
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_list').mockImplementationOnce((game_id, game_master_list) => {
-            return test_entity_1.TestEntity.get_test_game_master_info();
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild').mockImplementationOnce((guild, ignore_role_name_list) => {
-            return [test_entity_1.TestEntity.get_test_game_master_info()];
-        });
-        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'get_t_friend_code_from_game_id').mockImplementationOnce((server_id, game_id) => {
-            return new Promise((resolve, reject) => {
-                resolve([]);
-            });
-        });
-        // expect
-        let result = yield controller.search_friend_code(interaction);
-        expect(result).toEqual(false);
-    }));
-    test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_input_friend_code"],
-    ])("select menu friend code error test (search). (%s, %s, %s, %s)", (custom_id, guild_id, user_id, input_value) => __awaiter(void 0, void 0, void 0, function* () {
-        // get mock
-        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
-        const interaction = new Mock();
-        // hack mock
         interaction.guild = undefined;
         // expect
-        const result = yield controller.search_friend_code(interaction);
-        expect(result).toEqual(false);
+        let result = yield controller.search_friend_code(interaction);
+        expect(result).toEqual(expected);
     }));
 });
-describe('select menu regist friend codetest.', () => {
+describe('regist_friend_code', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_game_id"],
-    ])("select menu friend code test (regist open). (%s, %s, %s, %s)", (custom_id, guild_id, user_id, input_value) => __awaiter(void 0, void 0, void 0, function* () {
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_game_id",
+            [test_entity_1.TestEntity.get_test_friend_code()],
+            true
+        ],
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_game_id",
+            [],
+            true
+        ],
+    ])("test for regist_friend_code, (%s, %s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, game_id, matched_friend_code_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
-        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
+        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [game_id]);
         const interaction = new Mock();
         test_discord_mock_1.TestDiscordMock.embed_mock();
         test_discord_mock_1.TestDiscordMock.text_input_builder_mock();
         test_discord_mock_1.TestDiscordMock.modal_builder_mock();
-        // set special mock
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_interaction_value_by_idx').mockImplementationOnce((list, idx) => {
-            return input_value;
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_list').mockImplementationOnce((game_id, game_master_list) => {
-            return test_entity_1.TestEntity.get_test_game_master_info();
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild').mockImplementationOnce((guild, ignore_role_name_list) => {
-            return [test_entity_1.TestEntity.get_test_game_master_info()];
-        });
-        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'get_t_friend_code').mockImplementationOnce((server_id, game_id) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_friend_code()]);
-            });
-        });
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_interaction_value_by_idx')
+            .mockImplementationOnce(() => { return game_id; });
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_list')
+            .mockImplementationOnce(() => { return test_entity_1.TestEntity.get_test_game_master_info(); });
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild')
+            .mockImplementationOnce(() => { return []; });
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_text_input')
+            .mockImplementation(() => { return { setValue: () => { } }; });
+        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'get_t_friend_code')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return matched_friend_code_list; }));
         // expect
         let result = yield controller.regist_friend_code(interaction);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_game_id"],
-    ])("select menu friend code error test (regist open). (%s, %s, %s, %s)", (custom_id, guild_id, user_id, input_value) => __awaiter(void 0, void 0, void 0, function* () {
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_game_id",
+            [test_entity_1.TestEntity.get_test_friend_code()],
+            false
+        ],
+    ])("test for regist_friend_code exception, (%s, %s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, game_id, matched_friend_code_list, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
-        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
+        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [game_id]);
         const interaction = new Mock();
-        // hack mock
         interaction.guild = undefined;
         // expect
-        const result = yield controller.regist_friend_code(interaction);
-        expect(result).toEqual(false);
+        let result = yield controller.regist_friend_code(interaction);
+        expect(result).toEqual(expected);
     }));
 });
-describe('select menu delete friend codetest.', () => {
+describe('delete_friend_code', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_game_id"],
-    ])("select menu friend code test (delete ok). (%s, %s, %s, %s)", (custom_id, guild_id, user_id, input_value) => __awaiter(void 0, void 0, void 0, function* () {
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_game_id",
+            [test_entity_1.TestEntity.get_test_friend_code()], true,
+            true
+        ],
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_game_id",
+            [test_entity_1.TestEntity.get_test_friend_code()], false,
+            false
+        ],
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_game_id",
+            [], true,
+            false
+        ],
+    ])("test for delete_friend_code, (%s, %s, %s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, game_id, matched_friend_code_list, is_delete_successed, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
-        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
+        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [game_id]);
         const interaction = new Mock();
         test_discord_mock_1.TestDiscordMock.embed_mock();
-        // set special mock
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_interaction_value_by_idx').mockImplementationOnce((list, idx) => {
-            return input_value;
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_list').mockImplementationOnce((game_id, game_master_list) => {
-            return test_entity_1.TestEntity.get_test_game_master_info();
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild').mockImplementationOnce((guild, ignore_role_name_list) => {
-            return [test_entity_1.TestEntity.get_test_game_master_info()];
-        });
-        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'get_t_friend_code').mockImplementationOnce((server_id, game_id) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_friend_code()]);
-            });
-        });
-        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'delete_t_friend_code').mockImplementationOnce((server_id, user_id, game_id) => {
-            return new Promise((resolve, reject) => { resolve(1); });
-        });
-        jest.spyOn(friend_code_history_1.FriendCodeHistoryRepository.prototype, 'insert_t_friend_code').mockImplementation((fc) => {
-            return new Promise((resolve, reject) => { resolve(1); });
-        });
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_interaction_value_by_idx')
+            .mockImplementationOnce(() => { return game_id; });
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_list')
+            .mockImplementationOnce(() => { return test_entity_1.TestEntity.get_test_game_master_info(); });
+        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild')
+            .mockImplementationOnce(() => { return []; });
+        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'get_t_friend_code')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return matched_friend_code_list; }));
+        if (is_delete_successed) {
+            jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'delete_t_friend_code')
+                .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return 1; }));
+            jest.spyOn(friend_code_history_1.FriendCodeHistoryRepository.prototype, 'insert_t_friend_code')
+                .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return 1; }));
+        }
+        else {
+            jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'delete_t_friend_code')
+                .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return 0; }));
+            jest.spyOn(friend_code_history_1.FriendCodeHistoryRepository.prototype, 'insert_t_friend_code')
+                .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return 0; }));
+        }
         // expect
         let result = yield controller.delete_friend_code(interaction);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_game_id"],
-    ])("select menu friend code test (delete ng). (%s, %s, %s, %s)", (custom_id, guild_id, user_id, input_value) => __awaiter(void 0, void 0, void 0, function* () {
+        [
+            "test_custom_id", "test_server_id", "test_user_id", "test_game_id",
+            [test_entity_1.TestEntity.get_test_friend_code()], true,
+            false
+        ],
+    ])("test for delete_friend_code for exception, (%s, %s, %s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, game_id, matched_friend_code_list, is_delete_successed, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
-        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
+        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [game_id]);
         const interaction = new Mock();
         test_discord_mock_1.TestDiscordMock.embed_mock();
-        // set special mock
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_interaction_value_by_idx').mockImplementationOnce((list, idx) => {
-            return 'test_game_id_notfound';
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_list').mockImplementationOnce((game_id, game_master_list) => {
-            return test_entity_1.TestEntity.get_test_game_master_info();
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild').mockImplementationOnce((guild, ignore_role_name_list) => {
-            return [test_entity_1.TestEntity.get_test_game_master_info()];
-        });
-        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'get_t_friend_code').mockImplementationOnce((server_id, game_id) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_friend_code()]);
-            });
-        });
-        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'delete_t_friend_code').mockImplementationOnce((server_id, user_id, game_id) => {
-            return new Promise((resolve, reject) => { resolve(1); });
-        });
-        jest.spyOn(friend_code_history_1.FriendCodeHistoryRepository.prototype, 'insert_t_friend_code').mockImplementation((fc) => {
-            return new Promise((resolve, reject) => { resolve(1); });
-        });
-        // expect
-        let result = yield controller.delete_friend_code(interaction);
-        expect(result).toEqual(false);
-    }));
-    test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_game_id"],
-    ])("select menu friend code test (delete ng). (%s, %s, %s, %s)", (custom_id, guild_id, user_id, input_value) => __awaiter(void 0, void 0, void 0, function* () {
-        // get mock
-        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
-        const interaction = new Mock();
-        test_discord_mock_1.TestDiscordMock.embed_mock();
-        // set special mock
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_interaction_value_by_idx').mockImplementationOnce((list, idx) => {
-            return input_value;
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_list').mockImplementationOnce((game_id, game_master_list) => {
-            return test_entity_1.TestEntity.get_test_game_master_info();
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild').mockImplementationOnce((guild, ignore_role_name_list) => {
-            return [test_entity_1.TestEntity.get_test_game_master_info()];
-        });
-        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'get_t_friend_code').mockImplementationOnce((server_id, game_id) => {
-            return new Promise((resolve, reject) => {
-                resolve([]);
-            });
-        });
-        // expect
-        let result = yield controller.delete_friend_code(interaction);
-        expect(result).toEqual(false);
-    }));
-    test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_game_id"],
-    ])("select menu friend code error test (delete). (%s, %s, %s, %s)", (custom_id, guild_id, user_id, input_value) => __awaiter(void 0, void 0, void 0, function* () {
-        // get mock
-        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
-        const interaction = new Mock();
-        // hack mock
         interaction.guild = undefined;
         // expect
-        const result = yield controller.delete_friend_code(interaction);
-        expect(result).toEqual(false);
-    }));
-    test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_game_id"],
-    ])("select menu friend code error test (exception for delete record). (%s, %s, %s, %s)", (custom_id, guild_id, user_id, input_value) => __awaiter(void 0, void 0, void 0, function* () {
-        // get mock
-        const Mock = test_discord_mock_1.TestDiscordMock.select_menu_interaction_mock(custom_id, guild_id, user_id, [input_value]);
-        const interaction = new Mock();
-        test_discord_mock_1.TestDiscordMock.embed_mock();
-        // set special mock
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_interaction_value_by_idx').mockImplementationOnce((list, idx) => {
-            return input_value;
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_list').mockImplementationOnce((game_id, game_master_list) => {
-            return test_entity_1.TestEntity.get_test_game_master_info();
-        });
-        jest.spyOn(discord_common_1.DiscordCommon, 'get_game_master_from_guild').mockImplementationOnce((guild, ignore_role_name_list) => {
-            return [test_entity_1.TestEntity.get_test_game_master_info()];
-        });
-        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'get_t_friend_code').mockImplementationOnce((server_id, game_id) => {
-            return new Promise((resolve, reject) => {
-                resolve([test_entity_1.TestEntity.get_test_friend_code()]);
-            });
-        });
-        jest.spyOn(friend_code_1.FriendCodeRepository.prototype, 'delete_t_friend_code').mockImplementationOnce((server_id, user_id, game_id) => {
-            return new Promise((resolve, reject) => { resolve(0); });
-        });
-        jest.spyOn(friend_code_history_1.FriendCodeHistoryRepository.prototype, 'insert_t_friend_code').mockImplementation((fc) => {
-            return new Promise((resolve, reject) => { resolve(1); });
-        });
-        // expect
-        const result = yield controller.delete_friend_code(interaction);
-        expect(result).toEqual(false);
+        let result = yield controller.delete_friend_code(interaction);
+        expect(result).toEqual(expected);
     }));
 });
 //# sourceMappingURL=controller.select_interaction_friend_code_controller.test.js.map

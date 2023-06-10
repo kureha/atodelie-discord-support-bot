@@ -69,23 +69,29 @@ class CronActivityRecordController {
                 // resolve
                 return false;
             }
+            // total result
+            let total_result = true;
             for (const server_info of server_info_list) {
                 try {
                     // get guild
                     const guild = client.guilds.resolve(server_info.server_id);
                     if (guild == null) {
+                        logger_1.logger.warn(`guild is null, can't regist history.`);
+                        total_result = false;
                         continue;
                     }
                     // execute main logics
-                    yield this.execute_logic_for_guild(guild);
+                    if ((yield this.execute_logic_for_guild(guild)) == false) {
+                        total_result = false;
+                    }
                 }
                 catch (err) {
-                    // send error message
                     logger_1.logger.error(`activity history regist failed for error.`, err);
+                    total_result = false;
                 }
             }
-            logger_1.logger.info(`activity history regist with cron completed.`);
-            return true;
+            logger_1.logger.info(`activity history regist with cron completed. result = ${total_result}`);
+            return total_result;
         });
     }
     /**
@@ -99,12 +105,16 @@ class CronActivityRecordController {
             // get voice channel id list
             const voice_channel_id_list = discord_common_1.DiscordCommon.get_voice_channel_id_list(guild);
             logger_1.logger.trace(`target voice channel id list : ${voice_channel_id_list}`);
+            // total result
+            let total_result = true;
             // check channel member's game name
             for (const channel_id of voice_channel_id_list) {
-                yield this.execute_logic_for_channel(guild, channel_id);
+                if ((yield this.execute_logic_for_channel(guild, channel_id)) == false) {
+                    total_result = false;
+                }
             }
-            logger_1.logger.info(`activity history regist with cron completed. server id = ${guild.id}`);
-            return true;
+            logger_1.logger.info(`activity history regist with cron completed. server id = ${guild.id}, result = ${total_result}`);
+            return total_result;
         });
     }
     /**
@@ -141,7 +151,6 @@ class CronActivityRecordController {
     }
     /**
      * regist activity history
-     * @param activity_history_rep
      * @param guild_id
      * @param channel_id
      * @param most_playing_game_name
@@ -174,7 +183,6 @@ class CronActivityRecordController {
     }
     /**
      * delete activity history
-     * @param activity_history_rep
      * @param guild_id
      * @param month_limit
      * @returns
@@ -183,25 +191,9 @@ class CronActivityRecordController {
         return __awaiter(this, void 0, void 0, function* () {
             // delete history before 1 month
             let delete_date_from = new Date();
-            delete_date_from.setMonth(delete_date_from.getMonth() - 1);
+            delete_date_from.setMonth(delete_date_from.getMonth() - month_limit);
             return yield this.activity_history_rep.delete_t_activity_history(guild_id, delete_date_from);
         });
-    }
-    /**
-     * update channel name using game name
-     * @param now_channel_name
-     * @param prefix_regexp
-     * @returns
-     */
-    get_update_channel_name(game_name, now_channel_name, prefix_format, prefix_regexp) {
-        // get default channel name
-        let channel_name = now_channel_name.replace(prefix_regexp, constants_1.Constants.STRING_EMPTY);
-        // update channel name if new game name is exists
-        if (game_name.length > 0) {
-            channel_name = prefix_format.replace('%%GAME_NAME%%', game_name).replace('%%CHANNEL_NAME%%', channel_name);
-        }
-        // return channel name
-        return channel_name;
     }
     /**
      * get most playing game name
@@ -225,7 +217,7 @@ class CronActivityRecordController {
             }
             else if (play_count == most_play_count) {
                 // if equal, game name compare and get name
-                game_name = [game_name, unique_game_name].sort()[0] || '';
+                game_name = [game_name, unique_game_name].sort()[0];
             }
         });
         return game_name;

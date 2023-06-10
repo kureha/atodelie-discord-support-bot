@@ -36,15 +36,28 @@ function get_export_user_info_mock(data_list: UserInfo[]) {
     });
 }
 
-describe('export user infotest.', () => {
+describe('export_user_info', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("export user info test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        [
+            "test_custom_id", "test_server_id", "test_user_id",
+            -1,
+            true
+        ],
+        [
+            "test_custom_id", "test_server_id", "test_user_id",
+            1,
+            true
+        ],
+    ])("test for export_user_info, (%s, %s, %s) -> %s", async (
+        custom_id: any, guild_id: any, user_id: any,
+        member_limit: number,
+        expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -59,13 +72,15 @@ describe('export user infotest.', () => {
         );
 
         // expect
-        await expect(controller.export_user_info(interaction, false)).resolves.toEqual(true);
+        await expect(controller.export_user_info(interaction, false, member_limit)).resolves.toEqual(expected);
         await expect(controller.export_user_info(interaction)).resolves.toEqual(false);
     });
 
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("export user info error test. (%s, %s %s)", async (custom_id: any, guild_id: any, user_id: any) => {
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for export_user_info blank, (%s, %s, %s) -> %s", async (
+        custom_id: any, guild_id: any, user_id: any, expected: boolean
+    ) => {
         // get mock
         const Mock = TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -78,6 +93,6 @@ describe('export user infotest.', () => {
 
         // expect
         const result = await controller.export_user_info(interaction);
-        expect(result).toEqual(false);
+        expect(result).toEqual(expected);
     });
 });

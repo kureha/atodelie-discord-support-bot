@@ -14,49 +14,46 @@ const message_regist_command_controller_1 = require("../../controller/message_re
 const discord_register_command_1 = require("../../logic/discord_register_command");
 const constants_1 = require("../../common/constants");
 const controller = new message_regist_command_controller_1.MessageRegistCommandController();
-describe('regist commandtest.', () => {
+describe('regist_command', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_client_id"],
-    ])("regist command test. (%s, %s, %s, %s)", (custom_id, guild_id, user_id, client_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", "test_client_id", true],
+    ])("test for regist_command, (%s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, client_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.message_mock(user_id, constants_1.Constants.STRING_EMPTY);
         const message = new Mock();
-        jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'regist_command').mockImplementationOnce((client_id) => {
-            return new Promise((resolve, reject) => { resolve([]); });
-        });
+        jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'regist_command')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return []; }));
         let result = yield controller.regist_command(message, client_id, false);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_client_id"],
-    ])("regist command error test. (%s, %s, %s, %s)", (custom_id, guild_id, user_id, client_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", "test_client_id", false],
+    ])("test for regist_command error, (%s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, client_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.message_mock(user_id, constants_1.Constants.STRING_EMPTY);
         const message = new Mock();
-        jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'regist_command').mockImplementationOnce((client_id) => {
-            return new Promise((resolve, reject) => { resolve([]); });
-        });
+        jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'regist_command')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { return []; }));
         let result = yield controller.regist_command(message, client_id);
-        expect(result).toEqual(false);
+        expect(result).toEqual(expected);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_client_id"],
-    ])("regist command exception test. (%s, %s, %s, %s)", (custom_id, guild_id, user_id, client_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", "test_client_id", false],
+    ])("test for regist_command exception, (%s, %s, %s, %s) -> %s", (custom_id, guild_id, user_id, client_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.message_mock(user_id, constants_1.Constants.STRING_EMPTY);
         const message = new Mock();
-        jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'regist_command').mockImplementationOnce((client_id) => {
-            throw new Error(`test exception`);
-        });
+        jest.spyOn(discord_register_command_1.DiscordRegisterCommand.prototype, 'regist_command')
+            .mockImplementationOnce(() => __awaiter(void 0, void 0, void 0, function* () { throw `exception!`; }));
         const result = yield controller.regist_command(message, client_id, false);
-        expect(result).toEqual(false);
+        expect(result).toEqual(expected);
     }));
 });
-describe('regist commandtest.', () => {
+describe('is_regist_command.', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
@@ -65,7 +62,7 @@ describe('regist commandtest.', () => {
         ["test_user_id", "@test_user_id regist_slash_command", true],
         ["test_user_id", "regist_slash_command", false],
         ["test_user_id", "", false],
-    ])('regist command test', (user_id, contents, exp) => {
+    ])('test for is_regist_command, (%s, %s) -> %s', (user_id, contents, exp) => {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.message_mock(user_id, contents);
         const message = new Mock();

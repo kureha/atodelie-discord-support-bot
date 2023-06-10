@@ -21,7 +21,7 @@ export class CommandExportController {
      * user info list export
      * @param interaction
      */
-    async export_user_info(interaction: Discord.ChatInputCommandInteraction, is_check_privillege: boolean = true): Promise<boolean> {
+    async export_user_info(interaction: Discord.ChatInputCommandInteraction, is_check_privillege: boolean = true, member_limit: number = -1): Promise<boolean> {
         try {
             // get objects from discord.
             if (interaction.guild == undefined) {
@@ -38,6 +38,11 @@ export class CommandExportController {
 
                 // resolve (no permissions)
                 return false;
+            }
+
+            // get member limit
+            if (member_limit == -1) {
+                member_limit = constants.USER_INFO_LIST_LIMIT_NUMBER;
             }
 
             // get guild object
@@ -67,7 +72,7 @@ export class CommandExportController {
 
             // check member count is exceeded limit
             let message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO;
-            if (guild.memberCount > constants.USER_INFO_LIST_LIMIT_NUMBER) {
+            if (guild.memberCount > member_limit) {
                 logger.info(`user info list count is exceeded discord's limit number ${constants.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED}.`);
                 message_string = constants.DISCORD_MESSAGE_EXPORT_USER_INFO_LIMIT_EXCEEDED;
             }

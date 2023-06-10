@@ -47,25 +47,30 @@ export class CronAnnouncementController {
             return false;
         }
 
-        // loop with sync
+        // total result
+        let total_result: boolean = true;
         for (const server_info of server_info_list) {
             try {
                 // get guild
                 const guild: Discord.Guild | null = client.guilds.resolve(server_info.server_id);
                 if (guild == null) {
+                    logger.warn(`guild is null, can't regist history.`);
+                    total_result = false;
                     continue;
                 }
 
                 // execute main logics
-                await this.execute_logic_for_guild(guild, server_info.channel_id, server_info.recruitment_target_role);
+                if (await this.execute_logic_for_guild(guild, server_info.channel_id, server_info.recruitment_target_role) == false) {
+                    total_result = false;
+                }
             } catch (err) {
-                // send error message
                 logger.error(`annoucement failed for error.`, err);
+                total_result = false;
             };
         };
 
-        logger.info(`annoucement with cron completed.`);
-        return true;
+        logger.info(`annoucement with cron completed. result = ${total_result}`);
+        return total_result;
     }
 
     /**
@@ -81,13 +86,18 @@ export class CronAnnouncementController {
         const voice_channel_id_list: string[] = DiscordCommon.get_voice_channel_id_list(guild);
         logger.trace(`target voice channel id list : ${voice_channel_id_list}`);
 
+        // total result
+        let total_result: boolean = true;
+
         // check channel member's game name
         for (const channel_id of voice_channel_id_list) {
-            await this.execute_logic_for_channel(guild, announce_channel_id, announce_target_role, channel_id);
+            if (await this.execute_logic_for_channel(guild, announce_channel_id, announce_target_role, channel_id) == false) {
+                total_result = false;
+            }
         };
 
-        logger.info(`annoucement with cron completed. server id = ${guild.id}`);
-        return true;
+        logger.info(`annoucement with cron completed. server id = ${guild.id}, result = ${total_result}`);
+        return total_result;
     }
 
     /**
@@ -97,7 +107,7 @@ export class CronAnnouncementController {
      * @param announce_target_role 
      * @param channel_id 
      */
-    async execute_logic_for_channel(guild: Discord.Guild, announce_channel_id: string, announce_target_role: string, channel_id: string) {
+    async execute_logic_for_channel(guild: Discord.Guild, announce_channel_id: string, announce_target_role: string, channel_id: string): Promise<boolean> {
         try {
             logger.info(`check need announcet start. voice channel id = ${channel_id}`);
 
@@ -154,7 +164,11 @@ export class CronAnnouncementController {
         } catch (err) {
             // send error message
             logger.error(`annoucement failed for error. server id = ${guild.id}`, err);
+            return false;
         };
+
+        logger.error(`annoucement completed. server id = ${guild.id}`);
+        return true;
     }
 
     /**

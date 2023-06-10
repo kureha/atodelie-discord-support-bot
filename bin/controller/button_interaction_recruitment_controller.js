@@ -41,42 +41,42 @@ class ButtonInteractionRecruitmentController {
                 }
                 // analyze message
                 const analyzer = new discord_interaction_analyzer_1.DiscordInteractionAnalyzer();
-                yield analyzer.analyze(interaction.customId, interaction.user.id);
-                logger_1.logger.info(`analyze interaciton completed. type = ${analyzer.type}`);
-                logger_1.logger.trace(analyzer);
+                const analyze_result = yield analyzer.analyze(interaction.customId, interaction.user.id);
+                logger_1.logger.info(`analyze interaciton completed. type = ${analyze_result.type}`);
+                logger_1.logger.trace(analyze_result);
                 // check target recruitment is alive?
                 let recruitment_data;
                 try {
-                    recruitment_data = yield this.recruitment_repo.get_m_recruitment(analyzer.token);
-                    logger_1.logger.info(`select m_recruitoment successed. token = ${analyzer.token}`);
+                    recruitment_data = yield this.recruitment_repo.get_m_recruitment(analyze_result.token);
+                    logger_1.logger.info(`select m_recruitoment successed. token = ${analyze_result.token}`);
                 }
                 catch (err) {
                     // if not found, send error message
-                    logger_1.logger.warn(`target m_recruitment is not found. token = ${analyzer.token}`);
+                    logger_1.logger.warn(`target m_recruitment is not found. token = ${analyze_result.token}`);
                     // send error message
                     yield interaction.reply({
                         content: `${discord_message_1.DiscordMessage.get_no_recruitment()}`,
                         ephemeral: true,
                     });
                     // goto catch block
-                    throw new Error(`target m_recruitment is not found. token = ${analyzer.token}`);
+                    throw new Error(`target m_recruitment is not found. token = ${analyze_result.token}`);
                 }
                 try {
                     // try to insert
-                    const affected_data_cnt = yield this.participate_repo.insert_t_participate(analyzer.get_join_participate());
+                    const affected_data_cnt = yield this.participate_repo.insert_t_participate(analyze_result.get_join_participate());
                     logger_1.logger.info(`insert t_participate completed. affected_data_cnt = ${affected_data_cnt}`);
                 }
                 catch (err) {
                     // if error, try to update
                     logger_1.logger.info(`insert t_participate failed, try to update. err = (${err})`);
-                    const affected_data_cnt = yield this.participate_repo.update_t_participate(analyzer.get_join_participate());
+                    const affected_data_cnt = yield this.participate_repo.update_t_participate(analyze_result.get_join_participate());
                     logger_1.logger.info(`update t_participate completed. affected_data_cnt = ${affected_data_cnt}`);
                 }
                 // load server info
                 const server_info = yield this.server_info_repo.get_m_server_info(interaction.guildId);
                 logger_1.logger.info(`select m_server_info successed. server_id = ${interaction.guildId}`);
                 // set id to analyzer
-                analyzer.set_id(recruitment_data.id);
+                analyze_result.set_id(recruitment_data.id);
                 // get user list
                 recruitment_data.user_list = yield this.participate_repo.get_t_participate(recruitment_data.token);
                 logger_1.logger.info(`select recruitment's t_participate successed. count = ${recruitment_data.user_list.length}`);

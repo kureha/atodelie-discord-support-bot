@@ -43,24 +43,31 @@ export class CronVoiceChannelRenameController {
             return false;
         }
 
+        // total result
+        let total_result: boolean = true;
         for (const server_info of server_info_list) {
             try {
                 // get guild
                 const guild: Discord.Guild | null = client.guilds.resolve(server_info.server_id);
                 if (guild == null) {
+                    logger.warn(`guild is null, can't regist history.`);
+                    total_result = false;
                     continue;
                 }
 
                 // execute main logics
-                await this.execute_logic_for_guild(guild);
+                if (await this.execute_logic_for_guild(guild) == false) {
+                    total_result = false;
+                }
             } catch (err) {
                 // send error message
                 logger.error(`change channel name failed for error.`, err);
+                total_result = false;
             }
         }
 
-        logger.info(`rename voice channel with cron completed.`);
-        return true;
+        logger.info(`rename voice channel with cron completed. result = ${total_result}`);
+        return total_result;
     }
 
     /**
@@ -75,13 +82,18 @@ export class CronVoiceChannelRenameController {
         const voice_channel_id_list: string[] = DiscordCommon.get_voice_channel_id_list(guild);
         logger.trace(`target voice channel id list : ${voice_channel_id_list}`);
 
+        // total result
+        let total_result: boolean = true;
+
         // check channel member's game name
         for (const channel_id of voice_channel_id_list) {
-            await this.execute_logic_for_channel(guild, channel_id);
+            if (await this.execute_logic_for_channel(guild, channel_id) == false) {
+                total_result = false;
+            }
         }
 
-        logger.info(`rename voice channel with cron completed. server id = ${guild.id}`);
-        return true;
+        logger.info(`rename voice channel with cron completed. server id = ${guild.id}, result = ${total_result}`);
+        return total_result;
     }
 
     /**

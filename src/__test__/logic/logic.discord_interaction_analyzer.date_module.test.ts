@@ -4,7 +4,107 @@ const constants = new Constants();
 
 import { DiscordInteractionAnalyzer } from '../../logic/discord_interaction_analyzer';
 
-describe("get_recruitment_date test.", () => {
+describe('analyze', () => {
+    afterEach(() => {
+        jest.resetAllMocks();
+        jest.restoreAllMocks();
+    });
+
+    test.each([
+        ["join-recruite-token=test_token", 'test-uid', "test-token", constants.TYPE_JOIN, constants.STATUS_ENABLED, false],
+        ["view-recruite-token=test_token", 'test-uid', "test-token", constants.TYPE_VIEW, constants.STATUS_VIEW, false],
+        ["decline-recruite-token=test_token", 'test-uid', "test-token", constants.TYPE_DECLINE, constants.STATUS_DISABLED, true],
+    ])('test for analyze, (%s, %s, %s) -> %s, %s, %s', async (
+        custom_id: string, user_id: string, token: string,
+        expected_type: number, expected_status: number, expected_delete: boolean
+    ) => {
+        // setup mock
+        jest.spyOn(DiscordInteractionAnalyzer.prototype, 'get_token')
+            .mockImplementationOnce(() => { return token; });
+
+        const analyzer = new DiscordInteractionAnalyzer();
+        const result = await analyzer.analyze(custom_id, user_id);
+
+        expect(result.user_id).toEqual(user_id);
+        expect(result.token).toEqual(token);
+        expect(result.type).toEqual(expected_type);
+        expect(result.status).toEqual(expected_status);
+        expect(result.delete).toEqual(expected_delete);
+    });
+    test.each([
+        ["error-recruite-token=test_token", 'test-uid', "test-token", constants.TYPE_JOIN, constants.STATUS_ENABLED, false],
+        ["", 'test-uid', "test-token", constants.TYPE_VIEW, constants.STATUS_VIEW, false],
+    ])('test for analyze for exception,  (%s, %s, %s) -> %s, %s, %s', async (
+        custom_id: string, user_id: string, token: string,
+        expected_type: number, expected_status: number, expected_delete: boolean
+    ) => {
+        // setup mock
+        jest.spyOn(DiscordInteractionAnalyzer.prototype, 'get_token')
+            .mockImplementationOnce(() => { return token; });
+
+        expect(async () => {
+            const analyzer = new DiscordInteractionAnalyzer();
+            await analyzer.analyze(custom_id, user_id);
+        }).rejects.toThrowError(/^this interaction dosen't match join recruitment./);
+
+    });
+});
+
+describe('setter', () => {
+    test.each([[1, 'test'], [0, '']])('setter test (%s, %s)', (id: number, token: string) => {
+        const analyzer = new DiscordInteractionAnalyzer();
+        analyzer.set_id(id);
+        analyzer.set_token(token);
+        expect(analyzer.id).toEqual(id);
+        expect(analyzer.token).toEqual(token);
+    });
+});
+
+describe("get_token.", () => {
+    test.each(
+        [
+            ["", "", constants.ERROR_RECRUITMENT_TOKEN],
+            ["button-id-a1b2c3test", "button-id-", "a1b2c3test"],
+            [" button-id-a1b2c3test", " button-id-", "a1b2c3test"],
+            ["button-id-a1b2c3test ", "button-id-", "a1b2c3test "],
+            ["button-id-a1b2c3test", "a1b2c3test", constants.ERROR_RECRUITMENT_TOKEN],
+            [" button-id-a1b2c3test", "button-id-", constants.ERROR_RECRUITMENT_TOKEN],
+            ["button-id-a1b2c3test", " button-id-", constants.ERROR_RECRUITMENT_TOKEN],
+        ]
+    )("test for get_token, (%s, %s) -> %s", (
+        input: string, prefix: string, exp: string) => {
+        const a = new DiscordInteractionAnalyzer();
+        expect(a.get_token(input, prefix)).toEqual(exp);
+    });
+});
+
+describe("get_join_participate", () => {
+    test.each([
+        [1, 'token', 2, 'uid', 'desc', false],
+        [1, 'token', 2, 'uid', 'desc', true],
+    ])('test for get_join_participate, (%s, %s, %s, %s, %s, %s)', (
+        id: number, token: string, status: number, user_id: string, description: string, deleted: boolean
+    ) => {
+        let analyzer = new DiscordInteractionAnalyzer();
+        analyzer.set_id(id);
+        analyzer.set_token(token);
+        analyzer.status = status;
+        analyzer.user_id = user_id;
+        analyzer.description = description;
+        analyzer.delete = deleted;
+
+        const result = analyzer.get_join_participate();
+
+        expect(result.id).toBe(id);
+        expect(result.token).toBe(token);
+        expect(result.status).toBe(status);
+        expect(result.user_id).toBe(user_id);
+        expect(result.description).toBe(description);
+        expect(result.delete).toBe(deleted);
+    });
+});
+
+describe("get_recruitment_date", () => {
     test.each([
         [0, 0, new Date("2010-01-01T12:00:00.000+09:00"), new Date("2010-01-02T00:00:00.000+09:00")],
         [24, 0, new Date("2010-01-01T12:00:00.000+09:00"), new Date("2010-01-02T00:00:00.000+09:00")],
@@ -54,7 +154,7 @@ describe("get_recruitment_date test.", () => {
     });
 });
 
-describe("remove_full_wide_digits test.", () => {
+describe("remove_full_wide_digits", () => {
     test.each([
         ["", ""],
         ["１２３４５６７８９０", "1234567890"],
@@ -65,23 +165,5 @@ describe("remove_full_wide_digits test.", () => {
         ["1234567890", "1234567890"],
     ])('test for full-width character replace tests, %s -> %s', (input: string, expected: string) => {
         expect(DiscordInteractionAnalyzer.remove_full_wide_digits(input)).toEqual(expected)
-    });
-});
-
-describe("get_token test.", () => {
-    test.each(
-        [
-            ["", "", constants.ERROR_RECRUITMENT_TOKEN],
-            ["button-id-a1b2c3test", "button-id-", "a1b2c3test"],
-            [" button-id-a1b2c3test", " button-id-", "a1b2c3test"],
-            ["button-id-a1b2c3test ", "button-id-", "a1b2c3test "],
-            ["button-id-a1b2c3test", "a1b2c3test", constants.ERROR_RECRUITMENT_TOKEN],
-            [" button-id-a1b2c3test", "button-id-", constants.ERROR_RECRUITMENT_TOKEN],
-            ["button-id-a1b2c3test", " button-id-", constants.ERROR_RECRUITMENT_TOKEN],
-        ]
-    )("get token from button interaction id. button id = %s, prefix string = %s, exp = %s", (
-        input: string, prefix: string, exp: string) => {
-        const a = new DiscordInteractionAnalyzer();
-        expect(a.get_token(input, prefix)).toEqual(exp);
     });
 });

@@ -48,7 +48,7 @@ export class DiscordInteractionAnalyzer {
      * @param custom_id recruitment id
      * @param user_id discord bot's id
      */
-    async analyze(custom_id: string, user_id: string): Promise<void> {
+    async analyze(custom_id: string, user_id: string): Promise<DiscordInteractionAnalyzer> {
         // check custom id for recruitment join
         if (custom_id.match(new RegExp(`^${constants.DISCORD_BUTTON_ID_JOIN_RECRUITMENT_PREFIX}`))) {
             logger.debug(`interaction is valid. type = ${constants.TYPE_JOIN}`);
@@ -101,7 +101,7 @@ export class DiscordInteractionAnalyzer {
         this.description = constants.RECRUITMENT_DEFAULT_DESCRIPTION;
 
         // resolve
-        return;
+        return this;
     }
 
     /**

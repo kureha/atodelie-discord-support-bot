@@ -39,14 +39,23 @@ function get_export_user_info_mock(data_list) {
         };
     });
 }
-describe('export user infotest.', () => {
+describe('export_user_info', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("export user info test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        [
+            "test_custom_id", "test_server_id", "test_user_id",
+            -1,
+            true
+        ],
+        [
+            "test_custom_id", "test_server_id", "test_user_id",
+            1,
+            true
+        ],
+    ])("test for export_user_info, (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, member_limit, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -57,12 +66,12 @@ describe('export user infotest.', () => {
             test_entity_1.TestEntity.get_test_user_info(3, 2),
         ]);
         // expect
-        yield expect(controller.export_user_info(interaction, false)).resolves.toEqual(true);
+        yield expect(controller.export_user_info(interaction, false, member_limit)).resolves.toEqual(expected);
         yield expect(controller.export_user_info(interaction)).resolves.toEqual(false);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("export user info error test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for export_user_info blank, (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -72,7 +81,7 @@ describe('export user infotest.', () => {
         get_export_user_info_mock([]);
         // expect
         const result = yield controller.export_user_info(interaction);
-        expect(result).toEqual(false);
+        expect(result).toEqual(expected);
     }));
 });
 //# sourceMappingURL=controller.command_export_controller.test.js.map

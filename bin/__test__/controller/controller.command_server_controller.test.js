@@ -14,14 +14,14 @@ const test_discord_mock_1 = require("../common/test_discord_mock");
 const discord_common_1 = require("../../logic/discord_common");
 const command_server_controller_1 = require("../../controller/command_server_controller");
 const controller = new command_server_controller_1.CommandServerController();
-describe('slash command select menu regist server mastertest.', () => {
+describe('regist_server_master', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("select menu regist server master test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", true],
+    ])("test for regist_server_master, (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -30,11 +30,11 @@ describe('slash command select menu regist server mastertest.', () => {
             return {};
         });
         let result = yield controller.regist_server_master(interaction, false);
-        expect(result).toEqual(true);
+        expect(result).toEqual(expected);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("select menu regist server master error test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for regist_server_master error, (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -44,12 +44,12 @@ describe('slash command select menu regist server mastertest.', () => {
         jest.spyOn(discord_common_1.DiscordCommon, 'get_role_list_select_menu').mockImplementationOnce((custom_id, placeholder, guild) => {
             return {};
         });
-        const result = yield controller.regist_server_master(interaction);
-        expect(result).toEqual(false);
+        const result = yield controller.regist_server_master(interaction, false);
+        expect(result).toEqual(expected);
     }));
     test.each([
-        ["test_custom_id", "test_server_id", "test_user_id"],
-    ])("select menu regist server master error test. (%s, %s %s)", (custom_id, guild_id, user_id) => __awaiter(void 0, void 0, void 0, function* () {
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for regist_server_master error (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
         // get mock
         const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
         const interaction = new Mock();
@@ -58,7 +58,7 @@ describe('slash command select menu regist server mastertest.', () => {
             return {};
         });
         let result = yield controller.regist_server_master(interaction);
-        expect(result).toEqual(false);
+        expect(result).toEqual(expected);
     }));
 });
 //# sourceMappingURL=controller.command_server_controller.test.js.map

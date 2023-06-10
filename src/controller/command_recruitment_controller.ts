@@ -139,7 +139,7 @@ export class CommandRecruitmentController {
             await interaction.showModal(modal);
         } catch (err) {
             logger.error(err);
-            throw err;
+            return false;
         }
 
         return true;
