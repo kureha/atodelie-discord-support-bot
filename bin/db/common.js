@@ -20,9 +20,9 @@ class Common {
         return this.client;
     }
 }
+exports.Common = Common;
 /**
  * Prisma client
  */
 Common.client = null;
-exports.Common = Common;
 //# sourceMappingURL=common.js.map

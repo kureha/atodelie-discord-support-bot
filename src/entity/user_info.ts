@@ -1,6 +1,5 @@
 // import constants
 import { Constants } from '../common/constants';
-import { logger } from '../common/logger';
 
 // import discord modules
 import * as Discord from 'discord.js';
