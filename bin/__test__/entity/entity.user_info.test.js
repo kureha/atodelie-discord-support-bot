@@ -64,24 +64,26 @@ describe("entity.user_info function test.", () => {
     });
 });
 describe("parse_list_from_discordjs test.", () => {
-    var _a, _b, _c, _d, _e, _f;
-    // setup stab
-    const guild = {
-        roles: {
-            cache: [
-                { id: "test_id_1", name: "test_name_1" },
-                { id: "test_id_2", name: "test_name_2" },
-                { id: "test_id_3", name: "test_name_3" },
-            ]
-        }
-    };
-    const reuslt = user_info_1.RoleInfo.parse_list_from_discordjs(guild);
-    expect(reuslt.length).toEqual(3);
-    expect((_a = reuslt[0]) === null || _a === void 0 ? void 0 : _a.id).toEqual("test_id_1");
-    expect((_b = reuslt[0]) === null || _b === void 0 ? void 0 : _b.name).toEqual("test_name_1");
-    expect((_c = reuslt[1]) === null || _c === void 0 ? void 0 : _c.id).toEqual("test_id_2");
-    expect((_d = reuslt[1]) === null || _d === void 0 ? void 0 : _d.name).toEqual("test_name_2");
-    expect((_e = reuslt[2]) === null || _e === void 0 ? void 0 : _e.id).toEqual("test_id_3");
-    expect((_f = reuslt[2]) === null || _f === void 0 ? void 0 : _f.name).toEqual("test_name_3");
+    test('test for parse_list_from_discordjs', () => {
+        var _a, _b, _c, _d, _e, _f;
+        // setup stab
+        const guild = {
+            roles: {
+                cache: [
+                    { id: "test_id_1", name: "test_name_1" },
+                    { id: "test_id_2", name: "test_name_2" },
+                    { id: "test_id_3", name: "test_name_3" },
+                ]
+            }
+        };
+        const reuslt = user_info_1.RoleInfo.parse_list_from_discordjs(guild);
+        expect(reuslt.length).toEqual(3);
+        expect((_a = reuslt[0]) === null || _a === void 0 ? void 0 : _a.id).toEqual("test_id_1");
+        expect((_b = reuslt[0]) === null || _b === void 0 ? void 0 : _b.name).toEqual("test_name_1");
+        expect((_c = reuslt[1]) === null || _c === void 0 ? void 0 : _c.id).toEqual("test_id_2");
+        expect((_d = reuslt[1]) === null || _d === void 0 ? void 0 : _d.name).toEqual("test_name_2");
+        expect((_e = reuslt[2]) === null || _e === void 0 ? void 0 : _e.id).toEqual("test_id_3");
+        expect((_f = reuslt[2]) === null || _f === void 0 ? void 0 : _f.name).toEqual("test_name_3");
+    });
 });
 //# sourceMappingURL=entity.user_info.test.js.map

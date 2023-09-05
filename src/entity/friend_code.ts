@@ -52,17 +52,10 @@ export class FriendCode {
             v.game_id = SqliteUtils.get_value(row.game_id);
             v.game_name = SqliteUtils.get_value(row.game_name);
             v.friend_code = SqliteUtils.get_value(row.friend_code);
-            // regist_time, update_time is nullable
-            try {
-                v.regist_time = new Date(row.regist_time);
-            } catch (e) {
-                v.regist_time = Constants.get_default_date();
-            }
-            try {
-                v.update_time = new Date(row.update_time);
-            } catch (e) {
-                v.update_time = Constants.get_default_date();
-            }
+
+            v.regist_time = SqliteUtils.get_date_value(row.regist_time);
+            v.update_time = SqliteUtils.get_date_value(row.update_time);
+            
             // db delete is number, change boolean
             if (row.delete == true) {
                 v.delete = true;

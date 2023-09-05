@@ -37,12 +37,9 @@ export class VersionRepository {
             initial_version.app_version = VersionRepository.VERSION_DEFAULT;
             initial_version.database_version = VersionRepository.VERSION_DEFAULT;
             return initial_version;
-        } else if (list.length == 1) {
-            logger.info(`select successed. data = ${JSON.stringify(list)}`);
-            return Version.parse_from_db(list[0]);
         } else {
-            logger.error(`more than 2 datas found on m_version. result count = ${list.length}`);
-            throw `more than 2 datas found on m_version. result count = ${list.length}`;
+            logger.info(`select successed. data = ${JSON.stringify(list[0])}`);
+            return Version.parse_from_db(list[0]);
         }
     }
 

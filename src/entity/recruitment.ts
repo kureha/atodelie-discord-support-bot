@@ -63,27 +63,16 @@ export class Recruitment {
             v.thread_id = SqliteUtils.get_value(row.thread_id);
             v.token = SqliteUtils.get_value(row.token);
             v.status = SqliteUtils.get_value(row.status);
-            // limit_time is nullable
-            try {
-                v.limit_time = new Date(row.limit_time);
-            } catch (e) {
-                v.limit_time = Constants.get_default_date();
-            }
+
+            v.limit_time = SqliteUtils.get_date_value(row.limit_time);
+
             v.name = SqliteUtils.get_value(row.name);
             v.owner_id = SqliteUtils.get_value(row.owner_id);
             v.description = SqliteUtils.get_value(row.description);
-            // regist_time is nullable
-            try {
-                v.regist_time = new Date(row.regist_time);
-            } catch (e) {
-                v.regist_time = Constants.get_default_date();
-            }
-            // update_time is nullable
-            try {
-                v.update_time = new Date(row.update_time);
-            } catch (e) {
-                v.update_time = Constants.get_default_date();
-            }
+
+            v.regist_time = SqliteUtils.get_date_value(row.regist_time);
+            v.update_time = SqliteUtils.get_date_value(row.update_time);
+            
             // db delete is number, change boolean
             if (row.delete == true) {
                 v.delete = true;

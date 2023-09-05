@@ -35,38 +35,6 @@ export class FriendCodeHistoryRepository {
     }
 
     /**
-     * update data
-     * @param data key is [data.user_id] and [data.game_id]
-     * @returns 
-     */
-    async update_t_friend_code(data: FriendCode): Promise<number> {
-        // update date
-        const exeute_date: Date = new Date();
-        data.update_time = exeute_date;
-
-        logger.info(`update t_friend_code_history. data = ${JSON.stringify(data)}, key = { server_id: ${data.server_id}, user_id = ${data.user_id}, game_id = ${data.game_id} }`);
-        try {
-            const result = await this.client.t_friend_code_history.update({
-                where: {
-                    server_id_user_id_regist_time_game_id: {
-                        server_id: data.server_id,
-                        user_id: data.user_id,
-                        regist_time: data.regist_time,
-                        game_id: data.game_id,
-                    }
-                },
-                data: data
-            });
-
-            logger.info(`update succeeded. data = ${JSON.stringify(result)}`);
-            return 1;
-        } catch (err) {
-            logger.info(`no record updated. error = ${err}`);
-            return 0;
-        }
-    }
-
-    /**
      * delete data by user_id and game_id
      * @param server_id
      * @param user_id

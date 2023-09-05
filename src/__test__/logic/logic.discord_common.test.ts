@@ -449,8 +449,33 @@ describe("get_game_master_from_guild", () => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
     });
-
+    
     test("test for get_game_master_from_guild.", () => {
+        // setup mocks
+        const Mock = TestDiscordMock.select_menu_interaction_mock("test_custom_id", "test_guild_id", "test_user_id", []);
+        const guild = new Mock().guild;
+        const role_info_list = TestEntity.get_test_role_info(3);
+        const other_role_count = 3;
+        jest.spyOn(RoleInfo, "parse_list_from_discordjs").mockImplementation((guild: Discord.Guild): RoleInfo[] => {
+            return role_info_list;
+        });
+
+        // expect
+        const result = DiscordCommon.get_game_master_from_guild(guild, [role_info_list[1]?.name || Constants.STRING_EMPTY], other_role_count);
+        expect(result.length).toEqual(2 + other_role_count);
+        expect(result[0]?.game_id).toEqual(role_info_list[0]?.id);
+        expect(result[0]?.game_name).toEqual(role_info_list[0]?.name);
+        expect(result[1]?.game_id).toEqual(role_info_list[2]?.id);
+        expect(result[1]?.game_name).toEqual(role_info_list[2]?.name);
+        expect(result[2]?.game_id).toEqual("-1000");
+        expect(result[2]?.game_name).toEqual(constants.DISCORD_FRIEND_CODE_OTHER_NAME_FORMAT.replace('%%DISCORD_FRIEND_CODE_OTHER_COUNT%%', "1"));
+        expect(result[3]?.game_id).toEqual("-1001");
+        expect(result[3]?.game_name).toEqual(constants.DISCORD_FRIEND_CODE_OTHER_NAME_FORMAT.replace('%%DISCORD_FRIEND_CODE_OTHER_COUNT%%', "2"));
+        expect(result[4]?.game_id).toEqual("-1002");
+        expect(result[4]?.game_name).toEqual(constants.DISCORD_FRIEND_CODE_OTHER_NAME_FORMAT.replace('%%DISCORD_FRIEND_CODE_OTHER_COUNT%%', "3"));
+    });
+
+    test("test for get_game_master_from_guild (reverse).", () => {
         // setup mocks
         const Mock = TestDiscordMock.select_menu_interaction_mock("test_custom_id", "test_guild_id", "test_user_id", []);
         const guild = new Mock().guild;

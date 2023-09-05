@@ -85,23 +85,25 @@ describe("entity.user_info function test.", () => {
 });
 
 describe("parse_list_from_discordjs test.", () => {
-    // setup stab
-    const guild: any = {
-        roles: {
-            cache: [
-                { id: "test_id_1", name: "test_name_1" },
-                { id: "test_id_2", name: "test_name_2" },
-                { id: "test_id_3", name: "test_name_3" },
-            ]
-        }
-    };
+    test('test for parse_list_from_discordjs', () => {
+        // setup stab
+        const guild: any = {
+            roles: {
+                cache: [
+                    { id: "test_id_1", name: "test_name_1" },
+                    { id: "test_id_2", name: "test_name_2" },
+                    { id: "test_id_3", name: "test_name_3" },
+                ]
+            }
+        };
 
-    const reuslt = RoleInfo.parse_list_from_discordjs(guild);
-    expect(reuslt.length).toEqual(3);
-    expect(reuslt[0]?.id).toEqual("test_id_1");
-    expect(reuslt[0]?.name).toEqual("test_name_1");
-    expect(reuslt[1]?.id).toEqual("test_id_2");
-    expect(reuslt[1]?.name).toEqual("test_name_2");
-    expect(reuslt[2]?.id).toEqual("test_id_3");
-    expect(reuslt[2]?.name).toEqual("test_name_3");
+        const reuslt = RoleInfo.parse_list_from_discordjs(guild);
+        expect(reuslt.length).toEqual(3);
+        expect(reuslt[0]?.id).toEqual("test_id_1");
+        expect(reuslt[0]?.name).toEqual("test_name_1");
+        expect(reuslt[1]?.id).toEqual("test_id_2");
+        expect(reuslt[1]?.name).toEqual("test_name_2");
+        expect(reuslt[2]?.id).toEqual("test_id_3");
+        expect(reuslt[2]?.name).toEqual("test_name_3");
+    });
 });

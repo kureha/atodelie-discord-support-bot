@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoleInfo = exports.UserInfo = void 0;
 // import constants
 const constants_1 = require("../common/constants");
-const logger_1 = require("../common/logger");
 class UserInfo {
     /**
      * constructor
@@ -29,14 +28,8 @@ class UserInfo {
      */
     static parse_from_discordjs(data) {
         let v = new UserInfo();
-        try {
-            v.id = data.user.id;
-            v.name = data.user.username;
-        }
-        catch (e) {
-            logger_1.logger.error(e);
-            v = new UserInfo();
-        }
+        v.id = data.user.id;
+        v.name = data.user.username;
         return v;
     }
 }
@@ -57,14 +50,8 @@ class RoleInfo {
      */
     static parse_from_discordjs(data) {
         let v = new RoleInfo();
-        try {
-            v.id = data.id;
-            v.name = data.name;
-        }
-        catch (e) {
-            logger_1.logger.error(e);
-            v = new RoleInfo();
-        }
+        v.id = data.id;
+        v.name = data.name;
         return v;
     }
     /**

@@ -36,11 +36,9 @@ export class AnnouncementHistory {
             v.server_id = SqliteUtils.get_value(row.server_id);
             v.channel_id = SqliteUtils.get_value(row.channel_id);
             v.game_name = SqliteUtils.get_value(row.game_name);
-            try {
-                v.announcement_time = new Date(row.announcement_time);
-            } catch (e) {
-                v.announcement_time = Constants.get_default_date();
-            }
+
+            v.announcement_time = SqliteUtils.get_date_value(row.announcement_time);
+            
         } catch (e) {
             // if error, re-create new instance
             v = new AnnouncementHistory();

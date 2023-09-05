@@ -40,38 +40,6 @@ class FriendCodeHistoryRepository {
         });
     }
     /**
-     * update data
-     * @param data key is [data.user_id] and [data.game_id]
-     * @returns
-     */
-    update_t_friend_code(data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // update date
-            const exeute_date = new Date();
-            data.update_time = exeute_date;
-            logger_1.logger.info(`update t_friend_code_history. data = ${JSON.stringify(data)}, key = { server_id: ${data.server_id}, user_id = ${data.user_id}, game_id = ${data.game_id} }`);
-            try {
-                const result = yield this.client.t_friend_code_history.update({
-                    where: {
-                        server_id_user_id_regist_time_game_id: {
-                            server_id: data.server_id,
-                            user_id: data.user_id,
-                            regist_time: data.regist_time,
-                            game_id: data.game_id,
-                        }
-                    },
-                    data: data
-                });
-                logger_1.logger.info(`update succeeded. data = ${JSON.stringify(result)}`);
-                return 1;
-            }
-            catch (err) {
-                logger_1.logger.info(`no record updated. error = ${err}`);
-                return 0;
-            }
-        });
-    }
-    /**
      * delete data by user_id and game_id
      * @param server_id
      * @param user_id

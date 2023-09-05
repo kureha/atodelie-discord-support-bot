@@ -20,7 +20,7 @@ describe("entity.activity_history test.", () => {
     });
     test.each([
         ["", "", "", 0, 0, new Date('1970-01-01T00:00:00.000+09:00'), new Date('1970-01-01T00:00:00.000+09:00'), new Date('1970-01-01T00:00:00.000+09:00'), false],
-        ["test_server_id", "test_channel_id", "test_game_id", 2, 3, new Date('1970-01-01T00:00:00.000+09:00'), new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-01-02T01:02:03.000+09:00'), false],
+        ["test_server_id", "test_channel_id", "test_game_id", 2, 3, new Date('1970-01-01T00:00:00.000+09:00'), new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-01-02T01:02:03.000+09:00'), true],
     ])("test for parse activity history, {%s, %s, %s, %s, &s, %s, %s, %s, %s}", (server_id, channel_id, game_name, member_count, total_member_count, change_time, regist_time, update_time, deleted) => {
         expect(activity_history_1.ActivityHistory.parse_from_db({
             server_id: server_id,

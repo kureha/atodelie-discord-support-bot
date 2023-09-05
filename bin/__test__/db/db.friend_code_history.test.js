@@ -94,10 +94,8 @@ describe("db.friend_code_history test.", () => {
         // select deleted
         yield expect(rep.get_t_friend_code(test_frc_info.server_id, test_frc_info.user_id)).resolves.toEqual([]);
     }));
-    test("update or delete non-found friend code history test", () => __awaiter(void 0, void 0, void 0, function* () {
-        let cnt = yield rep.update_t_friend_code(test_entity_1.TestEntity.get_test_friend_code());
-        expect(cnt).toEqual(0);
-        cnt = yield rep.delete_t_friend_code(test_entity_1.TestEntity.get_test_friend_code().server_id, test_entity_1.TestEntity.get_test_friend_code().user_id, test_entity_1.TestEntity.get_test_friend_code().game_id);
+    test("delete non-found friend code history test", () => __awaiter(void 0, void 0, void 0, function* () {
+        let cnt = yield rep.delete_t_friend_code(test_entity_1.TestEntity.get_test_friend_code().server_id, test_entity_1.TestEntity.get_test_friend_code().user_id, test_entity_1.TestEntity.get_test_friend_code().game_id);
         expect(cnt).toEqual(0);
     }));
 });

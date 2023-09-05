@@ -27,13 +27,7 @@ class ServerInfo {
             v.server_id = sqlite_utils_1.SqliteUtils.get_value(row.server_id);
             v.channel_id = sqlite_utils_1.SqliteUtils.get_value(row.channel_id);
             v.recruitment_target_role = sqlite_utils_1.SqliteUtils.get_value(row.recruitment_target_role);
-            // follow_time is nullable
-            try {
-                v.follow_time = new Date(row.follow_time);
-            }
-            catch (e) {
-                v.follow_time = constants_1.Constants.get_default_date();
-            }
+            v.follow_time = sqlite_utils_1.SqliteUtils.get_date_value(row.follow_time);
         }
         catch (e) {
             v = new ServerInfo();

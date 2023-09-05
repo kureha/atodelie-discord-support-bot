@@ -42,30 +42,12 @@ class Recruitment {
             v.thread_id = sqlite_utils_1.SqliteUtils.get_value(row.thread_id);
             v.token = sqlite_utils_1.SqliteUtils.get_value(row.token);
             v.status = sqlite_utils_1.SqliteUtils.get_value(row.status);
-            // limit_time is nullable
-            try {
-                v.limit_time = new Date(row.limit_time);
-            }
-            catch (e) {
-                v.limit_time = constants_1.Constants.get_default_date();
-            }
+            v.limit_time = sqlite_utils_1.SqliteUtils.get_date_value(row.limit_time);
             v.name = sqlite_utils_1.SqliteUtils.get_value(row.name);
             v.owner_id = sqlite_utils_1.SqliteUtils.get_value(row.owner_id);
             v.description = sqlite_utils_1.SqliteUtils.get_value(row.description);
-            // regist_time is nullable
-            try {
-                v.regist_time = new Date(row.regist_time);
-            }
-            catch (e) {
-                v.regist_time = constants_1.Constants.get_default_date();
-            }
-            // update_time is nullable
-            try {
-                v.update_time = new Date(row.update_time);
-            }
-            catch (e) {
-                v.update_time = constants_1.Constants.get_default_date();
-            }
+            v.regist_time = sqlite_utils_1.SqliteUtils.get_date_value(row.regist_time);
+            v.update_time = sqlite_utils_1.SqliteUtils.get_date_value(row.update_time);
             // db delete is number, change boolean
             if (row.delete == true) {
                 v.delete = true;

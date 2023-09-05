@@ -34,19 +34,8 @@ class GameMaster {
             v.game_id = sqlite_utils_1.SqliteUtils.get_value(row.game_id);
             v.game_name = sqlite_utils_1.SqliteUtils.get_value(row.game_name);
             v.presence_name = sqlite_utils_1.SqliteUtils.get_value(row.presence_name);
-            // regist_time, update_time is nullable
-            try {
-                v.regist_time = new Date(row.regist_time);
-            }
-            catch (e) {
-                v.regist_time = constants_1.Constants.get_default_date();
-            }
-            try {
-                v.update_time = new Date(row.update_time);
-            }
-            catch (e) {
-                v.update_time = constants_1.Constants.get_default_date();
-            }
+            v.regist_time = sqlite_utils_1.SqliteUtils.get_date_value(row.regist_time);
+            v.update_time = sqlite_utils_1.SqliteUtils.get_date_value(row.update_time);
             // db delete is number, change boolean
             if (row.delete == true) {
                 v.delete = true;

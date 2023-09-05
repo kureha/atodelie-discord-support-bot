@@ -22,7 +22,7 @@ describe("entity.activity_history test.", () => {
     test.each(
         [
             ["", "", "", 0, 0, new Date('1970-01-01T00:00:00.000+09:00'), new Date('1970-01-01T00:00:00.000+09:00'), new Date('1970-01-01T00:00:00.000+09:00'), false],
-            ["test_server_id", "test_channel_id", "test_game_id", 2, 3, new Date('1970-01-01T00:00:00.000+09:00'), new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-01-02T01:02:03.000+09:00'), false],
+            ["test_server_id", "test_channel_id", "test_game_id", 2, 3, new Date('1970-01-01T00:00:00.000+09:00'), new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-01-02T01:02:03.000+09:00'), true],
         ]
     )("test for parse activity history, {%s, %s, %s, %s, &s, %s, %s, %s, %s}", (server_id: string,
         channel_id: string,

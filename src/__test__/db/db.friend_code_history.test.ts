@@ -103,10 +103,8 @@ describe("db.friend_code_history test.", () => {
         await expect(rep.get_t_friend_code(test_frc_info.server_id, test_frc_info.user_id)).resolves.toEqual([]);
     });
 
-    test("update or delete non-found friend code history test", async () => {
-        let cnt = await rep.update_t_friend_code(TestEntity.get_test_friend_code());
-        expect(cnt).toEqual(0);
-        cnt = await rep.delete_t_friend_code(TestEntity.get_test_friend_code().server_id, TestEntity.get_test_friend_code().user_id, TestEntity.get_test_friend_code().game_id);
+    test("delete non-found friend code history test", async () => {
+        let cnt = await rep.delete_t_friend_code(TestEntity.get_test_friend_code().server_id, TestEntity.get_test_friend_code().user_id, TestEntity.get_test_friend_code().game_id);
         expect(cnt).toEqual(0);
     });
 });

@@ -23,7 +23,7 @@ describe("entity.friend_code test.", () => {
     test.each(
         [
             ["", "", "", 0, "", "", new Date('1970-01-01T00:00:00.000+09:00'), new Date('1970-01-01T00:00:00.000+09:00'), false],
-            ["test_server_id", "test_user_id", "test_user_name", 999, "test_game_id", "test_friend_code", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
+            ["test_server_id", "test_user_id", "test_user_name", 999, "test_game_id", "test_friend_code", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), true],
         ]
     )("test for parse friend code, id = %s", (
         server_id: string,
@@ -45,7 +45,7 @@ describe("entity.friend_code test.", () => {
             friend_code: friend_code,
             regist_time: regist_time,
             update_time: update_time,
-            deleted: deleted,
+            delete: deleted,
         })).toEqual({
             server_id: server_id,
             user_id: user_id,

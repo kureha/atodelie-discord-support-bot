@@ -51,6 +51,11 @@ describe("db.announcement test.", () => {
         // select test 4
         result = yield rep.get_t_announcement(test_activity_history.server_id, test_activity_history.channel_id, 0);
         expect(result.length).toEqual(0);
+        // select test 5
+        result = yield rep.get_t_announcement_all(test_activity_history.server_id);
+        expect(result.length).toEqual(2);
+        expect(result).toContainEqual(test_activity_history);
+        expect(result).toContainEqual(test_activity_history_other);
     }));
     test("delete announcement test: insert -> delete", () => __awaiter(void 0, void 0, void 0, function* () {
         // test insert object 1

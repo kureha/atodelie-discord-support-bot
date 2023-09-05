@@ -47,12 +47,7 @@ class AnnouncementInfo {
             v.current_game_member_count = sqlite_utils_1.SqliteUtils.get_value(row.current_game_member_count);
             v.max_total_member_count = sqlite_utils_1.SqliteUtils.get_value(row.max_total_member_count);
             v.game_name = sqlite_utils_1.SqliteUtils.get_value(row.game_name);
-            try {
-                v.game_start_time = new Date(row.game_start_time);
-            }
-            catch (e) {
-                v.game_start_time = constants_1.Constants.get_default_date();
-            }
+            v.game_start_time = sqlite_utils_1.SqliteUtils.get_date_value(row.game_start_time);
         }
         catch (e) {
             // if error, re-create new instance

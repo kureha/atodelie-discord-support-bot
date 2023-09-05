@@ -30,12 +30,7 @@ class AnnouncementHistory {
             v.server_id = sqlite_utils_1.SqliteUtils.get_value(row.server_id);
             v.channel_id = sqlite_utils_1.SqliteUtils.get_value(row.channel_id);
             v.game_name = sqlite_utils_1.SqliteUtils.get_value(row.game_name);
-            try {
-                v.announcement_time = new Date(row.announcement_time);
-            }
-            catch (e) {
-                v.announcement_time = constants_1.Constants.get_default_date();
-            }
+            v.announcement_time = sqlite_utils_1.SqliteUtils.get_date_value(row.announcement_time);
         }
         catch (e) {
             // if error, re-create new instance

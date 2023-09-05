@@ -18,7 +18,7 @@ describe("entity.game_master test.", () => {
     });
     test.each([
         ["", 0, "", "", new Date('1970-01-01T00:00:00.000+09:00'), new Date('1970-01-01T00:00:00.000+09:00'), false],
-        ["test_server_id", 999, "test_game_id", "test_presence_name", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), false],
+        ["test_server_id", 999, "test_game_id", "test_presence_name", new Date('2020-12-23T12:34:56.000+09:00'), new Date('2021-02-03T01:02:03.000+09:00'), true],
     ])("test for parse game master info, id = %s", (server_id, game_id, game_name, presence_name, regist_time, update_time, deleted) => {
         expect(game_master_1.GameMaster.parse_from_db({
             server_id: server_id,
@@ -27,7 +27,7 @@ describe("entity.game_master test.", () => {
             presence_name: presence_name,
             regist_time: regist_time,
             update_time: update_time,
-            deleted: deleted,
+            delete: deleted,
         })).toEqual({
             server_id: server_id,
             game_id: game_id,

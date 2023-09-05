@@ -48,21 +48,11 @@ export class ActivityHistory {
             v.game_name = SqliteUtils.get_value(row.game_name);
             v.member_count = SqliteUtils.get_value(row.member_count);
             v.total_member_count = SqliteUtils.get_value(row.total_member_count);
-            try {
-                v.change_time = new Date(row.change_time);
-            } catch (e) {
-                v.change_time = Constants.get_default_date();
-            }
-            try {
-                v.regist_time = new Date(row.regist_time);
-            } catch (e) {
-                v.regist_time = Constants.get_default_date();
-            }
-            try {
-                v.update_time = new Date(row.update_time);
-            } catch (e) {
-                v.update_time = Constants.get_default_date();
-            }
+
+            v.change_time = SqliteUtils.get_date_value(row.change_time);
+            v.regist_time = SqliteUtils.get_date_value(row.regist_time);
+            v.update_time = SqliteUtils.get_date_value(row.update_time);
+            
             // db delete is number, change boolean
             if (row.delete == true) {
                 v.delete = true;

@@ -41,13 +41,9 @@ class VersionRepository {
                 initial_version.database_version = VersionRepository.VERSION_DEFAULT;
                 return initial_version;
             }
-            else if (list.length == 1) {
-                logger_1.logger.info(`select successed. data = ${JSON.stringify(list)}`);
-                return version_1.Version.parse_from_db(list[0]);
-            }
             else {
-                logger_1.logger.error(`more than 2 datas found on m_version. result count = ${list.length}`);
-                throw `more than 2 datas found on m_version. result count = ${list.length}`;
+                logger_1.logger.info(`select successed. data = ${JSON.stringify(list[0])}`);
+                return version_1.Version.parse_from_db(list[0]);
             }
         });
     }

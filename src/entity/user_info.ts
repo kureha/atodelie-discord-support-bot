@@ -38,13 +38,8 @@ export class UserInfo {
     static parse_from_discordjs(data: Discord.GuildMember): UserInfo {
         let v = new UserInfo();
 
-        try {
-            v.id = data.user.id;
-            v.name = data.user.username;
-        } catch (e) {
-            logger.error(e);
-            v = new UserInfo();
-        }
+        v.id = data.user.id;
+        v.name = data.user.username;
 
         return v;
     }
@@ -71,13 +66,8 @@ export class RoleInfo {
     static parse_from_discordjs(data: Discord.Role): RoleInfo {
         let v = new RoleInfo();
 
-        try {
-            v.id = data.id;
-            v.name = data.name;
-        } catch (e) {
-            logger.error(e);
-            v = new RoleInfo();
-        }
+        v.id = data.id;
+        v.name = data.name;
 
         return v;
     }
@@ -87,7 +77,7 @@ export class RoleInfo {
      * @param guild 
      * @returns 
      */
-     static parse_list_from_discordjs(guild: Discord.Guild): RoleInfo[] {
+    static parse_list_from_discordjs(guild: Discord.Guild): RoleInfo[] {
         // return value define
         const role_list: RoleInfo[] = [];
 
