@@ -1,12 +1,5 @@
-// define logger
-import { logger } from './../common/logger';
-
 // import discord modules
 import * as Discord from 'discord.js';
-
-// import constants
-import { Constants } from './../common/constants';
-const constants = new Constants();
 
 export class MessageSuggestRecruitmentController {
     /**

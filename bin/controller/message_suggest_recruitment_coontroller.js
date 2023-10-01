@@ -1,9 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MessageSuggestRecruitmentController = void 0;
-// import constants
-const constants_1 = require("./../common/constants");
-const constants = new constants_1.Constants();
 class MessageSuggestRecruitmentController {
     /**
      * Judge message is suggest

@@ -227,9 +227,9 @@ class DiscordInteractionAnalyzer {
         return dest_date;
     }
 }
-exports.DiscordInteractionAnalyzer = DiscordInteractionAnalyzer;
 /**
  * default recruitment time (copy from constants)
  */
 DiscordInteractionAnalyzer.HOURS_DEFAULT = constants.RECRUITMENT_DEFAULT_LIMIT_HOURS;
+exports.DiscordInteractionAnalyzer = DiscordInteractionAnalyzer;
 //# sourceMappingURL=discord_interaction_analyzer.js.map

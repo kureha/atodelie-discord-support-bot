@@ -448,7 +448,6 @@ class DiscordCommon {
             .setStyle(input_style);
     }
 }
-exports.DiscordCommon = DiscordCommon;
 /**
  * define button style
  */
@@ -460,4 +459,5 @@ DiscordCommon.BUTTON_STYLE_SUCCESS = 3;
  */
 DiscordCommon.TEXT_INPUT_STYLE_SHORT = 1;
 DiscordCommon.TEXT_INPUT_STYLE_PHARAGRAPH = 2;
+exports.DiscordCommon = DiscordCommon;
 //# sourceMappingURL=discord_common.js.map

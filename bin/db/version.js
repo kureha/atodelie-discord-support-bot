@@ -94,9 +94,9 @@ class VersionRepository {
         });
     }
 }
-exports.VersionRepository = VersionRepository;
 /**
  * Version of default
  */
 VersionRepository.VERSION_DEFAULT = '1.0.0.0';
+exports.VersionRepository = VersionRepository;
 //# sourceMappingURL=version.js.map

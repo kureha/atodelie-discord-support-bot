@@ -131,9 +131,9 @@ class DiscordRegisterCommand {
         return new Discord.SlashCommandBuilder().setName(name).setDescription(description);
     }
 }
-exports.DiscordRegisterCommand = DiscordRegisterCommand;
 /**
  * Discord REST API Version
  */
 DiscordRegisterCommand.DISCORD_REST_VERSION = '10';
+exports.DiscordRegisterCommand = DiscordRegisterCommand;
 //# sourceMappingURL=discord_register_command.js.map

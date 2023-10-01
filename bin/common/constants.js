@@ -227,10 +227,10 @@ class Constants {
         return v.replace(/[.*+?^=!:${}()|[\]\/\\]/g, '\\$&');
     }
 }
-exports.Constants = Constants;
 /**
  * reference for blank string
  */
 Constants.STRING_EMPTY = '';
+exports.Constants = Constants;
 ;
 //# sourceMappingURL=constants.js.map
