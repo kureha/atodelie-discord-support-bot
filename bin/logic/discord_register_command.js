@@ -84,6 +84,7 @@ class DiscordRegisterCommand {
                     this.get_slash_command(constants.DISCORD_COMMAND_REGIST_FRIEND_CODE, constants.DISCORD_COMMAND_DESCRIPTION_REGIST_FRIEND_CODE),
                     this.get_slash_command(constants.DISCORD_COMMAND_DELETE_FRIEND_CODE, constants.DISCORD_COMMAND_DESCRIPTION_DELETE_RECRUITMENT),
                     this.get_slash_command(constants.DISCORD_COMMAND_EDIT_GAME_MASTER, constants.DISCORD_COMMAND_DESCRIPTION_EDIT_GAME_MASTER),
+                    this.get_slash_command(constants.DISCORD_COMMAND_RESET_GAME_MASTER, constants.DISCORD_COMMAND_DESCRIPTION_RESET_GAME_MASTER),
                 ]);
                 // regist command
                 rest.put(this.get_url_for_guild_based_command(client_id, guild_id), { body: commands }).then((data) => {
@@ -131,9 +132,9 @@ class DiscordRegisterCommand {
         return new Discord.SlashCommandBuilder().setName(name).setDescription(description);
     }
 }
+exports.DiscordRegisterCommand = DiscordRegisterCommand;
 /**
  * Discord REST API Version
  */
 DiscordRegisterCommand.DISCORD_REST_VERSION = '10';
-exports.DiscordRegisterCommand = DiscordRegisterCommand;
 //# sourceMappingURL=discord_register_command.js.map

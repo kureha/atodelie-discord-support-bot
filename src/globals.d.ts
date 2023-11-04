@@ -74,6 +74,7 @@ declare namespace NodeJS {
         readonly DISCORD_MESSAGE_DELETE_FRIEND_CODE: string;
         readonly DISCORD_MESSAGE_DELETE_FRIEND_CODE_NOT_FOUND: string;
         readonly DISCORD_MESSAGE_EDIT_GAME_MASTER: string;
+        readonly DISCORD_MESSAGE_RESET_GAME_MASTER: string;
 
         readonly DISCORD_MESSAGE_EMBED_NO_MEMBER: string;
         readonly DISCORD_MESSAGE_EMBED_TITLE: string;
@@ -104,6 +105,7 @@ declare namespace NodeJS {
         readonly DISCORD_COMMAND_REGIST_FRIEND_CODE: string;
         readonly DISCORD_COMMAND_DELETE_FRIEND_CODE: string;
         readonly DISCORD_COMMAND_EDIT_GAME_MASTER: string;
+        readonly DISCORD_COMMAND_RESET_GAME_MASTER: string;
 
         readonly DISCORD_COMMAND_DESCRIPTION_NEW_RECRUITMENT: string;
         readonly DISCORD_COMMAND_DESCRIPTION_EDIT_RECRUITMENT: string;
@@ -115,6 +117,7 @@ declare namespace NodeJS {
         readonly DISCORD_COMMAND_DESCRIPTION_REGIST_FRIEND_CODE: string;
         readonly DISCORD_COMMAND_DESCRIPTION_DELETE_FRIEND_CODE: string;
         readonly DISCORD_COMMAND_DESCRIPTION_EDIT_GAME_MASTER: string;
+        readonly DISCORD_COMMAND_DESCRIPTION_RESET_GAME_MASTER: string;
 
         readonly DISOCRD_UPDATE_CHANNEL_NAME_FORMAT: string;
         readonly DISOCRD_UPDATE_CHANNEL_NAME_FORMAT_REGEXP: string;

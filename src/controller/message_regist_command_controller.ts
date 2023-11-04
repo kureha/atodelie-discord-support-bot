@@ -10,7 +10,6 @@ const constants = new Constants();
 
 // import logic
 import { DiscordRegisterCommand } from "../logic/discord_register_command";
-import { DiscordCommon } from '../logic/discord_common';
 
 export class MessageRegistCommandController {
     /**
@@ -18,19 +17,8 @@ export class MessageRegistCommandController {
      * @param message 
      * @param client_id 
      */
-    async regist_command(message: Discord.Message<boolean>, client_id: string, is_check_privillege: boolean = true): Promise<boolean> {
+    async regist_command(message: Discord.Message<boolean>, client_id: string): Promise<boolean> {
         try {
-            // check privilleges
-            if (DiscordCommon.check_privillege(constants.DISCORD_BOT_ADMIN_USER_ID, message.client.user?.id, is_check_privillege) == true) {
-                logger.info(`regist command privillege check ok. user id = ${message.client.user?.id}`);
-            } else {
-                logger.error(`regist command failed to privillege check. user id = ${message.client.user?.id}`);
-                message.reply(constants.DISCORD_MESSAGE_NO_PERMISSION);
-
-                // resolve (no permissions)
-                return false;
-            }
-
             // call regist slash command logic
             const register_command: DiscordRegisterCommand = new DiscordRegisterCommand();
             const success_server_info = await register_command.regist_command(client_id);

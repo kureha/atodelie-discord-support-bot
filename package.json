@@ -29,7 +29,7 @@
   },
   "scripts": {
     "start": "node ./bin/index.js",
-    "test": "jest --maxWorkers=1",
+    "test": "jest --coverage --maxWorkers=1",
     "build": "tsc",
     "watch": "tsc -w"
   },

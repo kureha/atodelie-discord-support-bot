@@ -47,7 +47,10 @@ export class CommandController {
             await controller.delete_friend_code(interaction);
         } else if (interaction.commandName == constants.DISCORD_COMMAND_EDIT_GAME_MASTER) {
             const controller = new CommandGameMasterController();
-            await controller.select_game_master(interaction);
+            await controller.select_game_master_for_edit_game_master(interaction);
+        } else if (interaction.commandName == constants.DISCORD_COMMAND_RESET_GAME_MASTER) {
+            const controller = new CommandGameMasterController();
+            await controller.select_game_master_for_reset_game_master(interaction);
         } else {
             logger.error(`Interaction recieved, but command is invalid. command = ${interaction.commandName}`);
             await interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION}`);

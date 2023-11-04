@@ -17,9 +17,23 @@ import { DiscordMessage } from '../logic/discord_message';
 
 export class CommandGameMasterController {
     /**
+     * list role list for reset game master for administrator. return game list
+     */
+    async select_game_master_for_reset_game_master(interaction: Discord.ChatInputCommandInteraction, is_check_privillege: boolean = true): Promise<boolean> {
+        return this.select_game_master(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_RESET_GAME_MASTER_BY_GAME_NAME_LIST, interaction, is_check_privillege);
+    }
+
+    /**
+     * list role list for edit game master for administrator. return game list
+     */
+    async select_game_master_for_edit_game_master(interaction: Discord.ChatInputCommandInteraction, is_check_privillege: boolean = true): Promise<boolean> {
+        return this.select_game_master(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_EDIT_GAME_MASTER_BY_GAME_NAME_LIST, interaction, is_check_privillege);
+    }
+
+    /**
      * list role list for administrator. return game list
      */
-    async select_game_master(interaction: Discord.ChatInputCommandInteraction, is_check_privillege: boolean = true): Promise<boolean> {
+    async select_game_master(interaction_mode: string, interaction: Discord.ChatInputCommandInteraction, is_check_privillege: boolean = true): Promise<boolean> {
         try {
             // get obejct from discord.
             if (interaction.guild == undefined) {
@@ -48,7 +62,7 @@ export class CommandGameMasterController {
             // get select game master action row list
             const select_game_master_action_row_list: Discord.ActionRowBuilder<Discord.StringSelectMenuBuilder>[] =
                 DiscordCommon.get_game_master_list_select_menu(
-                    constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_EDIT_GAME_MASTER_BY_GAME_NAME_LIST,
+                    interaction_mode,
                     game_master_list,
                     constants.DiSCORD_SELECT_MENU_LIMIT_LENGTH);
 

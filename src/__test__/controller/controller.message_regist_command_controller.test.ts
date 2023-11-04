@@ -25,21 +25,6 @@ describe('regist_command', () => {
         jest.spyOn(DiscordRegisterCommand.prototype, 'regist_command')
             .mockImplementationOnce(async () => { return []; });
 
-        let result = await controller.regist_command(message, client_id, false);
-        expect(result).toEqual(expected);
-    });
-
-    test.each([
-        ["test_custom_id", "test_server_id", "test_user_id", "test_client_id", false],
-    ])("test for regist_command error, (%s, %s, %s, %s) -> %s", async (
-        custom_id: any, guild_id: any, user_id: any, client_id: any, expected: boolean
-    ) => {
-        // get mock
-        const Mock = TestDiscordMock.message_mock(user_id, Constants.STRING_EMPTY);
-        const message = new Mock();
-        jest.spyOn(DiscordRegisterCommand.prototype, 'regist_command')
-            .mockImplementationOnce(async () => { return []; });
-
         let result = await controller.regist_command(message, client_id);
         expect(result).toEqual(expected);
     });
@@ -55,7 +40,7 @@ describe('regist_command', () => {
         jest.spyOn(DiscordRegisterCommand.prototype, 'regist_command')
             .mockImplementationOnce(async () => { throw `exception!` });
 
-        const result = await controller.regist_command(message, client_id, false);
+        const result = await controller.regist_command(message, client_id);
         expect(result).toEqual(expected);
     });
 });

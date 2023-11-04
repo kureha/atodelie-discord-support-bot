@@ -34,6 +34,9 @@ export class SelectInteractionController {
         } else if (interaction.customId.indexOf(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_EDIT_GAME_MASTER_BY_GAME_NAME_LIST) >= 0) {
             const controller = new SelectInteractionGameMasterController();
             await controller.edit_game_master(interaction);
+        } else if (interaction.customId.indexOf(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_RESET_GAME_MASTER_BY_GAME_NAME_LIST) >= 0) {
+            const controller = new SelectInteractionGameMasterController();
+            await controller.reset_game_master(interaction);
         } else {
             logger.error(`Interaction recieved, but command is invalid. command = ${interaction.customId}`);
             await interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION}`);

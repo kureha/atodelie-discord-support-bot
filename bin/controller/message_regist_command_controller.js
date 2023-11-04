@@ -17,27 +17,15 @@ const constants_1 = require("./../common/constants");
 const constants = new constants_1.Constants();
 // import logic
 const discord_register_command_1 = require("../logic/discord_register_command");
-const discord_common_1 = require("../logic/discord_common");
 class MessageRegistCommandController {
     /**
      * regist slash command to server.
      * @param message
      * @param client_id
      */
-    regist_command(message, client_id, is_check_privillege = true) {
-        var _a, _b, _c;
+    regist_command(message, client_id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // check privilleges
-                if (discord_common_1.DiscordCommon.check_privillege(constants.DISCORD_BOT_ADMIN_USER_ID, (_a = message.client.user) === null || _a === void 0 ? void 0 : _a.id, is_check_privillege) == true) {
-                    logger_1.logger.info(`regist command privillege check ok. user id = ${(_b = message.client.user) === null || _b === void 0 ? void 0 : _b.id}`);
-                }
-                else {
-                    logger_1.logger.error(`regist command failed to privillege check. user id = ${(_c = message.client.user) === null || _c === void 0 ? void 0 : _c.id}`);
-                    message.reply(constants.DISCORD_MESSAGE_NO_PERMISSION);
-                    // resolve (no permissions)
-                    return false;
-                }
                 // call regist slash command logic
                 const register_command = new discord_register_command_1.DiscordRegisterCommand();
                 const success_server_info = yield register_command.regist_command(client_id);

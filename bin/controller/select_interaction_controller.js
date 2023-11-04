@@ -46,6 +46,10 @@ class SelectInteractionController {
                 const controller = new select_interaction_game_master_controller_1.SelectInteractionGameMasterController();
                 yield controller.edit_game_master(interaction);
             }
+            else if (interaction.customId.indexOf(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_RESET_GAME_MASTER_BY_GAME_NAME_LIST) >= 0) {
+                const controller = new select_interaction_game_master_controller_1.SelectInteractionGameMasterController();
+                yield controller.reset_game_master(interaction);
+            }
             else {
                 logger_1.logger.error(`Interaction recieved, but command is invalid. command = ${interaction.customId}`);
                 yield interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION}`);

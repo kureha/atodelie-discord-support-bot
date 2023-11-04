@@ -26,7 +26,7 @@ function get_discord_common_mock() {
         return [];
     });
 }
-describe('select_game_master', () => {
+describe('select_game_master for edit', () => {
     afterEach(() => {
         jest.resetAllMocks();
         jest.restoreAllMocks();
@@ -39,7 +39,7 @@ describe('select_game_master', () => {
         const interaction = new Mock();
         // setup extra mock
         get_discord_common_mock();
-        let result = yield controller.select_game_master(interaction, false);
+        let result = yield controller.select_game_master_for_edit_game_master(interaction, false);
         expect(result).toEqual(expected);
     }));
     test.each([
@@ -52,7 +52,7 @@ describe('select_game_master', () => {
         interaction.guild = undefined;
         // setup extra mock
         get_discord_common_mock();
-        const result = yield controller.select_game_master(interaction);
+        const result = yield controller.select_game_master_for_edit_game_master(interaction);
         expect(result).toEqual(expected);
     }));
     test.each([
@@ -65,7 +65,50 @@ describe('select_game_master', () => {
             .mockImplementationOnce(() => { return false; });
         // setup extra mock
         get_discord_common_mock();
-        const result = yield controller.select_game_master(interaction);
+        const result = yield controller.select_game_master_for_edit_game_master(interaction);
+        expect(result).toEqual(expected);
+    }));
+});
+describe('select_game_master for reset', () => {
+    afterEach(() => {
+        jest.resetAllMocks();
+        jest.restoreAllMocks();
+    });
+    test.each([
+        ["test_custom_id", "test_server_id", "test_user_id", true],
+    ])("test for select_game_master (for reset), (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        // get mock
+        const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
+        const interaction = new Mock();
+        // setup extra mock
+        get_discord_common_mock();
+        let result = yield controller.select_game_master_for_reset_game_master(interaction, false);
+        expect(result).toEqual(expected);
+    }));
+    test.each([
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for select_game_master error (for reset), (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        // get mock
+        const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
+        const interaction = new Mock();
+        // hack mock
+        interaction.guild = undefined;
+        // setup extra mock
+        get_discord_common_mock();
+        const result = yield controller.select_game_master_for_reset_game_master(interaction);
+        expect(result).toEqual(expected);
+    }));
+    test.each([
+        ["test_custom_id", "test_server_id", "test_user_id", false],
+    ])("test for select_game_master check privilege error (for reset), (%s, %s, %s) -> %s", (custom_id, guild_id, user_id, expected) => __awaiter(void 0, void 0, void 0, function* () {
+        // get mock
+        const Mock = test_discord_mock_1.TestDiscordMock.chat_input_command_interaction_mock(custom_id, guild_id, user_id);
+        const interaction = new Mock();
+        jest.spyOn(discord_common_1.DiscordCommon, 'check_privillege')
+            .mockImplementationOnce(() => { return false; });
+        // setup extra mock
+        get_discord_common_mock();
+        const result = yield controller.select_game_master_for_reset_game_master(interaction);
         expect(result).toEqual(expected);
     }));
 });

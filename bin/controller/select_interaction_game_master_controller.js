@@ -107,11 +107,63 @@ class SelectInteractionGameMasterController {
             }
             catch (err) {
                 // send error message
-                logger_1.logger.error(`select game for regist friend code error.`, err);
+                logger_1.logger.error(`edit game master error.`, err);
                 yield interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
                 return false;
             }
-            logger_1.logger.info(`select game for regist friend code completed.`);
+            logger_1.logger.info(`edit game master completed.`);
+            return true;
+        });
+    }
+    /**
+     * reset game master
+     * @param interaction
+     */
+    reset_game_master(interaction, is_check_privillege = true) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // check values
+                if (interaction.guild == undefined) {
+                    throw new Error(`Discord interaction guild is undefined.`);
+                }
+                // check privilleges
+                if (discord_common_1.DiscordCommon.check_privillege(constants.DISCORD_BOT_ADMIN_USER_ID, interaction.user.id, is_check_privillege) == true) {
+                    logger_1.logger.info(`request reset game master privillege check ok. user id = ${interaction.user.id}`);
+                }
+                else {
+                    logger_1.logger.error(`request reset game master failed to privillege check. user id = ${interaction.user.id}`);
+                    interaction.reply(constants.DISCORD_MESSAGE_NO_PERMISSION);
+                    // resolve (no permissions)
+                    return false;
+                }
+                logger_1.logger.info(`request reset game master modal by selected game.`);
+                // get value from interaction
+                const target_game_id = discord_common_1.DiscordCommon.get_interaction_value_by_idx(interaction.values, 0);
+                // get game name
+                const target_game_name = discord_common_1.DiscordCommon.get_game_master_from_list(target_game_id, discord_common_1.DiscordCommon.get_game_master_from_guild(interaction.guild, constants.DISCORD_FRIEND_CODE_IGNORE_ROLE_LIST, 0)).game_name;
+                logger_1.logger.info(`target game found. game_name = ${target_game_name}`);
+                // try to load registed info
+                const affected_data_cnt = yield this.game_master_repo.delete_m_game_master(interaction.guild.id, target_game_id);
+                // try to get registed data and set value
+                logger_1.logger.info(`delete game master successed. delete count = ${affected_data_cnt}`);
+                // send result message
+                if (affected_data_cnt > 0) {
+                    logger_1.logger.info(`registration compoleted.`);
+                    yield interaction.reply(constants.DISCORD_MESSAGE_RESET_GAME_MASTER
+                        .replace('%%GAME_NAME%%', target_game_name));
+                }
+                else {
+                    // if update row count is low, failed to regist
+                    throw new Error(`data is not affected. game_id = ${target_game_id}, game_name = ${target_game_name}, count = ${affected_data_cnt}`);
+                }
+            }
+            catch (err) {
+                // send error message
+                logger_1.logger.error(`select game for reset game master error.`, err);
+                yield interaction.reply(`${constants.DISCORD_MESSAGE_EXCEPTION} (Error : ${err})`);
+                return false;
+            }
+            logger_1.logger.info(`reset game master completed.`);
             return true;
         });
     }

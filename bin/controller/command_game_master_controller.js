@@ -20,9 +20,25 @@ const discord_common_1 = require("../logic/discord_common");
 const discord_message_1 = require("../logic/discord_message");
 class CommandGameMasterController {
     /**
+     * list role list for reset game master for administrator. return game list
+     */
+    select_game_master_for_reset_game_master(interaction, is_check_privillege = true) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.select_game_master(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_RESET_GAME_MASTER_BY_GAME_NAME_LIST, interaction, is_check_privillege);
+        });
+    }
+    /**
+     * list role list for edit game master for administrator. return game list
+     */
+    select_game_master_for_edit_game_master(interaction, is_check_privillege = true) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.select_game_master(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_EDIT_GAME_MASTER_BY_GAME_NAME_LIST, interaction, is_check_privillege);
+        });
+    }
+    /**
      * list role list for administrator. return game list
      */
-    select_game_master(interaction, is_check_privillege = true) {
+    select_game_master(interaction_mode, interaction, is_check_privillege = true) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // get obejct from discord.
@@ -43,7 +59,7 @@ class CommandGameMasterController {
                 // game master list
                 const game_master_list = discord_common_1.DiscordCommon.get_game_master_from_guild(interaction.guild, constants.DISCORD_FRIEND_CODE_IGNORE_ROLE_LIST, 0);
                 // get select game master action row list
-                const select_game_master_action_row_list = discord_common_1.DiscordCommon.get_game_master_list_select_menu(constants.DISCORD_SELECT_MENU_CUSTOM_ID_FOR_EDIT_GAME_MASTER_BY_GAME_NAME_LIST, game_master_list, constants.DiSCORD_SELECT_MENU_LIMIT_LENGTH);
+                const select_game_master_action_row_list = discord_common_1.DiscordCommon.get_game_master_list_select_menu(interaction_mode, game_master_list, constants.DiSCORD_SELECT_MENU_LIMIT_LENGTH);
                 logger_1.logger.info(`create game master list completed. length = ${game_master_list.length}`);
                 // show select
                 yield interaction.reply({
