@@ -38,7 +38,7 @@ exports.configuration = {
         error: {
             type: "file",
             filename: path.join(APP_ROOT, "./logs/error.log"),
-            maxLogSize: 5000000,
+            maxLogSize: 5000000, // 5MB
             backups: 5 // Max 5 backup files
         }
     },

@@ -34,7 +34,7 @@
     "watch": "tsc -w"
   },
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "jest": {
     "moduleFileExtensions": [
